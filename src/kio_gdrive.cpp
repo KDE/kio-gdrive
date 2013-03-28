@@ -135,14 +135,15 @@ void KIOGDrive::listDir( const KUrl &url )
 {
     kDebug() << url;
 
-    const QString path = url.path();
     QString folderId;
-    if ( path.isEmpty() || path == QLatin1String( "/" ) ) {
+    QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
+    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
         folderId = QLatin1String( "root" );
     } else {
-        folderId = path;
+        folderId = path.mid( path.lastIndexOf( QLatin1Char('/') ) );
     }
 
+    kDebug() << "Opening folder" << folderId;
     ChildReferenceFetchJob *fetchJob = new ChildReferenceFetchJob( folderId, m_account );
     QEventLoop eventLoop;
     QObject::connect( fetchJob, SIGNAL(finished(KGAPI2::Job*)),
@@ -156,6 +157,8 @@ void KIOGDrive::listDir( const KUrl &url )
         filesIds << ref->id();
     }
 
+    kDebug() << "Found" << filesIds.count() << "entries";
+
     FileFetchJob *fileFetchJob =  new FileFetchJob( filesIds, m_account );
     QObject::connect( fileFetchJob, SIGNAL(finished(KGAPI2::Job*)),
                       &eventLoop, SLOT(quit()) );
@@ -167,15 +170,21 @@ void KIOGDrive::listDir( const KUrl &url )
 
         KIO::UDSEntry entry;
         bool isFolder = false;
-        entry.insert( KIO::UDSEntry::UDS_NAME, file->title() );
+        entry.insert( KIO::UDSEntry::UDS_NAME, file->id() );
+        entry.insert( KIO::UDSEntry::UDS_DISPLAY_NAME, file->title() );
         if ( file->mimeType() == QLatin1String("application/vnd.google-apps.folder") ) {
             entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR );
+            entry.insert( KIO::UDSEntry::UDS_SIZE, 0 );
             isFolder = true;
         } else {
             entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
             entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType() );
             entry.insert( KIO::UDSEntry::UDS_SIZE, file->fileSize() );
         }
+
+        entry.insert( KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t() );
+        entry.insert( KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t() );
+        entry.insert( KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t() );
         entry.insert( KIO::UDSEntry::UDS_USER, file->ownerNames().first() );
 
         if ( !isFolder ) {
