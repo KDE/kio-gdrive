@@ -22,16 +22,27 @@
 
 #include <KIO/SlaveBase>
 
-#include <LibKGAPI2/Account>
+#include <LibKGAPI2/Types>
 
 namespace KWallet
 {
 class Wallet;
 }
 
+namespace KGAPI2
+{
+class Job;
+}
+
 class KIOGDrive : public KIO::SlaveBase
 {
   public:
+    enum Action {
+        Success,
+        Fail,
+        Restart
+    };
+
     explicit KIOGDrive( const QByteArray &protocol,
                         const QByteArray &pool_socket,
                         const QByteArray &app_socket );
@@ -42,8 +53,15 @@ class KIOGDrive : public KIO::SlaveBase
     virtual void stat(const KUrl &url);
 
   private:
+    Action handleError( KGAPI2::Job *job, const KUrl &url );
+    KIO::UDSEntry fileToUDSEntry( const KGAPI2::Drive::FilePtr &file );
+
     KGAPI2::AccountPtr m_account;
     KWallet::Wallet *m_wallet;
+
+    static QString s_apiKey;
+    static QString s_apiSecret;
+
 };
 
 #endif // GDRIVESLAVE_H

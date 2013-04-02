@@ -25,6 +25,7 @@
 #include <KDE/KDebug>
 #include <KDE/KWallet/Wallet>
 
+#include <LibKGAPI2/Account>
 #include <LibKGAPI2/AuthJob>
 #include <LibKGAPI2/Drive/ChildReference>
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
@@ -35,6 +36,25 @@
 
 using namespace KGAPI2;
 using namespace Drive;
+
+QString KIOGDrive::s_apiKey = QLatin1String( "554041944266.apps.googleusercontent.com" );
+QString KIOGDrive::s_apiSecret = QLatin1String( "mdT1DjzohxN3npUUzkENT0gO" );
+
+#define RUN_KGAPI_JOB(job) { \
+    KIOGDrive::Action action = KIOGDrive::Fail; \
+    do { \
+        QEventLoop eventLoop; \
+        QObject::connect( job, SIGNAL(finished(KGAPI2::Job*)), \
+                          &eventLoop, SLOT(quit()) ); \
+        eventLoop.exec(); \
+        action = handleError( job, url ); \
+        if ( action == KIOGDrive::Success ) { \
+            break; \
+        } else if ( action == KIOGDrive::Fail ) { \
+            return; \
+        } \
+    } while ( action == Restart ); \
+}
 
 extern "C"
 {
@@ -59,6 +79,8 @@ KIOGDrive::KIOGDrive( const QByteArray &protocol, const QByteArray &pool_socket,
     SlaveBase( "gdrive", pool_socket, app_socket ),
     m_wallet( 0 )
 {
+    Q_UNUSED( protocol );
+
     kDebug() << "GDrive ready";
 
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(
@@ -81,9 +103,8 @@ KIOGDrive::KIOGDrive( const QByteArray &protocol, const QByteArray &pool_socket,
         m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive.metadata.readonly" ) );
         m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive.readonly" ) );
 
-        AuthJob *authJob = new AuthJob( m_account,
-                                        QLatin1String( "554041944266.apps.googleusercontent.com" ),
-                                        QLatin1String( "mdT1DjzohxN3npUUzkENT0gO" ) );
+        AuthJob *authJob = new AuthJob( m_account, s_apiKey, s_apiSecret );
+
         QEventLoop eventLoop;
         QObject::connect( authJob, SIGNAL(finished(KGAPI2::Job*)),
                           &eventLoop, SLOT(quit()) );
@@ -125,11 +146,92 @@ KIOGDrive::~KIOGDrive()
     closeConnection();
 }
 
+KIOGDrive::Action KIOGDrive::handleError( KGAPI2::Job *job, const KUrl &url )
+{
+    kDebug() << job->error() << job->errorString();
+
+    switch ( job->error() ) {
+        case KGAPI2::OK:
+        case KGAPI2::NoError:
+            return Success;
+        case KGAPI2::AuthCancelled:
+        case KGAPI2::AuthError:
+            error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
+            return Fail;
+        case KGAPI2::Unauthorized: {
+            AuthJob *authJob = new AuthJob( m_account, s_apiKey, s_apiSecret );
+            QEventLoop eventLoop;
+            QObject::connect( authJob, SIGNAL(finished(KGAPI2::Job*)),
+                              &eventLoop, SLOT(quit()) );
+            eventLoop.exec();
+
+            if ( !handleError( authJob, url ) ) {
+                error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
+                return Fail;
+            }
+            return Restart;
+        }
+        case KGAPI2::Forbidden:
+            error( KIO::ERR_ACCESS_DENIED, url.prettyUrl() );
+            return Fail;
+        case KGAPI2::NotFound:
+            error( KIO::ERR_DOES_NOT_EXIST, url.prettyUrl() );
+            return Fail;
+        case KGAPI2::NoContent:
+            error( KIO::ERR_NO_CONTENT, url.prettyUrl() );
+            return Fail;
+        case KGAPI2::QuotaExceeded:
+            error( KIO::ERR_DISK_FULL, url.prettyUrl() );
+            return Fail;
+        default:
+            error( KIO::ERR_SLAVE_DEFINED, job->errorString() );
+            return Fail;
+    }
+
+    return Fail;
+}
+
+KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file)
+{
+    KIO::UDSEntry entry;
+    bool isFolder = false;
+
+    entry.insert( KIO::UDSEntry::UDS_NAME, file->id() );
+    entry.insert( KIO::UDSEntry::UDS_DISPLAY_NAME, file->title() );
+
+    if ( file->isFolder() ) {
+        entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR );
+        entry.insert( KIO::UDSEntry::UDS_SIZE, 0 );
+        isFolder = true;
+    } else {
+        entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
+        entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType() );
+        entry.insert( KIO::UDSEntry::UDS_SIZE, file->fileSize() );
+    }
+
+    entry.insert( KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t() );
+    entry.insert( KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t() );
+    entry.insert( KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t() );
+    entry.insert( KIO::UDSEntry::UDS_USER, file->ownerNames().first() );
+
+    if ( !isFolder ) {
+        if ( file->editable() ) {
+            entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+        } else {
+            entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IRGRP | S_IROTH );
+        }
+    } else {
+        entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
+    }
+
+    return entry;
+}
+
+
 void KIOGDrive::openConnection()
 {
     kDebug() << "Ready to talk to GDrive";
 }
-
 
 void KIOGDrive::listDir( const KUrl &url )
 {
@@ -144,11 +246,9 @@ void KIOGDrive::listDir( const KUrl &url )
     }
 
     kDebug() << "Opening folder" << folderId;
+
     ChildReferenceFetchJob *fetchJob = new ChildReferenceFetchJob( folderId, m_account );
-    QEventLoop eventLoop;
-    QObject::connect( fetchJob, SIGNAL(finished(KGAPI2::Job*)),
-                      &eventLoop, SLOT(quit()) );
-    eventLoop.exec();
+    RUN_KGAPI_JOB( fetchJob );
 
     ObjectsList objects = fetchJob->items();
     QStringList filesIds;
@@ -160,43 +260,12 @@ void KIOGDrive::listDir( const KUrl &url )
     kDebug() << "Found" << filesIds.count() << "entries";
 
     FileFetchJob *fileFetchJob =  new FileFetchJob( filesIds, m_account );
-    QObject::connect( fileFetchJob, SIGNAL(finished(KGAPI2::Job*)),
-                      &eventLoop, SLOT(quit()) );
-    eventLoop.exec();
+    RUN_KGAPI_JOB( fileFetchJob );
 
     objects = fileFetchJob->items();
     Q_FOREACH ( const ObjectPtr &object, objects ) {
         const FilePtr file = object.dynamicCast<File>();
-
-        KIO::UDSEntry entry;
-        bool isFolder = false;
-        entry.insert( KIO::UDSEntry::UDS_NAME, file->id() );
-        entry.insert( KIO::UDSEntry::UDS_DISPLAY_NAME, file->title() );
-        if ( file->mimeType() == QLatin1String("application/vnd.google-apps.folder") ) {
-            entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR );
-            entry.insert( KIO::UDSEntry::UDS_SIZE, 0 );
-            isFolder = true;
-        } else {
-            entry.insert( KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG );
-            entry.insert( KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType() );
-            entry.insert( KIO::UDSEntry::UDS_SIZE, file->fileSize() );
-        }
-
-        entry.insert( KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t() );
-        entry.insert( KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t() );
-        entry.insert( KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t() );
-        entry.insert( KIO::UDSEntry::UDS_USER, file->ownerNames().first() );
-
-        if ( !isFolder ) {
-            if ( file->editable() ) {
-                entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
-            } else {
-                entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IRGRP | S_IROTH );
-            }
-        } else {
-            entry.insert( KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
-        }
-
+        const KIO::UDSEntry entry = fileToUDSEntry( file );
         listEntry( entry, false );
     }
 
@@ -206,5 +275,25 @@ void KIOGDrive::listDir( const KUrl &url )
 
 void KIOGDrive::stat(const KUrl &url)
 {
-    SlaveBase::stat(url);
+    QString fileId;
+    QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
+    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
+        fileId = QLatin1String( "root" );
+    } else {
+        fileId = path.mid( path.lastIndexOf( QLatin1Char('/') ) );
+    }
+
+    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, m_account );
+    RUN_KGAPI_JOB ( fileFetchJob );
+
+    ObjectsList objects = fileFetchJob->items();
+    Q_ASSERT( objects.count() == 1 );
+
+    const FilePtr file = objects.first().dynamicCast<File>();
+    const KIO::UDSEntry entry = fileToUDSEntry( file );
+
+    statEntry( entry );
+    finished();
 }
+
+
