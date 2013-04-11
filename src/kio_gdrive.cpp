@@ -33,8 +33,10 @@
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
 #include <LibKGAPI2/Drive/ChildReferenceCreateJob>
 #include <LibKGAPI2/Drive/File>
+#include <LibKGAPI2/Drive/FileCreateJob>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
+#include <LibKGAPI2/Drive/ParentReference>
 #include <LibKGAPI2/Drive/Permission>
 
 #include <QtNetwork/QNetworkRequest>
@@ -275,7 +277,7 @@ QString KIOGDrive::lastPathComponent( const KUrl &url ) const
     if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
         return QLatin1String( "root" );
     } else {
-        return path.mid( path.lastIndexOf( QLatin1Char('/') ) );
+        return path.mid( path.lastIndexOf( QLatin1Char('/') ) + 1 );
     }
 }
 
@@ -355,5 +357,32 @@ void KIOGDrive::get(const KUrl &url)
     RUN_KGAPI_JOB( contentJob )
 
     data( contentJob.data() );
+    finished();
+}
+
+void KIOGDrive::mkdir( const KUrl &url, int permissions )
+{
+    kDebug() << url;
+
+    const QString folderName = lastPathComponent( url );
+
+    FilePtr file( new File() );
+    file->setTitle( folderName );
+    file->setMimeType( File::folderMimeType() );
+
+    const KUrl parentUrl = url.upUrl();
+    QString parentId;
+    if ( !parentUrl.path( KUrl::RemoveTrailingSlash ).isEmpty() ) {
+        parentId = lastPathComponent( parentUrl );
+    } else {
+        parentId = QLatin1String( "root" );
+    }
+
+    ParentReferencePtr parent( new ParentReference( parentId ) );
+    file->setParents( ParentReferencesList() << parent );
+
+    FileCreateJob createJob( file, getAccount());
+    RUN_KGAPI_JOB( createJob )
+
     finished();
 }

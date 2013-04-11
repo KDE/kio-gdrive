@@ -51,6 +51,7 @@ class KIOGDrive : public KIO::SlaveBase
 
     virtual void openConnection();
     virtual void listDir( const KUrl &url );
+    virtual void mkdir( const KUrl &url, int permissions );
 
     virtual void stat( const KUrl &url );
     virtual void get( const KUrl &url );
