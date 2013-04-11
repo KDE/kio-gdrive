@@ -31,6 +31,7 @@
 #include <LibKGAPI2/AuthJob>
 #include <LibKGAPI2/Drive/ChildReference>
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
+#include <LibKGAPI2/Drive/ChildReferenceCreateJob>
 #include <LibKGAPI2/Drive/File>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
@@ -48,18 +49,18 @@ QString KIOGDrive::s_apiSecret = QLatin1String( "mdT1DjzohxN3npUUzkENT0gO" );
 #define RUN_KGAPI_JOB(job) { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     do { \
-        kDebug() << "Running job with accessToken" << job->account()->accessToken(); \
+        kDebug() << "Running job with accessToken" << job.account()->accessToken(); \
         QEventLoop eventLoop; \
-        QObject::connect( job, SIGNAL(finished(KGAPI2::Job*)), \
+        QObject::connect( &job, SIGNAL(finished(KGAPI2::Job*)), \
                           &eventLoop, SLOT(quit()) ); \
         eventLoop.exec(); \
-        action = handleError( job, url ); \
+        action = handleError( &job, url ); \
         if ( action == KIOGDrive::Success ) { \
             break; \
         } else if ( action == KIOGDrive::Fail ) { \
             return; \
         } \
-        job->setAccount( getAccount() ); \
+        job.setAccount( getAccount() ); \
     } while ( action == Restart ); \
 }
 
@@ -267,7 +268,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry( const FilePtr &file ) const
     return entry;
 }
 
-QString KIOGDrive::fileIdFromUrl( const KUrl &url ) const
+QString KIOGDrive::lastPathComponent( const KUrl &url ) const
 {
     QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
     if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
@@ -286,22 +287,22 @@ void KIOGDrive::listDir( const KUrl &url )
 {
     kDebug() << url;
 
-    const QString folderId = fileIdFromUrl( url );
+    const QString folderId = lastPathComponent( url );
 
-    ChildReferenceFetchJob *fetchJob = new ChildReferenceFetchJob( folderId, getAccount() );
+    ChildReferenceFetchJob fetchJob( folderId, getAccount() );
     RUN_KGAPI_JOB( fetchJob )
 
-    ObjectsList objects = fetchJob->items();
+    ObjectsList objects = fetchJob.items();
     QStringList filesIds;
     Q_FOREACH ( const ObjectPtr &object, objects ) {
         const ChildReferencePtr ref = object.dynamicCast<ChildReference>();
         filesIds << ref->id();
     }
 
-    FileFetchJob *fileFetchJob =  new FileFetchJob( filesIds, getAccount() );
+    FileFetchJob fileFetchJob( filesIds, getAccount() );
     RUN_KGAPI_JOB( fileFetchJob )
 
-    objects = fileFetchJob->items();
+    objects = fileFetchJob.items();
     Q_FOREACH ( const ObjectPtr &object, objects ) {
         const FilePtr file = object.dynamicCast<File>();
         const KIO::UDSEntry entry = fileToUDSEntry( file );
@@ -316,11 +317,11 @@ void KIOGDrive::stat(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString fileId = fileIdFromUrl( url );
-    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, getAccount() );
+    const QString fileId = lastPathComponent( url );
+    FileFetchJob fileFetchJob( fileId, getAccount() );
     RUN_KGAPI_JOB( fileFetchJob )
 
-    const ObjectsList objects = fileFetchJob->items();
+    const ObjectsList objects = fileFetchJob.items();
     Q_ASSERT( objects.count() == 1 );
 
     const FilePtr file = objects.first().dynamicCast<File>();
@@ -334,21 +335,20 @@ void KIOGDrive::get(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString fileId = fileIdFromUrl( url );
-    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, getAccount() );
+    const QString fileId = lastPathComponent( url );
+    FileFetchJob fileFetchJob( fileId, getAccount() );
     RUN_KGAPI_JOB( fileFetchJob )
 
-    const ObjectsList objects = fileFetchJob->items();
+    const ObjectsList objects = fileFetchJob.items();
     Q_ASSERT( objects.count() == 1 );
 
     const FilePtr file = objects.first().dynamicCast<File>();
 
     mimeType( file->mimeType() );
 
-    FileFetchContentJob *contentJob = new FileFetchContentJob( file, getAccount() );
+    FileFetchContentJob contentJob( file, getAccount() );
     RUN_KGAPI_JOB( contentJob )
 
-    data( contentJob->data() );
+    data( contentJob.data() );
     finished();
 }
-
