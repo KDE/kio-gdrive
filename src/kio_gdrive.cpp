@@ -305,6 +305,10 @@ void KIOGDrive::listDir( const KUrl &url )
     objects = fileFetchJob.items();
     Q_FOREACH ( const ObjectPtr &object, objects ) {
         const FilePtr file = object.dynamicCast<File>();
+        if ( file->labels()->trashed() ) {
+            continue;
+        }
+
         const KIO::UDSEntry entry = fileToUDSEntry( file );
         listEntry( entry, false );
     }
