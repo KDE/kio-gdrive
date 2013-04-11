@@ -254,6 +254,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry( const FilePtr &file ) const
     entry.insert( KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t() );
     entry.insert( KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t() );
     entry.insert( KIO::UDSEntry::UDS_USER, file->ownerNames().first() );
+    entry.insert( KIO::UDSEntry::UDS_HIDDEN, file->labels()->hidden() );
 
     if ( !isFolder ) {
         if ( file->editable() ) {
