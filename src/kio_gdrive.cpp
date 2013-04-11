@@ -24,6 +24,8 @@
 #include <KDE/KComponentData>
 #include <KDE/KDebug>
 #include <KDE/KWallet/Wallet>
+#include <KIO/Job>
+#include <KIO/AccessManager>
 
 #include <LibKGAPI2/Account>
 #include <LibKGAPI2/AuthJob>
@@ -31,8 +33,11 @@
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
 #include <LibKGAPI2/Drive/File>
 #include <LibKGAPI2/Drive/FileFetchJob>
+#include <LibKGAPI2/Drive/FileFetchContentJob>
 #include <LibKGAPI2/Drive/Permission>
 
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
 
 using namespace KGAPI2;
 using namespace Drive;
@@ -43,6 +48,7 @@ QString KIOGDrive::s_apiSecret = QLatin1String( "mdT1DjzohxN3npUUzkENT0gO" );
 #define RUN_KGAPI_JOB(job) { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     do { \
+        kDebug() << "Running job with accessToken" << job->account()->accessToken(); \
         QEventLoop eventLoop; \
         QObject::connect( job, SIGNAL(finished(KGAPI2::Job*)), \
                           &eventLoop, SLOT(quit()) ); \
@@ -53,6 +59,7 @@ QString KIOGDrive::s_apiSecret = QLatin1String( "mdT1DjzohxN3npUUzkENT0gO" );
         } else if ( action == KIOGDrive::Fail ) { \
             return; \
         } \
+        job->setAccount( getAccount() ); \
     } while ( action == Restart ); \
 }
 
@@ -82,59 +89,6 @@ KIOGDrive::KIOGDrive( const QByteArray &protocol, const QByteArray &pool_socket,
     Q_UNUSED( protocol );
 
     kDebug() << "GDrive ready";
-
-    KWallet::Wallet *wallet = KWallet::Wallet::openWallet(
-        KWallet::Wallet::NetworkWallet(), 0,
-        KWallet::Wallet::Synchronous );
-    if ( !wallet ) {
-        return;
-    }
-
-    if ( !wallet->hasFolder( QLatin1String( "GDrive" ) ) ) {
-        wallet->createFolder( QLatin1String( "GDrive" ) );
-    }
-
-    wallet->setFolder( QLatin1String("GDrive") );
-
-    m_account = AccountPtr( new Account( QLatin1String( "dan.vratil@gmail.com" ) ) );
-    if ( wallet->entryList().isEmpty() ) {
-        m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive" ) );
-        m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive.file") );
-        m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive.metadata.readonly" ) );
-        m_account->addScope( QUrl( "https://www.googleapis.com/auth/drive.readonly" ) );
-
-        AuthJob *authJob = new AuthJob( m_account, s_apiKey, s_apiSecret );
-
-        QEventLoop eventLoop;
-        QObject::connect( authJob, SIGNAL(finished(KGAPI2::Job*)),
-                          &eventLoop, SLOT(quit()) );
-        eventLoop.exec();
-
-        m_account = authJob->account();
-        authJob->deleteLater();
-
-        QMap<QString, QString> entry;
-        entry[ QLatin1String( "accessToken" ) ] = m_account->accessToken();
-        entry[ QLatin1String( "refreshToken" ) ] = m_account->refreshToken();
-        QStringList scopes;
-        Q_FOREACH ( const QUrl &scope, m_account->scopes() ) {
-            scopes << scope.toString();
-        }
-        entry[ QLatin1String( "scopes" ) ] = scopes.join( QLatin1String( "," ) );
-
-        wallet->writeMap( m_account->accountName(), entry );
-
-    } else {
-        QMap<QString, QString> entry;
-        wallet->readMap( m_account->accountName(), entry );
-
-        m_account->setAccessToken( entry.value( QLatin1String( "accessToken" ) ) );
-        m_account->setRefreshToken( entry.value( QLatin1String( "refreshToken" ) ) );
-        const QStringList scopes = entry.value( QLatin1String( "scopes" ) ).split( QLatin1Char(',' ), QString::SkipEmptyParts );
-        Q_FOREACH ( const QString &scope, scopes ) {
-            m_account->addScope( scope );
-        }
-    }
 }
 
 KIOGDrive::~KIOGDrive()
@@ -144,6 +98,90 @@ KIOGDrive::~KIOGDrive()
     }
 
     closeConnection();
+}
+
+AccountPtr KIOGDrive::getAccount()
+{
+    if (!m_wallet) {
+        m_wallet = KWallet::Wallet::openWallet(
+            KWallet::Wallet::NetworkWallet(), 0,
+            KWallet::Wallet::Synchronous );
+        if ( !m_wallet ) {
+            kWarning() << "Failed to open KWallet";
+            return AccountPtr();
+        }
+
+        if ( !m_wallet->hasFolder( QLatin1String( "GDrive" ) ) ) {
+            m_wallet->createFolder( QLatin1String( "GDrive" ) );
+        }
+
+        m_wallet->setFolder( QLatin1String("GDrive") );
+    }
+
+    AccountPtr account = AccountPtr( new Account( QLatin1String( "dan.vratil@gmail.com" ) ) );
+    if ( m_wallet->entryList().isEmpty() ) {
+        account->addScope( QUrl( "https://www.googleapis.com/auth/drive" ) );
+        account->addScope( QUrl( "https://www.googleapis.com/auth/drive.file") );
+        account->addScope( QUrl( "https://www.googleapis.com/auth/drive.metadata.readonly" ) );
+        account->addScope( QUrl( "https://www.googleapis.com/auth/drive.readonly" ) );
+
+        AuthJob *authJob = new AuthJob( account, s_apiKey, s_apiSecret );
+
+        QEventLoop eventLoop;
+        QObject::connect( authJob, SIGNAL(finished(KGAPI2::Job*)),
+                          &eventLoop, SLOT(quit()) );
+        eventLoop.exec();
+
+        account = authJob->account();
+        authJob->deleteLater();
+
+        storeAccount( account );
+
+    } else {
+        QMap<QString, QString> entry;
+        m_wallet->readMap( account->accountName(), entry );
+
+        account->setAccessToken( entry.value( QLatin1String( "accessToken" ) ) );
+        account->setRefreshToken( entry.value( QLatin1String( "refreshToken" ) ) );
+        const QStringList scopes = entry.value( QLatin1String( "scopes" ) ).split( QLatin1Char(',' ), QString::SkipEmptyParts );
+        Q_FOREACH ( const QString &scope, scopes ) {
+            account->addScope( scope );
+        }
+    }
+
+    return account;
+}
+
+void KIOGDrive::storeAccount(const AccountPtr &account)
+{
+    if (!m_wallet) {
+        m_wallet = KWallet::Wallet::openWallet(
+            KWallet::Wallet::NetworkWallet(), 0,
+            KWallet::Wallet::Synchronous );
+        if ( !m_wallet ) {
+            kWarning() << "Failed to open KWallet";
+            return;
+        }
+
+        if ( !m_wallet->hasFolder( QLatin1String( "GDrive" ) ) ) {
+            m_wallet->createFolder( QLatin1String( "GDrive" ) );
+        }
+
+        m_wallet->setFolder( QLatin1String("GDrive") );
+    }
+
+    kDebug() << "Storing account" << account->accessToken();
+
+    QMap<QString, QString> entry;
+    entry[ QLatin1String( "accessToken" ) ] = account->accessToken();
+    entry[ QLatin1String( "refreshToken" ) ] = account->refreshToken();
+    QStringList scopes;
+    Q_FOREACH ( const QUrl &scope, account->scopes() ) {
+        scopes << scope.toString();
+    }
+    entry[ QLatin1String( "scopes" ) ] = scopes.join( QLatin1String( "," ) );
+
+    m_wallet->writeMap( account->accountName(), entry );
 }
 
 KIOGDrive::Action KIOGDrive::handleError( KGAPI2::Job *job, const KUrl &url )
@@ -159,16 +197,18 @@ KIOGDrive::Action KIOGDrive::handleError( KGAPI2::Job *job, const KUrl &url )
             error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
             return Fail;
         case KGAPI2::Unauthorized: {
-            AuthJob *authJob = new AuthJob( m_account, s_apiKey, s_apiSecret );
+            AccountPtr account = getAccount();
+            AuthJob *authJob = new AuthJob( account, s_apiKey, s_apiSecret );
             QEventLoop eventLoop;
             QObject::connect( authJob, SIGNAL(finished(KGAPI2::Job*)),
                               &eventLoop, SLOT(quit()) );
             eventLoop.exec();
-
-            if ( !handleError( authJob, url ) ) {
+            if ( handleError( authJob, url ) != KIOGDrive::Success ) {
                 error( KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl() );
                 return Fail;
             }
+            account = authJob->account();
+            storeAccount( account );
             return Restart;
         }
         case KGAPI2::Forbidden:
@@ -191,7 +231,7 @@ KIOGDrive::Action KIOGDrive::handleError( KGAPI2::Job *job, const KUrl &url )
     return Fail;
 }
 
-KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file)
+KIO::UDSEntry KIOGDrive::fileToUDSEntry( const FilePtr &file ) const
 {
     KIO::UDSEntry entry;
     bool isFolder = false;
@@ -227,6 +267,15 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file)
     return entry;
 }
 
+QString KIOGDrive::fileIdFromUrl( const KUrl &url ) const
+{
+    QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
+    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
+        return QLatin1String( "root" );
+    } else {
+        return path.mid( path.lastIndexOf( QLatin1Char('/') ) );
+    }
+}
 
 void KIOGDrive::openConnection()
 {
@@ -237,18 +286,10 @@ void KIOGDrive::listDir( const KUrl &url )
 {
     kDebug() << url;
 
-    QString folderId;
-    QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
-    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
-        folderId = QLatin1String( "root" );
-    } else {
-        folderId = path.mid( path.lastIndexOf( QLatin1Char('/') ) );
-    }
+    const QString folderId = fileIdFromUrl( url );
 
-    kDebug() << "Opening folder" << folderId;
-
-    ChildReferenceFetchJob *fetchJob = new ChildReferenceFetchJob( folderId, m_account );
-    RUN_KGAPI_JOB( fetchJob );
+    ChildReferenceFetchJob *fetchJob = new ChildReferenceFetchJob( folderId, getAccount() );
+    RUN_KGAPI_JOB( fetchJob )
 
     ObjectsList objects = fetchJob->items();
     QStringList filesIds;
@@ -257,10 +298,8 @@ void KIOGDrive::listDir( const KUrl &url )
         filesIds << ref->id();
     }
 
-    kDebug() << "Found" << filesIds.count() << "entries";
-
-    FileFetchJob *fileFetchJob =  new FileFetchJob( filesIds, m_account );
-    RUN_KGAPI_JOB( fileFetchJob );
+    FileFetchJob *fileFetchJob =  new FileFetchJob( filesIds, getAccount() );
+    RUN_KGAPI_JOB( fileFetchJob )
 
     objects = fileFetchJob->items();
     Q_FOREACH ( const ObjectPtr &object, objects ) {
@@ -275,18 +314,13 @@ void KIOGDrive::listDir( const KUrl &url )
 
 void KIOGDrive::stat(const KUrl &url)
 {
-    QString fileId;
-    QString path = QUrl(url).toString( QUrl::StripTrailingSlash );
-    if ( path.indexOf( QLatin1Char( '/' ) ) == -1 ) {
-        fileId = QLatin1String( "root" );
-    } else {
-        fileId = path.mid( path.lastIndexOf( QLatin1Char('/') ) );
-    }
+    kDebug() << url;
 
-    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, m_account );
-    RUN_KGAPI_JOB ( fileFetchJob );
+    const QString fileId = fileIdFromUrl( url );
+    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, getAccount() );
+    RUN_KGAPI_JOB( fileFetchJob )
 
-    ObjectsList objects = fileFetchJob->items();
+    const ObjectsList objects = fileFetchJob->items();
     Q_ASSERT( objects.count() == 1 );
 
     const FilePtr file = objects.first().dynamicCast<File>();
@@ -296,4 +330,25 @@ void KIOGDrive::stat(const KUrl &url)
     finished();
 }
 
+void KIOGDrive::get(const KUrl &url)
+{
+    kDebug() << url;
+
+    const QString fileId = fileIdFromUrl( url );
+    FileFetchJob *fileFetchJob = new FileFetchJob( fileId, getAccount() );
+    RUN_KGAPI_JOB( fileFetchJob )
+
+    const ObjectsList objects = fileFetchJob->items();
+    Q_ASSERT( objects.count() == 1 );
+
+    const FilePtr file = objects.first().dynamicCast<File>();
+
+    mimeType( file->mimeType() );
+
+    FileFetchContentJob *contentJob = new FileFetchContentJob( file, getAccount() );
+    RUN_KGAPI_JOB( contentJob )
+
+    data( contentJob->data() );
+    finished();
+}
 

@@ -23,6 +23,7 @@
 #include <KIO/SlaveBase>
 
 #include <LibKGAPI2/Types>
+#include <LibKGAPI2/Account>
 
 namespace KWallet
 {
@@ -49,14 +50,18 @@ class KIOGDrive : public KIO::SlaveBase
     virtual ~KIOGDrive();
 
     virtual void openConnection();
-    virtual void listDir(const KUrl &url);
-    virtual void stat(const KUrl &url);
+    virtual void listDir( const KUrl &url );
+    virtual void stat( const KUrl &url );
+    virtual void get( const KUrl &url );
 
   private:
     Action handleError( KGAPI2::Job *job, const KUrl &url );
-    KIO::UDSEntry fileToUDSEntry( const KGAPI2::Drive::FilePtr &file );
+    KIO::UDSEntry fileToUDSEntry( const KGAPI2::Drive::FilePtr &file ) const;
+    QString fileIdFromUrl( const KUrl &url ) const;
 
-    KGAPI2::AccountPtr m_account;
+    KGAPI2::AccountPtr getAccount();
+    void storeAccount( const KGAPI2::AccountPtr &account );
+
     KWallet::Wallet *m_wallet;
 
     static QString s_apiKey;
