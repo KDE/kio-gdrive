@@ -44,32 +44,32 @@ class KIOGDrive : public KIO::SlaveBase
         Restart
     };
 
-    explicit KIOGDrive( const QByteArray &protocol,
-                        const QByteArray &pool_socket,
-                        const QByteArray &app_socket );
+    explicit KIOGDrive(const QByteArray &protocol,
+                       const QByteArray &pool_socket,
+                       const QByteArray &app_socket);
     virtual ~KIOGDrive();
 
     virtual void openConnection();
-    virtual void listDir( const KUrl &url );
-    virtual void mkdir( const KUrl &url, int permissions );
+    virtual void listDir(const KUrl &url);
+    virtual void mkdir(const KUrl &url, int permissions);
 
-    virtual void stat( const KUrl &url );
-    virtual void get( const KUrl &url );
-    virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
+    virtual void stat(const KUrl &url);
+    virtual void get(const KUrl &url);
+    virtual void put(const KUrl &url, int permissions, KIO::JobFlags flags);
 
-    virtual void copy(const KUrl& src, const KUrl& dest, int permissions, KIO::JobFlags flags);
-    virtual void rename(const KUrl& src, const KUrl& dest, KIO::JobFlags flags);
-    virtual void del(const KUrl& url, bool isfile);
+    virtual void copy(const KUrl &src, const KUrl &dest, int permissions, KIO::JobFlags flags);
+    virtual void rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags);
+    virtual void del(const KUrl &url, bool isfile);
 
-    virtual void mimetype(const KUrl& url);
+    virtual void mimetype(const KUrl &url);
 
   private:
-    Action handleError( KGAPI2::Job *job, const KUrl &url );
-    KIO::UDSEntry fileToUDSEntry( const KGAPI2::Drive::FilePtr &file ) const;
-    QString lastPathComponent( const KUrl &url ) const;
+    Action handleError(KGAPI2::Job *job, const KUrl &url);
+    KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file) const;
+    QString lastPathComponent(const KUrl &url) const;
 
     KGAPI2::AccountPtr getAccount();
-    void storeAccount( const KGAPI2::AccountPtr &account );
+    void storeAccount(const KGAPI2::AccountPtr &account);
 
     KWallet::Wallet *m_wallet;
 
