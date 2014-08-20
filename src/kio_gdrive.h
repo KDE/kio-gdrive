@@ -55,7 +55,13 @@ class KIOGDrive : public KIO::SlaveBase
 
     virtual void stat( const KUrl &url );
     virtual void get( const KUrl &url );
+    virtual void put(const KUrl& url, int permissions, KIO::JobFlags flags);
 
+    virtual void copy(const KUrl& src, const KUrl& dest, int permissions, KIO::JobFlags flags);
+    virtual void rename(const KUrl& src, const KUrl& dest, KIO::JobFlags flags);
+    virtual void del(const KUrl& url, bool isfile);
+
+    virtual void mimetype(const KUrl& url);
 
   private:
     Action handleError( KGAPI2::Job *job, const KUrl &url );

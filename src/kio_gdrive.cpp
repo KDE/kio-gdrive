@@ -320,6 +320,36 @@ void KIOGDrive::listDir( const KUrl &url )
     finished();
 }
 
+
+void KIOGDrive::mkdir( const KUrl &url, int permissions )
+{
+    kDebug() << url;
+
+    const QString folderName = lastPathComponent( url );
+
+    FilePtr file( new File() );
+    file->setTitle( folderName );
+    file->setMimeType( File::folderMimeType() );
+
+    const KUrl parentUrl = url.upUrl();
+    QString parentId;
+    if ( !parentUrl.path( KUrl::RemoveTrailingSlash ).isEmpty() ) {
+        parentId = lastPathComponent( parentUrl );
+    } else {
+        parentId = QLatin1String( "root" );
+    }
+
+    ParentReferencePtr parent( new ParentReference( parentId ) );
+    file->setParents( ParentReferencesList() << parent );
+
+    FileCreateJob createJob( file, getAccount());
+    RUN_KGAPI_JOB( createJob )
+
+    finished();
+}
+
+
+
 void KIOGDrive::stat(const KUrl &url)
 {
     kDebug() << url;
@@ -360,29 +390,31 @@ void KIOGDrive::get(const KUrl &url)
     finished();
 }
 
-void KIOGDrive::mkdir( const KUrl &url, int permissions )
+void KIOGDrive::put(const KUrl& url, int permissions, KIO::JobFlags flags)
 {
-    kDebug() << url;
+    // TODO
+}
 
-    const QString folderName = lastPathComponent( url );
 
-    FilePtr file( new File() );
-    file->setTitle( folderName );
-    file->setMimeType( File::folderMimeType() );
 
-    const KUrl parentUrl = url.upUrl();
-    QString parentId;
-    if ( !parentUrl.path( KUrl::RemoveTrailingSlash ).isEmpty() ) {
-        parentId = lastPathComponent( parentUrl );
-    } else {
-        parentId = QLatin1String( "root" );
-    }
+void KIOGDrive::copy(const KUrl& src, const KUrl& dest, int permissions, KIO::JobFlags flags)
+{
+    // TODO
+}
 
-    ParentReferencePtr parent( new ParentReference( parentId ) );
-    file->setParents( ParentReferencesList() << parent );
+void KIOGDrive::del(const KUrl& url, bool isfile)
+{
+    // TODO
+}
 
-    FileCreateJob createJob( file, getAccount());
-    RUN_KGAPI_JOB( createJob )
+void KIOGDrive::rename(const KUrl& src, const KUrl& dest, KIO::JobFlags flags)
+{
+    // TODO
+}
 
-    finished();
+
+
+void KIOGDrive::mimetype(const KUrl& url)
+{
+    // TODO
 }
