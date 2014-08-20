@@ -7,7 +7,14 @@ find_package(KDE4 REQUIRED)
 find_package(LibKGAPI2 REQUIRED)
 include(KDE4Defaults)
 
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+    # C++11!
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    # Aggreesive warnings
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+endif()
 
 include_directories(
    ${CMAKE_SOURCE_DIR}

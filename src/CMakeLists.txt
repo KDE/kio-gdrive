@@ -1,4 +1,8 @@
-set(kio_gdrive_SRCS kio_gdrive.cpp )
+set(kio_gdrive_SRCS
+    kio_gdrive.cpp
+    pathcache.cpp
+    accountmanager.cpp
+)
 
 kde4_add_plugin(kio_gdrive ${kio_gdrive_SRCS})
 

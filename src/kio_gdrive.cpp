@@ -45,9 +45,6 @@
 using namespace KGAPI2;
 using namespace Drive;
 
-QString KIOGDrive::s_apiKey = QLatin1String("554041944266.apps.googleusercontent.com");
-QString KIOGDrive::s_apiSecret = QLatin1String("mdT1DjzohxN3npUUzkENT0gO");
-
 #define RUN_KGAPI_JOB(job) { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     do { \
@@ -62,7 +59,7 @@ QString KIOGDrive::s_apiSecret = QLatin1String("mdT1DjzohxN3npUUzkENT0gO");
         } else if (action == KIOGDrive::Fail) { \
             return; \
         } \
-        job.setAccount(getAccount()); \
+        job.setAccount(getAccount(accountId)); \
     } while (action == Restart); \
 }
 
@@ -86,8 +83,7 @@ extern "C"
 
 KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
                       const QByteArray &app_socket):
-    SlaveBase("gdrive", pool_socket, app_socket),
-    m_wallet(0)
+    SlaveBase("gdrive", pool_socket, app_socket)
 {
     Q_UNUSED(protocol);
 
@@ -96,95 +92,7 @@ KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
 
 KIOGDrive::~KIOGDrive()
 {
-    if (m_wallet) {
-        m_wallet->closeWallet(KWallet::Wallet::NetworkWallet(), false);
-    }
-
     closeConnection();
-}
-
-AccountPtr KIOGDrive::getAccount()
-{
-    if (!m_wallet) {
-        m_wallet = KWallet::Wallet::openWallet(
-            KWallet::Wallet::NetworkWallet(), 0,
-            KWallet::Wallet::Synchronous);
-        if (!m_wallet) {
-            kWarning() << "Failed to open KWallet";
-            return AccountPtr();
-        }
-
-        if (!m_wallet->hasFolder(QLatin1String("GDrive"))) {
-            m_wallet->createFolder(QLatin1String("GDrive"));
-        }
-
-        m_wallet->setFolder(QLatin1String("GDrive"));
-    }
-
-    AccountPtr account = AccountPtr(new Account(QLatin1String("dan.vratil@gmail.com")));
-    if (m_wallet->entryList().isEmpty()) {
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.file"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.metadata.readonly"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.readonly"));
-
-        AuthJob *authJob = new AuthJob(account, s_apiKey, s_apiSecret);
-
-        QEventLoop eventLoop;
-        QObject::connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-                          &eventLoop, SLOT(quit()));
-        eventLoop.exec();
-
-        account = authJob->account();
-        authJob->deleteLater();
-
-        storeAccount(account);
-
-    } else {
-        QMap<QString, QString> entry;
-        m_wallet->readMap(account->accountName(), entry);
-
-        account->setAccessToken(entry.value(QLatin1String("accessToken")));
-        account->setRefreshToken(entry.value(QLatin1String("refreshToken")));
-        const QStringList scopes = entry.value(QLatin1String("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
-        Q_FOREACH (const QString &scope, scopes) {
-            account->addScope(scope);
-        }
-    }
-
-    return account;
-}
-
-void KIOGDrive::storeAccount(const AccountPtr &account)
-{
-    if (!m_wallet) {
-        m_wallet = KWallet::Wallet::openWallet(
-            KWallet::Wallet::NetworkWallet(), 0,
-            KWallet::Wallet::Synchronous);
-        if (!m_wallet) {
-            kWarning() << "Failed to open KWallet";
-            return;
-        }
-
-        if (!m_wallet->hasFolder(QLatin1String("GDrive"))) {
-            m_wallet->createFolder(QLatin1String("GDrive"));
-        }
-
-        m_wallet->setFolder(QLatin1String("GDrive"));
-    }
-
-    kDebug() << "Storing account" << account->accessToken();
-
-    QMap<QString, QString> entry;
-    entry[ QLatin1String("accessToken") ] = account->accessToken();
-    entry[ QLatin1String("refreshToken") ] = account->refreshToken();
-    QStringList scopes;
-    Q_FOREACH (const QUrl &scope, account->scopes()) {
-        scopes << scope.toString();
-    }
-    entry[ QLatin1String("scopes") ] = scopes.join(QLatin1String(","));
-
-    m_wallet->writeMap(account->accountName(), entry);
 }
 
 KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
@@ -200,18 +108,12 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
             error(KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl());
             return Fail;
         case KGAPI2::Unauthorized: {
-            AccountPtr account = getAccount();
-            AuthJob *authJob = new AuthJob(account, s_apiKey, s_apiSecret);
-            QEventLoop eventLoop;
-            QObject::connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-                              &eventLoop, SLOT(quit()));
-            eventLoop.exec();
-            if (handleError(authJob, url) != KIOGDrive::Success) {
+            const AccountPtr oldAccount = job->account();
+            const AccountPtr account = m_accountManager.refreshAccount(getAccount(oldAccount->accountName()));
+            if (!account) {
                 error(KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl());
                 return Fail;
             }
-            account = authJob->account();
-            storeAccount(account);
             return Restart;
         }
         case KGAPI2::Forbidden:
@@ -273,13 +175,27 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file) const
 
 QString KIOGDrive::lastPathComponent(const KUrl &url) const
 {
-    QString path = QUrl(url).toString(QUrl::StripTrailingSlash);
-    if (path.indexOf(QLatin1Char('/')) == -1) {
-        return QLatin1String("root");
-    } else {
-        return path.mid(path.lastIndexOf(QLatin1Char('/')) + 1);
+    const QString path = url.path(KUrl::KUrl::RemoveTrailingSlash);
+    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    if (components.isEmpty()) {
+        return QString();
     }
+    if (components.size() == 1) {
+        return QLatin1String("root");
+    }
+    return components.last();
 }
+
+QString KIOGDrive::accountFromPath(const KUrl& url) const
+{
+    const QString path = url.path(KUrl::RemoveTrailingSlash);
+    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    if (components.isEmpty()) {
+        return QString();
+    }
+    return components[0];
+}
+
 
 void KIOGDrive::openConnection()
 {
@@ -293,8 +209,30 @@ void KIOGDrive::listDir(const KUrl &url)
     kDebug() << url;
 
     const QString folderId = lastPathComponent(url);
+    const QString accountId = accountFromPath(url);
 
-    ChildReferenceFetchJob fetchJob(folderId, getAccount());
+    // When listing root, list available accounts
+    if (folderId.isEmpty()) {
+        const QStringList accounts = m_accountManager.accounts();
+        // If there are any accounts, list them and return
+        if (!accounts.isEmpty()) {
+            for (const QString &account : accounts) {
+                const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
+                listEntry(entry, false);
+            }
+            listEntry(KIO::UDSEntry(), true);
+            finished();
+            return;
+
+        // otherwise ask user to authenticate and redirect to that account
+        } else {
+            const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+            redirection(KUrl(QString::fromLatin1("gdrive://%1").arg(account->accountName())));
+            return;
+        }
+    }
+
+    ChildReferenceFetchJob fetchJob(folderId, getAccount(accountId));
     RUN_KGAPI_JOB(fetchJob)
 
     ObjectsList objects = fetchJob.items();
@@ -304,7 +242,7 @@ void KIOGDrive::listDir(const KUrl &url)
         filesIds << ref->id();
     }
 
-    FileFetchJob fileFetchJob(filesIds, getAccount());
+    FileFetchJob fileFetchJob(filesIds, getAccount(accountId));
     RUN_KGAPI_JOB(fileFetchJob)
 
     objects = fileFetchJob.items();
@@ -328,6 +266,7 @@ void KIOGDrive::mkdir(const KUrl &url, int permissions)
     kDebug() << url;
 
     const QString folderName = lastPathComponent(url);
+    const QString accountId = accountFromPath(url);
 
     FilePtr file(new File());
     file->setTitle(folderName);
@@ -344,7 +283,7 @@ void KIOGDrive::mkdir(const KUrl &url, int permissions)
     ParentReferencePtr parent(new ParentReference(parentId));
     file->setParents(ParentReferencesList() << parent);
 
-    FileCreateJob createJob(file, getAccount());
+    FileCreateJob createJob(file, getAccount(accountId));
     RUN_KGAPI_JOB(createJob)
 
     finished();
@@ -357,7 +296,15 @@ void KIOGDrive::stat(const KUrl &url)
     kDebug() << url;
 
     const QString fileId = lastPathComponent(url);
-    FileFetchJob fileFetchJob(fileId, getAccount());
+    const QString accountId = accountFromPath(url);
+
+    // If this is an account, don't query Google!
+    if (url.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts).size() == 1) {
+        finished();
+        return;
+    }
+
+    FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
@@ -375,7 +322,9 @@ void KIOGDrive::get(const KUrl &url)
     kDebug() << url;
 
     const QString fileId = lastPathComponent(url);
-    FileFetchJob fileFetchJob(fileId, getAccount());
+    const QString accountId = accountFromPath(url);
+
+    FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
@@ -385,7 +334,7 @@ void KIOGDrive::get(const KUrl &url)
 
     mimeType(file->mimeType());
 
-    FileFetchContentJob contentJob(file, getAccount());
+    FileFetchContentJob contentJob(file, getAccount(accountId));
     RUN_KGAPI_JOB(contentJob)
 
     data(contentJob.data());
