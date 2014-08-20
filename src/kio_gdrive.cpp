@@ -36,6 +36,7 @@
 #include <LibKGAPI2/Drive/FileCreateJob>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
+#include <LibKGAPI2/Drive/FileSearchQuery>
 #include <LibKGAPI2/Drive/ParentReference>
 #include <LibKGAPI2/Drive/Permission>
 
@@ -232,20 +233,12 @@ void KIOGDrive::listDir(const KUrl &url)
         }
     }
 
-    ChildReferenceFetchJob fetchJob(folderId, getAccount(accountId));
-    RUN_KGAPI_JOB(fetchJob)
-
-    ObjectsList objects = fetchJob.items();
-    QStringList filesIds;
-    Q_FOREACH (const ObjectPtr &object, objects) {
-        const ChildReferencePtr ref = object.dynamicCast<ChildReference>();
-        filesIds << ref->id();
-    }
-
-    FileFetchJob fileFetchJob(filesIds, getAccount(accountId));
+    FileSearchQuery query;
+    query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
+    FileFetchJob fileFetchJob(query, getAccount(accountId));
     RUN_KGAPI_JOB(fileFetchJob)
 
-    objects = fileFetchJob.items();
+    ObjectsList objects = fileFetchJob.items();
     Q_FOREACH (const ObjectPtr &object, objects) {
         const FilePtr file = object.dynamicCast<File>();
         if (file->labels()->trashed()) {
