@@ -244,8 +244,8 @@ void KIOGDrive::listDir(const KUrl &url)
     FileSearchQuery query;
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     FileFetchJob fileFetchJob(query, getAccount(accountId));
-    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
-                              | FileFetchJob::LastViewedByMeDate);
+    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions) |
+                           FileFetchJob::Labels | FileFetchJob::LastViewedByMeDate);
     RUN_KGAPI_JOB(fileFetchJob)
 
     ObjectsList objects = fileFetchJob.items();
