@@ -324,6 +324,7 @@ void KIOGDrive::get(const KUrl &url)
     const QString accountId = accountFromPath(url);
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
+    fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType | FileFetchJob::DownloadUrl);
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
