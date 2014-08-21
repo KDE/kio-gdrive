@@ -33,6 +33,7 @@
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
 #include <LibKGAPI2/Drive/ChildReferenceCreateJob>
 #include <LibKGAPI2/Drive/File>
+#include <LibKGAPI2/Drive/FileCopyJob>
 #include <LibKGAPI2/Drive/FileCreateJob>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
@@ -46,7 +47,11 @@
 using namespace KGAPI2;
 using namespace Drive;
 
-#define RUN_KGAPI_JOB(job) { \
+
+#define RUN_KGAPI_JOB(job) RUN_KGAPI_JOB_PARAMS(job, url, accountId)
+
+#define RUN_KGAPI_JOB_PARAMS(job, url, accountId) \
+{ \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     do { \
         kDebug() << "Running job with accessToken" << job.account()->accessToken(); \
@@ -357,8 +362,68 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 
 void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::JobFlags flags)
 {
-    // TODO
-    kDebug() << src << dest << permissions << flags;
+    // NOTE: We deliberately ignore the permissions field here, because GDrive
+    // does not recognize any privileges that could be mapped to standard UNIX
+    // file permissions.
+    Q_UNUSED(permissions);
+
+    // NOTE: We deliberately ignore the flags field here, because the "overwrite"
+    // flag would have no effect on GDrive, since file name don't have to be
+    // unique. IOW if there is a file "foo.bar" and user copy-pastes into the
+    // same directory, the FileCopyJob will succeed and a new file with the same
+    // name will be created.
+    Q_UNUSED(flags);
+
+    const QString sourceFileId = lastPathComponent(src);
+    const QString destFileName = lastPathComponent(dest);
+    const QString sourceAccountId = accountFromPath(src);
+    const QString destAccountId = accountFromPath(dest);
+
+    // TODO: Does this actually happen, or does KIO treat our account name as host?
+    if (sourceAccountId != destAccountId) {
+        // KIO will fallback to get+post
+        error(KIO::ERR_UNSUPPORTED_ACTION, src.fileName());
+        return;
+    }
+
+    FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
+    sourceFileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::ModifiedDate |
+                                 FileFetchJob::LastViewedByMeDate | FileFetchJob::Description);
+    RUN_KGAPI_JOB_PARAMS(sourceFileFetchJob, src, sourceAccountId)
+
+    const ObjectsList objects = sourceFileFetchJob.items();
+    if (objects.count() != 1) {
+        error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+        return;
+    }
+
+    const FilePtr sourceFile = objects[0].dynamicCast<File>();
+
+    ParentReferencesList destParentReferences;
+    const QStringList paths = dest.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
+    if (paths.size() == 0) {
+        // paths.size == 0 -> error, user is trying to copy to top-level gdrive:///
+        error(KIO::ERR_ACCESS_DENIED, dest.fileName());
+        return;
+    } else if (paths.size() == 1) {
+        // user is trying to copy to root -> keep destParentReferences empty
+    } else if (paths.size() > 2) {
+        // skip filename and extract the second-to-last component
+        const QString destDirId = paths[paths.count() - 2];
+        destParentReferences << ParentReferencePtr(new ParentReference(destDirId));
+    }
+
+    FilePtr destFile(new File);
+    destFile->setTitle(destFileName);
+    destFile->setModifiedDate(sourceFile->modifiedDate());
+    destFile->setLastViewedByMeDate(sourceFile->lastViewedByMeDate());
+    destFile->setDescription(sourceFile->description());
+    destFile->setParents(destParentReferences);
+
+    FileCopyJob copyJob(sourceFile, destFile, getAccount(sourceAccountId));
+    RUN_KGAPI_JOB_PARAMS(copyJob, dest, sourceAccountId)
+
+    finished();
 }
 
 void KIOGDrive::del(const KUrl &url, bool isfile)
