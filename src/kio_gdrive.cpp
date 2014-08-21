@@ -371,7 +371,22 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
 
 void KIOGDrive::mimetype(const KUrl &url)
 {
-
-    // TODO
     kDebug() << url;
+
+    const QString fileId = lastPathComponent(url);
+    const QString accountId = accountFromPath(url);
+
+    FileFetchJob fileFetchJob(fileId, getAccount(accountId));
+    fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);
+    RUN_KGAPI_JOB(fileFetchJob);
+
+    const ObjectsList objects = fileFetchJob.items();
+    if (objects.count() != 1) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.fileName());
+        return;
+    }
+
+    const FilePtr file = objects.first().dynamicCast<File>();
+    mimeType(file->mimeType());
+    finished();
 }
