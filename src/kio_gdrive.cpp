@@ -35,6 +35,7 @@
 #include <LibKGAPI2/Drive/File>
 #include <LibKGAPI2/Drive/FileCopyJob>
 #include <LibKGAPI2/Drive/FileCreateJob>
+#include <LibKGAPI2/Drive/FileTrashJob>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
 #include <LibKGAPI2/Drive/FileSearchQuery>
@@ -428,8 +429,42 @@ void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::Jo
 
 void KIOGDrive::del(const KUrl &url, bool isfile)
 {
-    // TODO
+    // FIXME: Verify that a single file cannot actually have multiple parent
+    // references. If it can, then we need to be more careful: currently this
+    // implementation will simply remove the file from all it's parents but
+    // it actually should just remove the current parent reference
+
+    // FIXME: Because of the above, we are not really deleting the file, but only
+    // moving it to trash - so if users really really really wants to delete the
+    // file, they have to go to GDrive web interface and delete it there. I think
+    // that we should do the DELETE operation here, because for trash people have
+    // their local trashes. This however requires fixing the first FIXME first,
+    // otherwise we are risking severe data loss.
+
     kDebug() << url << isfile;
+
+    const QString fileId = lastPathComponent(url);
+    const QString accountId = accountFromPath(url);
+
+    // GDrive allows us to delete entire directory even when it's not empty,
+    // so we need to emulate the normal behavior ourselves by checking number of
+    // child references
+    if (!isfile) {
+        ChildReferenceFetchJob referencesFetch(fileId, getAccount(accountId));
+        RUN_KGAPI_JOB(referencesFetch);
+        const bool isEmpty = !referencesFetch.items().count();
+
+        if (!isEmpty && metaData("recurse") != QLatin1String("true")) {
+            error(KIO::ERR_COULD_NOT_RMDIR, url.fileName());
+            return;
+        }
+    }
+
+    FileTrashJob trashJob(fileId, getAccount(accountId));
+    RUN_KGAPI_JOB(trashJob)
+
+    finished();
+
 }
 
 void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
@@ -449,7 +484,7 @@ void KIOGDrive::mimetype(const KUrl &url)
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);
-    RUN_KGAPI_JOB(fileFetchJob);
+    RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
