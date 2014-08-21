@@ -54,7 +54,7 @@ using namespace Drive;
 #define RUN_KGAPI_JOB_PARAMS(job, url, accountId) \
 { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
-    do { \
+    Q_FOREVER { \
         kDebug() << "Running job with accessToken" << job.account()->accessToken(); \
         QEventLoop eventLoop; \
         QObject::connect(&job, SIGNAL(finished(KGAPI2::Job*)), \
@@ -67,7 +67,8 @@ using namespace Drive;
             return; \
         } \
         job.setAccount(getAccount(accountId)); \
-    } while (action == Restart); \
+        job.restart(); \
+    }; \
 }
 
 extern "C"
@@ -116,7 +117,7 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
             return Fail;
         case KGAPI2::Unauthorized: {
             const AccountPtr oldAccount = job->account();
-            const AccountPtr account = m_accountManager.refreshAccount(getAccount(oldAccount->accountName()));
+            const AccountPtr account = m_accountManager.refreshAccount(oldAccount);
             if (!account) {
                 error(KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl());
                 return Fail;

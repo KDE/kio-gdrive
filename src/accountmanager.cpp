@@ -70,8 +70,9 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         return KGAPI2::AccountPtr();
     }
 
-    KGAPI2::AccountPtr account(new KGAPI2::Account(accountName));
+    KGAPI2::AccountPtr account;
     if (!m_wallet->entryList().contains(accountName)) {
+        account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive"));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive.file"));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive.metadata.readonly"));
@@ -90,14 +91,18 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         storeAccount(account);
     } else {
         QMap<QString, QString> entry;
-        m_wallet->readMap(account->accountName(), entry);
+        m_wallet->readMap(accountName, entry);
 
-        account->setAccessToken(entry.value(QLatin1String("accessToken")));
-        account->setRefreshToken(entry.value(QLatin1String("refreshToken")));
         const QStringList scopes = entry.value(QLatin1String("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        QList<QUrl> scopeUrls;
         Q_FOREACH (const QString &scope, scopes) {
-            account->addScope(scope);
+            scopeUrls << scope;
         }
+
+        account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
+                                                         entry.value(QLatin1String("accessToken")),
+                                                         entry.value(QLatin1String("refreshToken")),
+                                                         scopeUrls));
     }
 
     return account;
