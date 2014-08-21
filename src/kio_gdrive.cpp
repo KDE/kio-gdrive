@@ -307,7 +307,10 @@ void KIOGDrive::stat(const KUrl &url)
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
-    Q_ASSERT(objects.count() == 1);
+    if (objects.count() != 1) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.fileName());
+        return;
+    }
 
     const FilePtr file = objects.first().dynamicCast<File>();
     const KIO::UDSEntry entry = fileToUDSEntry(file);
@@ -328,7 +331,10 @@ void KIOGDrive::get(const KUrl &url)
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
-    Q_ASSERT(objects.count() == 1);
+    if (objects.count() != 1) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.fileName());
+        return;
+    }
 
     const FilePtr file = objects.first().dynamicCast<File>();
 
