@@ -158,7 +158,9 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file) const
     entry.insert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
     entry.insert(KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t());
     entry.insert(KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t());
-    entry.insert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
+    if (!file->ownerNames().isEmpty()) {
+        entry.insert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
+    }
     entry.insert(KIO::UDSEntry::UDS_HIDDEN, file->labels()->hidden());
 
     if (!isFolder) {
@@ -236,6 +238,8 @@ void KIOGDrive::listDir(const KUrl &url)
     FileSearchQuery query;
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     FileFetchJob fileFetchJob(query, getAccount(accountId));
+    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
+                              | FileFetchJob::LastViewedByMeDate);
     RUN_KGAPI_JOB(fileFetchJob)
 
     ObjectsList objects = fileFetchJob.items();
