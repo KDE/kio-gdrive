@@ -35,6 +35,7 @@
 #include <LibKGAPI2/Drive/File>
 #include <LibKGAPI2/Drive/FileCopyJob>
 #include <LibKGAPI2/Drive/FileCreateJob>
+#include <LibKGAPI2/Drive/FileModifyJob>
 #include <LibKGAPI2/Drive/FileTrashJob>
 #include <LibKGAPI2/Drive/FileFetchJob>
 #include <LibKGAPI2/Drive/FileFetchContentJob>
@@ -470,11 +471,82 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
 
 void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
 {
-    // TODO
     kDebug() << src << dest << flags;
+
+    const QString sourceFileId = lastPathComponent(src);
+    const QString destFileName = lastPathComponent(dest);
+    const QString sourceAccountId = accountFromPath(src);
+    const QString destAccountId = accountFromPath(dest);
+
+    // TODO: Does this actually happen, or does KIO treat our account name as host?
+    if (sourceAccountId != destAccountId) {
+        error(KIO::ERR_UNSUPPORTED_ACTION, src.fileName());
+        return;
+    }
+
+    // We need to fetch ALL, so that we can do update later
+    FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
+    RUN_KGAPI_JOB_PARAMS(sourceFileFetchJob, src, sourceAccountId)
+
+    const ObjectsList objects = sourceFileFetchJob.items();
+    if (objects.count() != 1) {
+        error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+        return;
+    }
+
+    const FilePtr sourceFile = objects[0].dynamicCast<File>();
+
+    ParentReferencesList parentReferences = sourceFile->parents();
+    const QStringList destPaths = dest.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
+    if (destPaths.size() == 0) {
+        // paths.size == 0 -> error, user is trying to move to top-level gdrive:///
+        error(KIO::ERR_ACCESS_DENIED, dest.fileName());
+        return;
+    } else if (destPaths.size() == 1) {
+        // user is trying to move to root -> we are only renaming
+    } else if (destPaths.size() > 2) {
+        const QStringList srcPaths = src.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
+        if (srcPaths.size() < 3) {
+            // WTF?
+            error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+            return;
+        }
+
+        // skip filename and extract the second-to-last component
+        const QString destDirId = destPaths[destPaths.count() - 2];
+        const QString srcDirId = srcPaths[srcPaths.count() - 2];
+
+        // Remove source from parent references
+        auto iter = parentReferences.begin();
+        bool removed = false;
+        while (iter != parentReferences.end()) {
+            const ParentReferencePtr ref = *iter;
+            if (ref->id() == srcDirId) {
+                parentReferences.erase(iter);
+                removed = true;
+                break;
+            }
+            ++iter;
+        }
+        if (!removed) {
+            error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+            return;
+        }
+
+        // Add destination to parent references
+        parentReferences << ParentReferencePtr(new ParentReference(destDirId));
+    }
+
+    FilePtr destFile(sourceFile);
+    destFile->setTitle(destFileName);
+    destFile->setParents(parentReferences);
+
+    FileModifyJob modifyJob(destFile, getAccount(sourceAccountId));
+    modifyJob.setUpdateModifiedDate(true);
+    RUN_KGAPI_JOB_PARAMS(modifyJob, dest, sourceAccountId)
+
+    finished();
 }
-
-
 
 void KIOGDrive::mimetype(const KUrl &url)
 {
