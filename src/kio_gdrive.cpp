@@ -296,7 +296,9 @@ void KIOGDrive::stat(const KUrl &url)
     const QString accountId = accountFromPath(url);
 
     // If this is an account, don't query Google!
-    if (url.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts).size() == 1) {
+    if (!accountId.isEmpty() && fileId == QLatin1String("root")) {
+        const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(accountId);
+        statEntry(entry);
         finished();
         return;
     }
@@ -368,6 +370,7 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
 
 void KIOGDrive::mimetype(const KUrl &url)
 {
+
     // TODO
     kDebug() << url;
 }
