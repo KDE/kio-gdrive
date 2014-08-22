@@ -18,6 +18,7 @@
  */
 
 #include "kio_gdrive.h"
+#include "gdrivehelper.h"
 
 #include <QtGui/QApplication>
 
@@ -146,10 +147,15 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
     return Fail;
 }
 
-KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &file) const
+KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile) const
 {
     KIO::UDSEntry entry;
     bool isFolder = false;
+
+    FilePtr file = origFile;
+    if (GDriveHelper::isGDocsDocument(file)) {
+        GDriveHelper::convertFromGDocs(file);
+    }
 
     entry.insert(KIO::UDSEntry::UDS_NAME, file->id());
     entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, file->title());
@@ -258,8 +264,10 @@ void KIOGDrive::listDir(const KUrl &url)
         query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
     }
     FileFetchJob fileFetchJob(query, getAccount(accountId));
-    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions) |
-                           FileFetchJob::Labels | FileFetchJob::LastViewedByMeDate);
+    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
+                            | FileFetchJob::Labels
+                            | FileFetchJob::ExportLinks
+                            | FileFetchJob::LastViewedByMeDate);
     RUN_KGAPI_JOB(fileFetchJob)
 
     ObjectsList objects = fileFetchJob.items();
@@ -358,7 +366,10 @@ void KIOGDrive::get(const KUrl &url)
     const QString accountId = accountFromPath(url);
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
-    fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType | FileFetchJob::DownloadUrl);
+    fileFetchJob.setFields(FileFetchJob::Id
+                            | FileFetchJob::MimeType
+                            | FileFetchJob::ExportLinks
+                            | FileFetchJob::DownloadUrl);
     RUN_KGAPI_JOB(fileFetchJob)
 
     const ObjectsList objects = fileFetchJob.items();
@@ -367,11 +378,17 @@ void KIOGDrive::get(const KUrl &url)
         return;
     }
 
-    const FilePtr file = objects.first().dynamicCast<File>();
+    FilePtr file = objects.first().dynamicCast<File>();
+    QUrl downloadUrl;
+    if (GDriveHelper::isGDocsDocument(file)) {
+        downloadUrl = GDriveHelper::convertFromGDocs(file);
+    } else {
+        downloadUrl = file->downloadUrl();
+    }
 
     mimeType(file->mimeType());
 
-    FileFetchContentJob contentJob(file, getAccount(accountId));
+    FileFetchContentJob contentJob(downloadUrl, getAccount(accountId));
     RUN_KGAPI_JOB(contentJob)
 
     data(contentJob.data());
