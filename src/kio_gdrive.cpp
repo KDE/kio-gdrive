@@ -240,7 +240,8 @@ void KIOGDrive::listDir(const KUrl &url)
         finished();
         return;
     } else if (accounts.isEmpty() || accountId == QLatin1String("new-account")) {
-        // otherwise ask user to authenticate and redirect to that account
+        // when there are no accounts, or user requested a new one, ask user to
+        // authenticate and redirect to that account
         const KGAPI2::AccountPtr account = m_accountManager.account(QString());
         redirection(KUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
         finished();
@@ -285,7 +286,12 @@ void KIOGDrive::listDir(const KUrl &url)
 
 void KIOGDrive::mkdir(const KUrl &url, int permissions)
 {
-    kDebug() << url;
+    // NOTE: We deliberately ignore the permissions field here, because GDrive
+    // does not recognize any privileges that could be mapped to standard UNIX
+    // file permissions.
+    Q_UNUSED(permissions);
+
+    kDebug() << url << permissions;
 
     const QString folderName = lastPathComponent(url);
     const QString accountId = accountFromPath(url);
