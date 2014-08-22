@@ -26,39 +26,16 @@
 class PathCache
 {
 public:
-    PathCache(int expireSeconds = 30);
+    PathCache();
     ~PathCache();
 
-    void insertPath(const QString &id, const QString &name, const QString &parentId);
+    void insertPath(const QString &path, const QString &fileId);
 
-    QString nameForId(const QString &id);
-    QString idForName(const QString &name);
-    QStringList descendants(const QString &parentId);
+    QString idForPath(const QString &path) const;
+    QStringList descendants(const QString &path) const;
 
 private:
-    class Record {
-    public:
-        Record();
-        Record(const QString &value, const QString &parentId);
-        Record(const Record &other);
-
-        bool isNull() const {
-            return timestamp == -1;
-        }
-
-        QString value;
-        QString ancestor;
-        qint64 timestamp;
-    };
-
-    bool isRecordExpired(const Record &record);
-    QString valueForKey(QHash<QString, Record> &map, const QString &key);
-
-    QHash<QString /* name */, Record > m_nameIdMap;
-    QHash<QString /* id */,   Record > m_idNameMap;
-    QMultiHash<QString /* parentId */, Record > m_parentChildrenMap;
-
-    int m_expireSeconds;
+    QHash<QString /* path */, QString> m_pathIdMap;
 };
 
 #endif // PATHCACHE_H

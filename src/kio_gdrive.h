@@ -62,9 +62,21 @@ public:
     virtual void mimetype(const KUrl &url);
 
 private:
+    void listAccounts();
+    void createAccount();
+
+    QString resolveFileIdFromPath(const QString &path, bool isFolder);
+
     Action handleError(KGAPI2::Job *job, const KUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file) const;
-    QString lastPathComponent(const KUrl &url) const;
+
+    QStringList pathComponents(const QString &path) const;
+    QStringList pathComponents(const KUrl &url) const {
+        return pathComponents(url.path(KUrl::RemoveTrailingSlash));
+    }
+
+    bool isRoot(const KUrl &url) const;
+    bool isAccountRoot(const KUrl &url) const;
     QString accountFromPath(const KUrl &url) const;
 
     const KGAPI2::AccountPtr getAccount(const QString &accountName) {

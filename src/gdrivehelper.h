@@ -24,11 +24,13 @@
 
 namespace GDriveHelper
 {
+    QString folderMimeType() const;
 
     bool isGDocsDocument(const KGAPI2::Drive::FilePtr &file);
 
     QUrl convertFromGDocs(KGAPI2::Drive::FilePtr &file);
 }
+
 
 
 #endif // GDRIVEHELPER_H

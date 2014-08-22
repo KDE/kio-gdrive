@@ -29,6 +29,7 @@ using namespace KGAPI2::Drive;
 #define VND_GOOGLE_APPS_FORM            QLatin1String("application/vnd.google-apps.form")
 #define VND_GOOGLE_APPS_PRESENTATION    QLatin1String("application/vnd.google-apps.presentation")
 #define VND_GOOGLE_APPS_SPREADSHEET     QLatin1String("application/vnd.google-apps.spreadsheet")
+#define VND_GOOGLE_APPS_FOLDER          QLatin1String("application/vnd.google-apps.folder")
 
 #define VND_OASIS_OPENDOCUMENT_TEXT     QLatin1String("application/vnd.oasis.opendocument.text")
 #define VND_OASIS_OPENDOCUMENT_PRESENTATION QLatin1String("application/vnd.oasis.opendocument.presentation")
@@ -91,6 +92,11 @@ static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > C
     return map;
 }();
 
+}
+
+QString GDriveHelper::folderMimeType() const
+{
+    return VND_GOOGLE_APPS_FOLDER;
 }
 
 bool GDriveHelper::isGDocsDocument(const KGAPI2::Drive::FilePtr &file)

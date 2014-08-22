@@ -52,9 +52,14 @@ using namespace KGAPI2;
 using namespace Drive;
 
 
-#define RUN_KGAPI_JOB(job) RUN_KGAPI_JOB_PARAMS(job, url, accountId)
-
+#define RUN_KGAPI_JOB(job) \
+    RUN_KGAPI_JOB_PARAMS(job, url, accountId)
 #define RUN_KGAPI_JOB_PARAMS(job, url, accountId) \
+    RUN_KGAPI_JOB_IMPL(job, url, accountId, )
+#define RUN_KGAPI_JOB_RETVAL(job, retval) \
+    RUN_KGAPI_JOB_IMPL(job, url, accountId, retval)
+
+#define RUN_KGAPI_JOB_IMPL(job, url, accountId, retval) \
 { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     Q_FOREVER { \
@@ -67,7 +72,7 @@ using namespace Drive;
         if (action == KIOGDrive::Success) { \
             break; \
         } else if (action == KIOGDrive::Fail) { \
-            return; \
+            return retval; \
         } \
         job.setAccount(getAccount(accountId)); \
         job.restart(); \
@@ -157,7 +162,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile) const
         GDriveHelper::convertFromGDocs(file);
     }
 
-    entry.insert(KIO::UDSEntry::UDS_NAME, file->id());
+    entry.insert(KIO::UDSEntry::UDS_NAME, file->title());
     entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, file->title());
 
     if (file->isFolder()) {
@@ -191,33 +196,109 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile) const
     return entry;
 }
 
-QString KIOGDrive::lastPathComponent(const KUrl &url) const
+void KIOGDrive::openConnection()
 {
-    const QString path = url.path(KUrl::KUrl::RemoveTrailingSlash);
-    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
-    if (components.isEmpty()) {
-        return QString();
-    }
-    if (components.size() == 1) {
-        return QLatin1String("root");
-    }
-    return components.last();
+    kDebug() << "Ready to talk to GDrive";
+}
+
+
+
+
+QStringList KIOGDrive::pathComponents(const QString &path) const
+{
+    return path.split(QLatin1Char('/'), QString::SkipEmptyParts);
 }
 
 QString KIOGDrive::accountFromPath(const KUrl& url) const
 {
-    const QString path = url.path(KUrl::RemoveTrailingSlash);
-    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    const QStringList components = pathComponents(url);
     if (components.isEmpty()) {
         return QString();
     }
     return components[0];
 }
 
-
-void KIOGDrive::openConnection()
+bool KIOGDrive::isRoot(const KUrl& url) const
 {
-    kDebug() << "Ready to talk to GDrive";
+    return pathComponents(url).length() == 0;
+}
+
+
+bool KIOGDrive::isAccountRoot(const KUrl& url) const
+{
+    return pathComponents(url).length() == 1;
+}
+
+
+void KIOGDrive::createAccount()
+{
+    const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+    redirection(KUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
+    finished();
+}
+
+void KIOGDrive::listAccounts()
+{
+    const QString accounts = m_accountManager.accounts();
+    if (accounts.isEmpty()) {
+        createAccount();
+        return;
+    }
+
+    for (const QString &account : accounts) {
+        const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
+        listEntry(entry, false);
+    }
+    KIO::UDSEntry newAccountEntry;
+    newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
+    newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
+    newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("list-add-user"));
+    listEntry(newAccountEntry, false);
+    listEntry(KIO::UDSEntry(), true);
+    finished();
+    return;
+}
+
+QString KIOGDrive::resolveFileIdFromPath(const QString &path, bool isFolder)
+{
+    QString fileId = m_cache.idForPath(path);
+    if (!fileId.isEmpty()) {
+        return fileId;
+    }
+
+    const int index = path.lastIndexOf(QLatin1Char('/'));
+    if (index < 1) {
+        return QLatin1String("root");
+    }
+    const QString fileName = path.midRef(index + 1);
+    const QString parentPath = m_cache.idForPath(path.midRef(0, index - 1));
+
+    // Try to recursively resolve ID of parent path - either from cache, or by
+    // querying Google
+    const QString parentId = resolveFileIdFromPath(parentPath, true);
+
+    FileSearchQuery query;
+    query.addQuery(FileSearchQuery::MimeType,
+                   isFolder ? FileSearchQuery::Equals : FileSearchQuery::NotEquals,
+                   GDriveHelper::folderMimeType());
+    query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, x);
+    query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
+
+    const QString accountId = accountFromPath(path);
+    FileFetchJob fetchJob(query, getAccount(accountId));
+    fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title);
+    RUN_KGAPI_JOB_RETVAL(fetchJob, QString());
+
+    const ObjectsList objects = fetchJob.items();
+    if (objects.count() != 1) {
+        return QString();
+    }
+
+    const FilePtr file = objects[0].dynamicCast<File>();
+    m_cache.insertPath(path, file->id());
+
+    return file->id();
 }
 
 
@@ -226,35 +307,33 @@ void KIOGDrive::listDir(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString folderId = lastPathComponent(url);
-    const QString accountId = accountFromPath(url);
-
-    // When listing root, list available accounts
-    const QStringList accounts = m_accountManager.accounts();
-    if (folderId.isEmpty() && !accounts.isEmpty()) {
-        for (const QString &account : accounts) {
-            const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
-            listEntry(entry, false);
-        }
-        KIO::UDSEntry newAccountEntry;
-        newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
-        newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
-        newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-        newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("list-add-user"));
-        listEntry(newAccountEntry, false);
-        listEntry(KIO::UDSEntry(), true);
-        finished();
-        return;
-    } else if (accounts.isEmpty() || accountId == QLatin1String("new-account")) {
-        // when there are no accounts, or user requested a new one, ask user to
-        // authenticate and redirect to that account
-        const KGAPI2::AccountPtr account = m_accountManager.account(QString());
-        redirection(KUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
-        finished();
+    if (isRoot(url)) {
+        listAccounts();
         return;
     }
 
-    const bool listingTrash = (folderId == QLatin1String("trash"));
+    const QString accountId = accountFromPath(url);
+    if (accountId == QLatin1String("new-account")) {
+        createAccount();
+        return;
+    }
+
+    const QString folderName = url.fileName();
+    const bool listingTrash = (folderName == QLatin1String("trash"));
+
+    QString folderId;
+    if (isAccountRoot(url)) {
+        folderId = QLatin1String("root");
+    } else {
+        folderId = m_cache.idForPath(url.path());
+        if (folderId.isEmpty()) {
+            folderId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash), true);
+        }
+        if (folderId.isEmpty()) {
+            error(KIO::ERR_DOES_NOT_EXIST, url.path());
+            return;
+        }
+    }
 
     FileSearchQuery query;
     if (listingTrash) {
@@ -276,9 +355,11 @@ void KIOGDrive::listDir(const KUrl &url)
 
         const KIO::UDSEntry entry = fileToUDSEntry(file);
         listEntry(entry, false);
+
+        m_cache.insertPath(url.path(KUrl::AddTrailingSlash) + file->title(), file->id());
     }
 
-    if (folderId == QLatin1String("root")) {
+    if (isAccountRoot(url)) {
         KIO::UDSEntry trashEntry;
         trashEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("trash"));
         trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
