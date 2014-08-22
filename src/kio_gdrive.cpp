@@ -24,6 +24,7 @@
 #include <KDE/KComponentData>
 #include <KDE/KDebug>
 #include <KDE/KWallet/Wallet>
+#include <KDE/KTemporaryFile>
 #include <KIO/Job>
 #include <KIO/AccessManager>
 
@@ -357,8 +358,71 @@ void KIOGDrive::get(const KUrl &url)
 
 void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 {
-    // TODO
     kDebug() << url << permissions << flags;
+
+    const QString fileName = lastPathComponent(url);
+    const QString accountId = accountFromPath(url);
+
+    ParentReferencesList parentReferences;
+    const QStringList paths = url.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
+    kDebug() << paths;
+    if (paths.length() < 2) {
+        error(KIO::ERR_ACCESS_DENIED, url.fileName());
+        return;
+    } else if (paths.length() == 2) {
+        // Creating in root directory
+    } else {
+        const QString parentId = paths[paths.length() - 2];
+        parentReferences << ParentReferencePtr(new ParentReference(parentId));
+    }
+
+    FilePtr file(new File);
+    file->setTitle(fileName);
+    file->setParents(parentReferences);
+    /*
+    if (hasMetaData(QLatin1String("modified"))) {
+        const QString modified = metaData(QLatin1String("modified"));
+        kDebug() << modified;
+        file->setModifiedDate(KDateTime::fromString(modified, KDateTime::ISODate));
+    }
+    */
+
+    // TODO: Instead of using a temp file, upload directly the raw data (requires
+    // support in LibKGAPI)
+
+    // TODO: For large files, switch to resumable upload and upload the file in
+    // reasonably large chunks (requires support in LibKGAPI)
+
+    // TODO: Support resumable upload (requires support in LibKGAPI)
+
+    KTemporaryFile tempFile;
+    tempFile.setPrefix(QLatin1String("gdrive"));
+    if (!tempFile.open()) {
+        error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+        return;
+    }
+
+    int result;
+    do {
+        QByteArray buffer;
+        dataReq();
+        result = readData(buffer);
+        qint64 size = tempFile.write(buffer);
+        if (size != buffer.size()) {
+            error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+            return;
+        }
+    } while (result > 0);
+
+    if (result == -1) {
+        error(KIO::ERR_COULD_NOT_READ, url.fileName());
+        return;
+    }
+
+    FileCreateJob createJob(tempFile.fileName(), file, getAccount(accountId));
+    RUN_KGAPI_JOB(createJob)
+
+    finished();
 }
 
 
