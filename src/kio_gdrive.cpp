@@ -224,24 +224,26 @@ void KIOGDrive::listDir(const KUrl &url)
     const QString accountId = accountFromPath(url);
 
     // When listing root, list available accounts
-    if (folderId.isEmpty()) {
-        const QStringList accounts = m_accountManager.accounts();
-        // If there are any accounts, list them and return
-        if (!accounts.isEmpty()) {
-            for (const QString &account : accounts) {
-                const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
-                listEntry(entry, false);
-            }
-            listEntry(KIO::UDSEntry(), true);
-            finished();
-            return;
-
-        // otherwise ask user to authenticate and redirect to that account
-        } else {
-            const KGAPI2::AccountPtr account = m_accountManager.account(QString());
-            redirection(KUrl(QString::fromLatin1("gdrive://%1").arg(account->accountName())));
-            return;
+    const QStringList accounts = m_accountManager.accounts();
+    if (folderId.isEmpty() && !accounts.isEmpty()) {
+        for (const QString &account : accounts) {
+            const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
+            listEntry(entry, false);
         }
+        KIO::UDSEntry newAccountEntry;
+        newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
+        newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
+        newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+        listEntry(newAccountEntry, false);
+        listEntry(KIO::UDSEntry(), true);
+        finished();
+        return;
+    } else if (accounts.isEmpty() || accountId == QLatin1String("new-account")) {
+        // otherwise ask user to authenticate and redirect to that account
+        const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+        redirection(KUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
+        finished();
+        return;
     }
 
     FileSearchQuery query;
@@ -511,6 +513,18 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
 
     const QString fileId = lastPathComponent(url);
     const QString accountId = accountFromPath(url);
+
+    // If user tries to delete the account folder, remove the account from KWallet
+    if (!isfile && fileId == QLatin1String("root") && !accountId.isEmpty()) {
+        const KGAPI2::AccountPtr account = m_accountManager.account(accountId);
+        if (!account) {
+            error(KIO::ERR_DOES_NOT_EXIST, accountId);
+            return;
+        }
+        m_accountManager.removeAccount(accountId);
+        finished();
+        return;
+    }
 
     // GDrive allows us to delete entire directory even when it's not empty,
     // so we need to emulate the normal behavior ourselves by checking number of

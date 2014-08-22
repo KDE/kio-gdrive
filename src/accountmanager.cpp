@@ -71,7 +71,7 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
     }
 
     KGAPI2::AccountPtr account;
-    if (!m_wallet->entryList().contains(accountName)) {
+    if (accountName.isEmpty() || !m_wallet->entryList().contains(accountName)) {
         account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive"));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive.file"));
@@ -155,4 +155,13 @@ KIO::UDSEntry AccountManager::accountToUDSEntry(const QString &accountNAme)
     entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 
     return entry;
+}
+
+void AccountManager::removeAccount(const QString &accountName)
+{
+    if (!m_wallet) {
+        return;
+    }
+
+    m_wallet->removeEntry(accountName);
 }

@@ -36,6 +36,7 @@ public:
     KGAPI2::AccountPtr account(const QString &accountName);
     void storeAccount(const KGAPI2::AccountPtr &account);
     KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account);
+    void removeAccount(const QString &accountName);
 
     QStringList accounts();
 
