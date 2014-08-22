@@ -234,6 +234,7 @@ void KIOGDrive::listDir(const KUrl &url)
         newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
         newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
         newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+        newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("list-add-user"));
         listEntry(newAccountEntry, false);
         listEntry(KIO::UDSEntry(), true);
         finished();

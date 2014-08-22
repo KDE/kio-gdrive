@@ -153,6 +153,7 @@ KIO::UDSEntry AccountManager::accountToUDSEntry(const QString &accountNAme)
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
     entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("im-google"));
 
     return entry;
 }
