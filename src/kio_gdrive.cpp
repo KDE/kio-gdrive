@@ -247,8 +247,15 @@ void KIOGDrive::listDir(const KUrl &url)
         return;
     }
 
+    const bool listingTrash = (folderId == QLatin1String("trash"));
+
     FileSearchQuery query;
-    query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
+    if (listingTrash) {
+        query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, true);
+    } else {
+        query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
+        query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
+    }
     FileFetchJob fileFetchJob(query, getAccount(accountId));
     fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions) |
                            FileFetchJob::Labels | FileFetchJob::LastViewedByMeDate);
@@ -257,12 +264,18 @@ void KIOGDrive::listDir(const KUrl &url)
     ObjectsList objects = fileFetchJob.items();
     Q_FOREACH (const ObjectPtr &object, objects) {
         const FilePtr file = object.dynamicCast<File>();
-        if (file->labels()->trashed()) {
-            continue;
-        }
 
         const KIO::UDSEntry entry = fileToUDSEntry(file);
         listEntry(entry, false);
+    }
+
+    if (folderId == QLatin1String("root")) {
+        KIO::UDSEntry trashEntry;
+        trashEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("trash"));
+        trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
+        trashEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+        trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("user-trash"));
+        listEntry(trashEntry, false);
     }
 
     listEntry(KIO::UDSEntry(), true);
