@@ -74,7 +74,7 @@ private:
     QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
 
     Action handleError(KGAPI2::Job *job, const KUrl &url);
-    KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file) const;
+    KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
     QStringList pathComponents(const QString &path) const;
     QStringList pathComponents(const KUrl &url) const {
