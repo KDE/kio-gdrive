@@ -22,13 +22,17 @@
 
 #include <LibKGAPI2/Types>
 
+#include <kio/udsentry.h>
+
 namespace GDriveHelper
 {
-    QString folderMimeType() const;
+    QString folderMimeType();
 
     bool isGDocsDocument(const KGAPI2::Drive::FilePtr &file);
 
     QUrl convertFromGDocs(KGAPI2::Drive::FilePtr &file);
+
+    KIO::UDSEntry trash();
 }
 
 

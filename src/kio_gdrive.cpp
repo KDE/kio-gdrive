@@ -31,6 +31,8 @@
 
 #include <LibKGAPI2/Account>
 #include <LibKGAPI2/AuthJob>
+#include <LibKGAPI2/Drive/About>
+#include <LibKGAPI2/Drive/AboutFetchJob>
 #include <LibKGAPI2/Drive/ChildReference>
 #include <LibKGAPI2/Drive/ChildReferenceFetchJob>
 #include <LibKGAPI2/Drive/ChildReferenceCreateJob>
@@ -77,6 +79,18 @@ using namespace Drive;
         job.setAccount(getAccount(accountId)); \
         job.restart(); \
     }; \
+}
+
+static QString joinSublist(const QStringList &strv, int start, int end, const QChar &joinChar)
+{
+    QString res;
+    for (int i = start; i <= end; ++i) {
+        res += strv[i];
+        if (i < end) {
+            res += joinChar;
+        }
+    }
+    return res;
 }
 
 extern "C"
@@ -164,6 +178,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile) const
 
     entry.insert(KIO::UDSEntry::UDS_NAME, file->title());
     entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, file->title());
+    entry.insert(KIO::UDSEntry::UDS_COMMENT, file->description());
 
     if (file->isFolder()) {
         entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
@@ -239,7 +254,7 @@ void KIOGDrive::createAccount()
 
 void KIOGDrive::listAccounts()
 {
-    const QString accounts = m_accountManager.accounts();
+    const QStringList accounts = m_accountManager.accounts();
     if (accounts.isEmpty()) {
         createAccount();
         return;
@@ -260,57 +275,120 @@ void KIOGDrive::listAccounts()
     return;
 }
 
-QString KIOGDrive::resolveFileIdFromPath(const QString &path, bool isFolder)
+class RecursionDepthCounter
 {
+public:
+    RecursionDepthCounter()
+    {
+        ++sDepth;
+    }
+    ~RecursionDepthCounter()
+    {
+        --sDepth;
+    }
+
+    int depth() const
+    {
+        return sDepth;
+    }
+
+private:
+    static int sDepth;
+};
+
+int RecursionDepthCounter::sDepth = 0;
+
+
+QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
+{
+    kDebug() << path;
+    RecursionDepthCounter recursion;
+    if (recursion.depth() == 1) {
+        m_cache.dump();
+    }
+
+    if (path.isEmpty()) {
+        return QString();
+    }
+
     QString fileId = m_cache.idForPath(path);
     if (!fileId.isEmpty()) {
+        kDebug() << "Resolved" << path << "to" << fileId << "(from cache)";
         return fileId;
     }
 
-    const int index = path.lastIndexOf(QLatin1Char('/'));
-    if (index < 1) {
-        return QLatin1String("root");
+    const QStringList components = pathComponents(path);
+    Q_ASSERT(!components.isEmpty());
+    if (components.size() == 1 || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
+        kDebug() << "Resolved" << path << "to \"root\"";
+        return rootFolderId(components[0]);
     }
-    const QString fileName = path.midRef(index + 1);
-    const QString parentPath = m_cache.idForPath(path.midRef(0, index - 1));
 
+    QString parentName;
+    Q_ASSERT(components.size() >= 2);
+    const QString parentPath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
     // Try to recursively resolve ID of parent path - either from cache, or by
     // querying Google
-    const QString parentId = resolveFileIdFromPath(parentPath, true);
+    const QString parentId = resolveFileIdFromPath(parentPath, KIOGDrive::PathIsFolder);
+    if (parentId.isEmpty()) {
+        // We failed to resolve parent -> error
+        return QString();
+    }
 
     FileSearchQuery query;
-    query.addQuery(FileSearchQuery::MimeType,
-                   isFolder ? FileSearchQuery::Equals : FileSearchQuery::NotEquals,
-                   GDriveHelper::folderMimeType());
-    query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, x);
+    if (flags != KIOGDrive::None) {
+        query.addQuery(FileSearchQuery::MimeType,
+                       (flags & KIOGDrive::PathIsFolder ? FileSearchQuery::Equals : FileSearchQuery::NotEquals),
+                       GDriveHelper::folderMimeType());
+    }
+    query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, components.last());
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
+    query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, components[1] == QLatin1String("trash"));
 
     const QString accountId = accountFromPath(path);
     FileFetchJob fetchJob(query, getAccount(accountId));
-    fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title);
+    fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
+    QUrl url(path);
     RUN_KGAPI_JOB_RETVAL(fetchJob, QString());
 
     const ObjectsList objects = fetchJob.items();
-    if (objects.count() != 1) {
+    kDebug() << objects;
+    if (objects.count() == 0) {
+        kWarning() << "Failed to resolve" << path;
         return QString();
     }
 
     const FilePtr file = objects[0].dynamicCast<File>();
+
     m_cache.insertPath(path, file->id());
 
+    kDebug() << "Resolved" << path << "to" << file->id() << "(from network)";
     return file->id();
 }
 
+QString KIOGDrive::rootFolderId(const QString &accountId)
+{
+    if (!m_rootIds.contains(accountId)) {
+        AboutFetchJob aboutFetch(getAccount(accountId));
+        QUrl url;
+        RUN_KGAPI_JOB_RETVAL(aboutFetch, QString())
 
+        const AboutPtr about = aboutFetch.aboutData();
+        if (!about || about->rootFolderId().isEmpty()) {
+            kWarning() << "Failed to obtain root ID";
+            return QString();
+        }
+
+        m_rootIds.insert(accountId, about->rootFolderId());
+        return about->rootFolderId();
+    }
+
+    return m_rootIds[accountId];
+}
 
 void KIOGDrive::listDir(const KUrl &url)
 {
     kDebug() << url;
-
-    if (isRoot(url)) {
-        listAccounts();
-        return;
-    }
 
     const QString accountId = accountFromPath(url);
     if (accountId == QLatin1String("new-account")) {
@@ -318,29 +396,36 @@ void KIOGDrive::listDir(const KUrl &url)
         return;
     }
 
-    const QString folderName = url.fileName();
-    const bool listingTrash = (folderName == QLatin1String("trash"));
-
+    const QStringList components = pathComponents(url);
     QString folderId;
-    if (isAccountRoot(url)) {
+    bool listingTrash = false;
+    if (components.isEmpty())  {
+        listAccounts();
+        return;
+    } else if (components.size() == 1) {
         folderId = QLatin1String("root");
     } else {
-        folderId = m_cache.idForPath(url.path());
-        if (folderId.isEmpty()) {
-            folderId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash), true);
+        if (components[1] == QLatin1String("trash")) {
+            listingTrash = true;
+            folderId = QLatin1String("root");
         }
-        if (folderId.isEmpty()) {
-            error(KIO::ERR_DOES_NOT_EXIST, url.path());
-            return;
+        if (!listingTrash || components.size() > 2) {
+            folderId = m_cache.idForPath(url.path());
+            if (folderId.isEmpty()) {
+                folderId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+                                                 KIOGDrive::PathIsFolder);
+            }
+            if (folderId.isEmpty()) {
+                error(KIO::ERR_DOES_NOT_EXIST, url.path());
+                return;
+            }
         }
     }
 
     FileSearchQuery query;
-    if (listingTrash) {
-        query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, true);
-    } else {
+    query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, listingTrash);
+    if (!folderId.isEmpty()) {
         query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
-        query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
     }
     FileFetchJob fileFetchJob(query, getAccount(accountId));
     fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
@@ -359,14 +444,15 @@ void KIOGDrive::listDir(const KUrl &url)
         m_cache.insertPath(url.path(KUrl::AddTrailingSlash) + file->title(), file->id());
     }
 
+    /* FIXME: The folder hierarchy of trashed items is bugged: trashed folders still
+     * have their original parent reference, which makes it impossible for us to
+     * correctly map the virtual "Trash" folder to a reasonable KIO hierarchy
+     *
+     * Should be re-enabled once I find enough booze to try to make it work
     if (isAccountRoot(url)) {
-        KIO::UDSEntry trashEntry;
-        trashEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("trash"));
-        trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
-        trashEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-        trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("user-trash"));
-        listEntry(trashEntry, false);
+        listEntry(GDriveHelper::trash(), false);
     }
+    */
 
     listEntry(KIO::UDSEntry(), true);
     finished();
@@ -382,20 +468,30 @@ void KIOGDrive::mkdir(const KUrl &url, int permissions)
 
     kDebug() << url << permissions;
 
-    const QString folderName = lastPathComponent(url);
+    const QStringList components = pathComponents(url);
+    QString parentId;
+    // At least account and new folder name
+    if (components.size() < 2) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    } else if (components.size() == 2) {
+        parentId = QLatin1String("root");
+    } else {
+        const QString subpath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
+        parentId = resolveFileIdFromPath(subpath, KIOGDrive::PathIsFolder);
+    }
+
+    if (parentId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
+
     const QString accountId = accountFromPath(url);
+    const QString folderName = components.last();
 
     FilePtr file(new File());
     file->setTitle(folderName);
     file->setMimeType(File::folderMimeType());
-
-    const KUrl parentUrl = url.upUrl();
-    QString parentId;
-    if (!parentUrl.path(KUrl::RemoveTrailingSlash).isEmpty()) {
-        parentId = lastPathComponent(parentUrl);
-    } else {
-        parentId = QLatin1String("root");
-    }
 
     ParentReferencePtr parent(new ParentReference(parentId));
     file->setParents(ParentReferencesList() << parent);
@@ -412,14 +508,29 @@ void KIOGDrive::stat(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString fileId = lastPathComponent(url);
     const QString accountId = accountFromPath(url);
-
-    // If this is an account, don't query Google!
-    if (!accountId.isEmpty() && fileId == QLatin1String("root")) {
+    const QStringList components = pathComponents(url);
+    if (components.isEmpty()) {
+        // TODO Can we stat() root?
+        finished();
+        return;
+    } else if (components.size() == 1) {
         const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(accountId);
         statEntry(entry);
         finished();
+        return;
+    } else if (components.size() == 2) {
+        if (components.last() == QLatin1String("trash")) {
+            statEntry(GDriveHelper::trash());
+            finished();
+            return;
+        }
+    }
+
+    const QString fileId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+                                                 KIOGDrive::PathIsFile);
+    if (fileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
 
@@ -443,8 +554,23 @@ void KIOGDrive::get(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString fileId = lastPathComponent(url);
     const QString accountId = accountFromPath(url);
+    const QStringList components = pathComponents(url);
+    if (components.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    } else if (components.size() == 1) {
+        // You cannot GET an account folder!
+        error(KIO::ERR_ACCESS_DENIED, url.path());
+        return;
+    }
+
+    const QString fileId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+                                                 KIOGDrive::PathIsFile);
+    if (fileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields(FileFetchJob::Id
@@ -480,24 +606,26 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 {
     kDebug() << url << permissions << flags;
 
-    const QString fileName = lastPathComponent(url);
     const QString accountId = accountFromPath(url);
+    const QStringList components = pathComponents(url);
 
     ParentReferencesList parentReferences;
-    const QStringList paths = url.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
-    kDebug() << paths;
-    if (paths.length() < 2) {
-        error(KIO::ERR_ACCESS_DENIED, url.fileName());
+    if (components.size() < 2) {
+        error(KIO::ERR_ACCESS_DENIED, url.path());
         return;
-    } else if (paths.length() == 2) {
+    } else if (components.length() == 2) {
         // Creating in root directory
     } else {
-        const QString parentId = paths[paths.length() - 2];
+        const QString parentId = resolveFileIdFromPath(joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
+        if (parentId.isEmpty()) {
+            error(KIO::ERR_DOES_NOT_EXIST, url.directory());
+            return;
+        }
         parentReferences << ParentReferencePtr(new ParentReference(parentId));
     }
 
     FilePtr file(new File);
-    file->setTitle(fileName);
+    file->setTitle(components.last());
     file->setParents(parentReferences);
     /*
     if (hasMetaData(QLatin1String("modified"))) {
@@ -535,12 +663,14 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
     } while (result > 0);
 
     if (result == -1) {
-        error(KIO::ERR_COULD_NOT_READ, url.fileName());
+        error(KIO::ERR_COULD_NOT_READ, url.path());
         return;
     }
 
     FileCreateJob createJob(tempFile.fileName(), file, getAccount(accountId));
     RUN_KGAPI_JOB(createJob)
+
+    // FIXME: Update the cache now!
 
     finished();
 }
@@ -561,18 +691,30 @@ void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::Jo
     // name will be created.
     Q_UNUSED(flags);
 
-    const QString sourceFileId = lastPathComponent(src);
-    const QString destFileName = lastPathComponent(dest);
     const QString sourceAccountId = accountFromPath(src);
     const QString destAccountId = accountFromPath(dest);
 
     // TODO: Does this actually happen, or does KIO treat our account name as host?
     if (sourceAccountId != destAccountId) {
         // KIO will fallback to get+post
-        error(KIO::ERR_UNSUPPORTED_ACTION, src.fileName());
+        error(KIO::ERR_UNSUPPORTED_ACTION, src.path());
         return;
     }
 
+    const QStringList srcPathComps = pathComponents(src);
+    if (srcPathComps.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, src.path());
+        return;
+    } else if (srcPathComps.size() == 1) {
+        error(KIO::ERR_ACCESS_DENIED, src.path());
+        return;
+    }
+
+    const QString sourceFileId = resolveFileIdFromPath(src.path(KUrl::RemoveTrailingSlash));
+    if (sourceFileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, src.path());
+        return;
+    }
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
     sourceFileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::ModifiedDate |
                                  FileFetchJob::LastViewedByMeDate | FileFetchJob::Description);
@@ -580,25 +722,24 @@ void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::Jo
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
-        error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+        error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
     }
 
     const FilePtr sourceFile = objects[0].dynamicCast<File>();
 
+    const QStringList destPathComps = pathComponents(dest);
     ParentReferencesList destParentReferences;
-    const QStringList paths = dest.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
-    if (paths.size() == 0) {
-        // paths.size == 0 -> error, user is trying to copy to top-level gdrive:///
-        error(KIO::ERR_ACCESS_DENIED, dest.fileName());
+    if (destPathComps.isEmpty()) {
+        error(KIO::ERR_ACCESS_DENIED, dest.path());
         return;
-    } else if (paths.size() == 1) {
-        // user is trying to copy to root -> keep destParentReferences empty
-    } else if (paths.size() > 2) {
-        // skip filename and extract the second-to-last component
-        const QString destDirId = paths[paths.count() - 2];
+    } else if (destPathComps.size() == 1) {
+        // copy to root
+    } else {
+        const QString destDirId = destPathComps[destPathComps.count() - 2];
         destParentReferences << ParentReferencePtr(new ParentReference(destDirId));
     }
+    const QString destFileName = destPathComps.last();
 
     FilePtr destFile(new File);
     destFile->setTitle(destFileName);
@@ -629,7 +770,12 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
 
     kDebug() << url << isfile;
 
-    const QString fileId = lastPathComponent(url);
+    const QString fileId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+                                                 isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
+    if (fileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
     const QString accountId = accountFromPath(url);
 
     // If user tries to delete the account folder, remove the account from KWallet
@@ -653,7 +799,7 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
         const bool isEmpty = !referencesFetch.items().count();
 
         if (!isEmpty && metaData("recurse") != QLatin1String("true")) {
-            error(KIO::ERR_COULD_NOT_RMDIR, url.fileName());
+            error(KIO::ERR_COULD_NOT_RMDIR, url.path());
             return;
         }
     }
@@ -669,14 +815,27 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
 {
     kDebug() << src << dest << flags;
 
-    const QString sourceFileId = lastPathComponent(src);
-    const QString destFileName = lastPathComponent(dest);
     const QString sourceAccountId = accountFromPath(src);
     const QString destAccountId = accountFromPath(dest);
 
     // TODO: Does this actually happen, or does KIO treat our account name as host?
     if (sourceAccountId != destAccountId) {
-        error(KIO::ERR_UNSUPPORTED_ACTION, src.fileName());
+        error(KIO::ERR_UNSUPPORTED_ACTION, src.path());
+        return;
+    }
+
+    const QStringList srcPathComps = pathComponents(src);
+    if (srcPathComps.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, dest.path());
+        return;
+    } else if (srcPathComps.size() == 1) {
+        error(KIO::ERR_ACCESS_DENIED, dest.path());
+        return;
+    }
+    const QString sourceFileId = resolveFileIdFromPath(src.path(KUrl::RemoveTrailingSlash),
+                                                       KIOGDrive::PathIsFile);
+    if (sourceFileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
     }
 
@@ -686,31 +845,32 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
-        error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+        error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
     }
 
     const FilePtr sourceFile = objects[0].dynamicCast<File>();
 
     ParentReferencesList parentReferences = sourceFile->parents();
-    const QStringList destPaths = dest.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
-    if (destPaths.size() == 0) {
+    const QStringList destPathComps = pathComponents(dest);
+    if (destPathComps.isEmpty()) {
         // paths.size == 0 -> error, user is trying to move to top-level gdrive:///
         error(KIO::ERR_ACCESS_DENIED, dest.fileName());
         return;
-    } else if (destPaths.size() == 1) {
+    } else if (destPathComps.size() == 1) {
         // user is trying to move to root -> we are only renaming
-    } else if (destPaths.size() > 2) {
-        const QStringList srcPaths = src.path(KUrl::RemoveTrailingSlash).split(QLatin1Char('/'), QString::SkipEmptyParts);
-        if (srcPaths.size() < 3) {
+    } else {
+        if (srcPathComps.size() < 3) {
             // WTF?
-            error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+            error(KIO::ERR_DOES_NOT_EXIST, src.path());
             return;
         }
 
         // skip filename and extract the second-to-last component
-        const QString destDirId = destPaths[destPaths.count() - 2];
-        const QString srcDirId = srcPaths[srcPaths.count() - 2];
+        const QString destDirId = resolveFileIdFromPath(joinSublist(destPathComps, 0, destPathComps.count() - 2, QLatin1Char('/')),
+                                                        KIOGDrive::PathIsFolder);
+        const QString srcDirId = resolveFileIdFromPath(joinSublist(srcPathComps, 0, srcPathComps.count() - 2, QLatin1Char('/')),
+                                                       KIOGDrive::PathIsFolder);
 
         // Remove source from parent references
         auto iter = parentReferences.begin();
@@ -725,13 +885,15 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
             ++iter;
         }
         if (!removed) {
-            error(KIO::ERR_DOES_NOT_EXIST, src.fileName());
+            error(KIO::ERR_DOES_NOT_EXIST, src.path());
             return;
         }
 
         // Add destination to parent references
         parentReferences << ParentReferencePtr(new ParentReference(destDirId));
     }
+
+    const QString destFileName = destPathComps.last();
 
     FilePtr destFile(sourceFile);
     destFile->setTitle(destFileName);
@@ -748,7 +910,11 @@ void KIOGDrive::mimetype(const KUrl &url)
 {
     kDebug() << url;
 
-    const QString fileId = lastPathComponent(url);
+    const QString fileId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash));
+    if (fileId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
     const QString accountId = accountFromPath(url);
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
@@ -757,7 +923,7 @@ void KIOGDrive::mimetype(const KUrl &url)
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
-        error(KIO::ERR_DOES_NOT_EXIST, url.fileName());
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
 

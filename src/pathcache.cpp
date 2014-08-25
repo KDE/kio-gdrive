@@ -20,6 +20,8 @@
 #include "pathcache.h"
 #include <QDateTime>
 
+#include <KDebug>
+
 PathCache::PathCache()
 {
 }
@@ -30,12 +32,21 @@ PathCache::~PathCache()
 
 void PathCache::insertPath(const QString &path, const QString &fileId)
 {
-    m_pathIdMap.insert(path, fileId);
+    kDebug() << path;
+    if (path.startsWith(QLatin1Char('/'))) {
+        m_pathIdMap.insert(path.mid(1), fileId);
+    } else {
+        m_pathIdMap.insert(path, fileId);
+    }
 }
 
 QString PathCache::idForPath(const QString &path) const
 {
-    return m_pathIdMap[path];
+    if (path.startsWith(QLatin1Char('/'))) {
+        return m_pathIdMap[path.mid(1)];
+    } else {
+        return m_pathIdMap[path];
+    }
 }
 
 QStringList PathCache::descendants(const QString &path) const
@@ -59,3 +70,13 @@ QStringList PathCache::descendants(const QString &path) const
 
     return descendants;
 }
+
+void PathCache::dump()
+{
+    kDebug() << "==== DUMP ====";
+    for (auto iter = m_pathIdMap.constBegin(); iter != m_pathIdMap.constEnd(); ++iter) {
+        kDebug() << iter.key() << " => " << iter.value();
+    }
+    kDebug() << "==== DUMP ====";
+}
+

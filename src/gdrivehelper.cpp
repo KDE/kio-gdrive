@@ -20,6 +20,8 @@
 #include "gdrivehelper.h"
 
 #include <LibKGAPI2/Drive/File>
+#include <KIO/Job>
+#include <KLocalizedString>
 
 using namespace KGAPI2::Drive;
 
@@ -94,7 +96,7 @@ static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > C
 
 }
 
-QString GDriveHelper::folderMimeType() const
+QString GDriveHelper::folderMimeType()
 {
     return VND_GOOGLE_APPS_FOLDER;
 }
@@ -123,6 +125,16 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     // If we got here that means that the file cannot be converted to any meaningful
     // type, so we do nothing
     return file->downloadUrl();
+}
+
+KIO::UDSEntry GDriveHelper::trash()
+{
+    KIO::UDSEntry trashEntry;
+    trashEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("trash"));
+    trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
+    trashEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("user-trash"));
+    return trashEntry;
 }
 
 

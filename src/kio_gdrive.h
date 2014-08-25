@@ -62,10 +62,16 @@ public:
     virtual void mimetype(const KUrl &url);
 
 private:
+    enum PathFlags {
+        None = 0,
+        PathIsFolder = 1,
+        PathIsFile = 2
+    };
+
     void listAccounts();
     void createAccount();
 
-    QString resolveFileIdFromPath(const QString &path, bool isFolder);
+    QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
 
     Action handleError(KGAPI2::Job *job, const KUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file) const;
@@ -79,12 +85,16 @@ private:
     bool isAccountRoot(const KUrl &url) const;
     QString accountFromPath(const KUrl &url) const;
 
-    const KGAPI2::AccountPtr getAccount(const QString &accountName) {
+    KGAPI2::AccountPtr getAccount(const QString &accountName) {
         return m_accountManager.account(accountName);
     }
 
+    QString rootFolderId(const QString &accountId);
+
     AccountManager m_accountManager;
     PathCache m_cache;
+
+    QMap<QString /* account */, QString /* rootId */> m_rootIds;
 
 };
 

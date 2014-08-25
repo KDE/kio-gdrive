@@ -34,6 +34,7 @@ public:
     QString idForPath(const QString &path) const;
     QStringList descendants(const QString &path) const;
 
+    void dump();
 private:
     QHash<QString /* path */, QString> m_pathIdMap;
 };
