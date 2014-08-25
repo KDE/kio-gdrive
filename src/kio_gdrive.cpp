@@ -484,8 +484,6 @@ void KIOGDrive::mkdir(const KUrl &url, int permissions)
     finished();
 }
 
-
-
 void KIOGDrive::stat(const KUrl &url)
 {
     kDebug() << url;
@@ -590,24 +588,88 @@ void KIOGDrive::get(const KUrl &url)
     finished();
 }
 
-void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
+bool KIOGDrive::readPutData(KTemporaryFile &tempFile)
 {
-    kDebug() << url << permissions << flags;
+    // TODO: Instead of using a temp file, upload directly the raw data (requires
+    // support in LibKGAPI)
 
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
+    // TODO: For large files, switch to resumable upload and upload the file in
+    // reasonably large chunks (requires support in LibKGAPI)
 
+    // TODO: Support resumable upload (requires support in LibKGAPI)
+
+    tempFile.setPrefix(QLatin1String("gdrive"));
+    if (!tempFile.open()) {
+        error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+        return false;
+    }
+
+    int result;
+    do {
+        QByteArray buffer;
+        dataReq();
+        result = readData(buffer);
+        if (!buffer.isEmpty()) {
+            qint64 size = tempFile.write(buffer);
+            if (size != buffer.size()) {
+                error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+                return false;
+            }
+        }
+    } while (result > 0);
+    tempFile.close();
+
+    if (result == -1) {
+        kWarning() << "Could not read source file" << tempFile.fileName();
+        error(KIO::ERR_COULD_NOT_READ, QString());
+        return false;
+    }
+
+    return true;
+}
+
+bool KIOGDrive::putUpdate(const KUrl &url, const QString &accountId, const QStringList &pathComponents)
+{
+    const QString fileId = url.queryItem(QLatin1String("id"));
+    kDebug() << url << fileId;
+
+    FileFetchJob fetchJob(fileId, getAccount(accountId));
+    RUN_KGAPI_JOB_RETVAL(fetchJob, false)
+
+    const ObjectsList objects = fetchJob.items();
+    if (objects.size() != 1) {
+        putCreate(url, accountId, pathComponents);
+        return false;
+    }
+
+    const FilePtr file = objects[0].dynamicCast<File>();
+    KTemporaryFile tmpFile;
+    if (!readPutData(tmpFile)) {
+        error(KIO::ERR_COULD_NOT_READ, url.path());
+        return false;
+    }
+
+    FileModifyJob modifyJob(tmpFile.fileName(), file, getAccount(accountId));
+    modifyJob.setUpdateModifiedDate(true);
+    RUN_KGAPI_JOB_RETVAL(modifyJob, false)
+
+    return true;
+}
+
+bool KIOGDrive::putCreate(const KUrl &url, const QString &accountId, const QStringList &components)
+{
+    kDebug() << url;
     ParentReferencesList parentReferences;
     if (components.size() < 2) {
         error(KIO::ERR_ACCESS_DENIED, url.path());
-        return;
+        return false;
     } else if (components.length() == 2) {
         // Creating in root directory
     } else {
         const QString parentId = resolveFileIdFromPath(joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
         if (parentId.isEmpty()) {
             error(KIO::ERR_DOES_NOT_EXIST, url.directory());
-            return;
+            return false;
         }
         parentReferences << ParentReferencePtr(new ParentReference(parentId));
     }
@@ -623,58 +685,40 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
     }
     */
 
-    // TODO: Instead of using a temp file, upload directly the raw data (requires
-    // support in LibKGAPI)
-
-    // TODO: For large files, switch to resumable upload and upload the file in
-    // reasonably large chunks (requires support in LibKGAPI)
-
-    // TODO: Support resumable upload (requires support in LibKGAPI)
-
-
-    KTemporaryFile tempFile;
-    tempFile.setPrefix(QLatin1String("gdrive"));
-    if (!tempFile.open()) {
-        error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
-        return;
-    }
-
-    int result;
-    qint64 totalSize = 0;
-    do {
-        QByteArray buffer;
-        dataReq();
-        result = readData(buffer);
-        if (!buffer.isEmpty()) {
-            qint64 size = tempFile.write(buffer);
-            if (size != buffer.size()) {
-                error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
-                return;
-            }
-            totalSize += size;
-        }
-    } while (result > 0);
-    tempFile.close();
-
-    if (result == -1) {
-        kWarning() << "Could not read source file" << tempFile.fileName();
+    KTemporaryFile tmpFile;
+    if (!readPutData(tmpFile)) {
         error(KIO::ERR_COULD_NOT_READ, url.path());
-        return;
+        return false;
     }
 
-    if (totalSize == 0) {
-        FileCreateJob createJob(file, getAccount(accountId));
-        RUN_KGAPI_JOB(createJob)
+    FileCreateJob createJob(tmpFile.fileName(), file, getAccount(accountId));
+    RUN_KGAPI_JOB_RETVAL(createJob, false)
+
+    return true;
+}
+
+
+void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
+{
+    kDebug() << url << permissions << flags;
+
+    const QString accountId = accountFromPath(url);
+    const QStringList components = pathComponents(url);
+
+    if (url.hasQueryItem(QLatin1String("id"))) {
+        if (!putUpdate(url, accountId, components)) {
+            return;
+        }
     } else {
-        FileCreateJob createJob(tempFile.fileName(), file, getAccount(accountId));
-        RUN_KGAPI_JOB(createJob)
+        if (!putCreate(url, accountId, components)) {
+            return;
+        }
     }
 
     // FIXME: Update the cache now!
 
     finished();
 }
-
 
 
 void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::JobFlags flags)

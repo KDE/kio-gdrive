@@ -28,6 +28,7 @@
 #include "accountmanager.h"
 #include "pathcache.h"
 
+class KTemporaryFile;
 namespace KGAPI2
 {
 class Job;
@@ -90,6 +91,10 @@ private:
     }
 
     QString rootFolderId(const QString &accountId);
+
+    bool putUpdate(const KUrl &url, const QString &accountId, const QStringList &pathComponents);
+    bool putCreate(const KUrl &url, const QString &accountId, const QStringList &pathComponents);
+    bool readPutData(KTemporaryFile &tmpFile);
 
     AccountManager m_accountManager;
     PathCache m_cache;
