@@ -650,6 +650,7 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
             return;
         }
     } while (result > 0);
+    tempFile.close();
 
     if (result == -1) {
         error(KIO::ERR_COULD_NOT_READ, url.path());
