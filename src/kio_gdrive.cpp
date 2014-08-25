@@ -640,25 +640,35 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
     }
 
     int result;
+    qint64 totalSize = 0;
     do {
         QByteArray buffer;
         dataReq();
         result = readData(buffer);
-        qint64 size = tempFile.write(buffer);
-        if (size != buffer.size()) {
-            error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
-            return;
+        if (!buffer.isEmpty()) {
+            qint64 size = tempFile.write(buffer);
+            if (size != buffer.size()) {
+                error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+                return;
+            }
+            totalSize += size;
         }
     } while (result > 0);
     tempFile.close();
 
     if (result == -1) {
+        kWarning() << "Could not read source file" << tempFile.fileName();
         error(KIO::ERR_COULD_NOT_READ, url.path());
         return;
     }
 
-    FileCreateJob createJob(tempFile.fileName(), file, getAccount(accountId));
-    RUN_KGAPI_JOB(createJob)
+    if (totalSize == 0) {
+        FileCreateJob createJob(file, getAccount(accountId));
+        RUN_KGAPI_JOB(createJob)
+    } else {
+        FileCreateJob createJob(tempFile.fileName(), file, getAccount(accountId));
+        RUN_KGAPI_JOB(createJob)
+    }
 
     // FIXME: Update the cache now!
 
