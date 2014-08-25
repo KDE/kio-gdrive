@@ -8,7 +8,7 @@ KNOWN ISSUES
 ============
 
 GDocs file don't have file size
-  Not our fould, Google Drive API simply does not return filesize of these files.
+  Not our fault, Google Drive API simply does not return filesize of these files.
   I think it's because they are in the Google Docs format, so the size is irrelevant,
   since only GDocs can open them, and if we convert the files into .ODT or .DOCX or
   whatever else, the size is different (so we would have to count it manually)
