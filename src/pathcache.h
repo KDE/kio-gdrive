@@ -33,6 +33,7 @@ public:
 
     QString idForPath(const QString &path) const;
     QStringList descendants(const QString &path) const;
+    void removePath(const QString &path);
 
     void dump();
 private:

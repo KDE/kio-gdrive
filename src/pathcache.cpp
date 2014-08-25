@@ -32,7 +32,6 @@ PathCache::~PathCache()
 
 void PathCache::insertPath(const QString &path, const QString &fileId)
 {
-    kDebug() << path;
     if (path.startsWith(QLatin1Char('/'))) {
         m_pathIdMap.insert(path.mid(1), fileId);
     } else {
@@ -70,6 +69,12 @@ QStringList PathCache::descendants(const QString &path) const
 
     return descendants;
 }
+
+void PathCache::removePath(const QString &path)
+{
+    m_pathIdMap.remove(path);
+}
+
 
 void PathCache::dump()
 {

@@ -798,6 +798,8 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
     FileTrashJob trashJob(fileId, getAccount(accountId));
     RUN_KGAPI_JOB(trashJob)
 
+    m_cache.removePath(url.path());
+
     finished();
 
 }
