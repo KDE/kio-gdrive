@@ -523,7 +523,12 @@ void KIOGDrive::stat(const KUrl &url)
     }
 
     const FilePtr file = objects.first().dynamicCast<File>();
-    const KIO::UDSEntry entry = fileToUDSEntry(file);
+    if (file->labels()->trashed()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
+
+    const KIO::UDSEntry entry = fileToUDSEntry(file, joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
 
     statEntry(entry);
     finished();
