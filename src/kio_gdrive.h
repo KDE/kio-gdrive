@@ -50,19 +50,19 @@ public:
                        const QByteArray &app_socket);
     virtual ~KIOGDrive();
 
-    virtual void openConnection();
-    virtual void listDir(const QUrl &url);
-    virtual void mkdir(const QUrl &url, int permissions);
+    virtual void openConnection() Q_DECL_OVERRIDE;
+    virtual void listDir(const QUrl &url) Q_DECL_OVERRIDE;
+    virtual void mkdir(const QUrl &url, int permissions) Q_DECL_OVERRIDE;
 
-    virtual void stat(const QUrl &url);
-    virtual void get(const QUrl &url);
-    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
+    virtual void stat(const QUrl &url) Q_DECL_OVERRIDE;
+    virtual void get(const QUrl &url) Q_DECL_OVERRIDE;
+    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags) Q_DECL_OVERRIDE;
 
-    virtual void copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags);
-    virtual void rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags);
-    virtual void del(const QUrl &url, bool isfile);
+    virtual void copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags) Q_DECL_OVERRIDE;
+    virtual void rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags) Q_DECL_OVERRIDE;
+    virtual void del(const QUrl &url, bool isfile) Q_DECL_OVERRIDE;
 
-    virtual void mimetype(const QUrl &url);
+    virtual void mimetype(const QUrl &url) Q_DECL_OVERRIDE;
 
 private:
     enum PathFlags {
