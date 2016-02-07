@@ -263,15 +263,14 @@ void KIOGDrive::listAccounts()
 
     for (const QString &account : accounts) {
         const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
-        listEntry(entry, false);
+        listEntry(entry);
     }
     KIO::UDSEntry newAccountEntry;
     newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
     newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
     newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("list-add-user"));
-    listEntry(newAccountEntry, false);
-    listEntry(KIO::UDSEntry(), true);
+    listEntry(newAccountEntry);
     finished();
     return;
 }
@@ -431,13 +430,12 @@ void KIOGDrive::listDir(const QUrl &url)
         const FilePtr file = object.dynamicCast<File>();
 
         const KIO::UDSEntry entry = fileToUDSEntry(file, url.adjusted(QUrl::StripTrailingSlash).path());
-        listEntry(entry, false);
+        listEntry(entry);
 
         QString path = url.path().endsWith("/") ? url.path() : url.path() + "/";
         m_cache.insertPath(path + file->title(), file->id());
     }
 
-    listEntry(KIO::UDSEntry(), true);
     finished();
 }
 
