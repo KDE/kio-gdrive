@@ -21,9 +21,9 @@
 #include "gdrivehelper.h"
 
 #include <QCoreApplication>
+#include <QTemporaryFile>
 
 #include <KWallet/KWallet>
-#include <KDE/KTemporaryFile>
 #include <KIO/Job>
 #include <KIO/AccessManager>
 
@@ -587,7 +587,7 @@ void KIOGDrive::get(const QUrl &url)
     finished();
 }
 
-bool KIOGDrive::readPutData(KTemporaryFile &tempFile)
+bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
 {
     // TODO: Instead of using a temp file, upload directly the raw data (requires
     // support in LibKGAPI)
@@ -642,7 +642,7 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
     }
 
     const FilePtr file = objects[0].dynamicCast<File>();
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     if (!readPutData(tmpFile)) {
         error(KIO::ERR_COULD_NOT_READ, url.path());
         return false;
@@ -684,7 +684,7 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
     }
     */
 
-    KTemporaryFile tmpFile;
+    QTemporaryFile tmpFile;
     if (!readPutData(tmpFile)) {
         error(KIO::ERR_COULD_NOT_READ, url.path());
         return false;

@@ -30,7 +30,7 @@
 
 Q_DECLARE_LOGGING_CATEGORY(LOG_KIO_GDRIVE)
 
-class KTemporaryFile;
+class QTemporaryFile;
 namespace KGAPI2
 {
 class Job;
@@ -96,7 +96,7 @@ private:
 
     bool putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
     bool putCreate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
-    bool readPutData(KTemporaryFile &tmpFile);
+    bool readPutData(QTemporaryFile &tmpFile);
 
     AccountManager m_accountManager;
     PathCache m_cache;
