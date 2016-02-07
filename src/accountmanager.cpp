@@ -94,7 +94,7 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         const QStringList scopes = entry.value(QLatin1String("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
         QList<QUrl> scopeUrls;
         Q_FOREACH (const QString &scope, scopes) {
-            scopeUrls << scope;
+            scopeUrls << QUrl::fromUserInput(scope);
         }
 
         account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
