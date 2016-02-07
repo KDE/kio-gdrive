@@ -22,8 +22,8 @@
 
 #include <KIO/SlaveBase>
 
-#include <LibKGAPI2/Types>
-#include <LibKGAPI2/Account>
+#include <KGAPI/Types>
+#include <KGAPI/Account>
 
 #include "accountmanager.h"
 #include "pathcache.h"
