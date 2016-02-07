@@ -20,7 +20,7 @@
 #ifndef GDRIVEHELPER_H
 #define GDRIVEHELPER_H
 
-#include <LibKGAPI2/Types>
+#include <KGAPI/Types>
 
 #include <kio/udsentry.h>
 
