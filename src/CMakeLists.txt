@@ -8,8 +8,11 @@ set(kio_gdrive_SRCS
 kde4_add_plugin(kio_gdrive ${kio_gdrive_SRCS})
 
 target_link_libraries(kio_gdrive
-    ${KDE4_KIO_LIBS}
-    ${LibKGAPI2_LIBRARY}
-)
+    Qt5::Core
+    Qt5::Network
+    KF5::GAPICore
+    KF5::KIOCore
+    KF5::I18n
+    KF5::Wallet)
 
-install(TARGETS kio_gdrive DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kio_gdrive DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/kio)

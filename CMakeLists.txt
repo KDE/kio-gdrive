@@ -1,13 +1,27 @@
 project(kio-gdrive)
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.12)
 
-find_package(Qt4 REQUIRED)
-find_package(KDE4 REQUIRED)
-find_package(LibKGAPI2 2.2.40 REQUIRED)
-include(KDE4Defaults)
+set(QT_MIN_VERSION 5.0.0)
+set(KF5_MIN_VERSION 5.0.0)
 
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Network)
+
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
+
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+    I18n
+    KIO
+    Wallet)
+
+find_package(KF5GAPI 5.0.0 REQUIRED)
+
+add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
     # C++11!
@@ -19,11 +33,11 @@ endif()
 include_directories(
    ${CMAKE_SOURCE_DIR}
    ${CMAKE_BINARY_DIR}
-   ${KDE4_INCLUDES}
-   ${LibKGAPI2_INCLUDE_DIR}
+#    ${KDE4_INCLUDES}
+#    ${LibKGAPI2_INCLUDE_DIR}
 )
 
 add_subdirectory(src)
 
-install(FILES gdrive.protocol DESTINATION ${KDE4_SERVICES_INSTALL_DIR})
+install(FILES gdrive.protocol DESTINATION ${SERVICES_INSTALL_DIR})
 
