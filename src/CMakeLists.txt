@@ -12,6 +12,7 @@ target_link_libraries(kio_gdrive
     Qt5::Network
     KF5::GAPICore
     KF5::KIOCore
+    KF5::KIOWidgets
     KF5::I18n
     KF5::Wallet)
 
