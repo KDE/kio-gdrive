@@ -22,7 +22,6 @@
 
 #include <QCoreApplication>
 
-#include <KDE/KDebug>
 #include <KDE/KWallet/Wallet>
 #include <KDE/KTemporaryFile>
 #include <KIO/Job>
@@ -52,6 +51,7 @@
 using namespace KGAPI2;
 using namespace Drive;
 
+Q_LOGGING_CATEGORY(LOG_KIO_GDRIVE, "kde.kio-gdrive")
 
 #define RUN_KGAPI_JOB(job) \
     RUN_KGAPI_JOB_PARAMS(job, url, accountId)
@@ -64,7 +64,7 @@ using namespace Drive;
 { \
     KIOGDrive::Action action = KIOGDrive::Fail; \
     Q_FOREVER { \
-        kDebug() << "Running job" << (&job) << "with accessToken" << job.account()->accessToken(); \
+        qCDebug(LOG_KIO_GDRIVE) << "Running job" << (&job) << "with accessToken" << job.account()->accessToken(); \
         QEventLoop eventLoop; \
         QObject::connect(&job, SIGNAL(finished(KGAPI2::Job*)), \
                           &eventLoop, SLOT(quit())); \
@@ -116,7 +116,7 @@ KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
 {
     Q_UNUSED(protocol);
 
-    kDebug() << "GDrive ready";
+    qCDebug(LOG_KIO_GDRIVE) << "GDrive ready";
 }
 
 KIOGDrive::~KIOGDrive()
@@ -126,7 +126,7 @@ KIOGDrive::~KIOGDrive()
 
 KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const QUrl &url)
 {
-    kDebug() << job->error() << job->errorString();
+    qCDebug(LOG_KIO_GDRIVE) << job->error() << job->errorString();
 
     switch (job->error()) {
         case KGAPI2::OK:
@@ -213,7 +213,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
 
 void KIOGDrive::openConnection()
 {
-    kDebug() << "Ready to talk to GDrive";
+    qCDebug(LOG_KIO_GDRIVE) << "Ready to talk to GDrive";
 }
 
 
@@ -301,7 +301,7 @@ int RecursionDepthCounter::sDepth = 0;
 
 QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 {
-    kDebug() << path;
+    qCDebug(LOG_KIO_GDRIVE) << path;
     RecursionDepthCounter recursion;
     if (recursion.depth() == 1) {
         m_cache.dump();
@@ -313,14 +313,14 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     QString fileId = m_cache.idForPath(path);
     if (!fileId.isEmpty()) {
-        kDebug() << "Resolved" << path << "to" << fileId << "(from cache)";
+        qCDebug(LOG_KIO_GDRIVE) << "Resolved" << path << "to" << fileId << "(from cache)";
         return fileId;
     }
 
     const QStringList components = pathComponents(path);
     Q_ASSERT(!components.isEmpty());
     if (components.size() == 1 || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
-        kDebug() << "Resolved" << path << "to \"root\"";
+        qCDebug(LOG_KIO_GDRIVE) << "Resolved" << path << "to \"root\"";
         return rootFolderId(components[0]);
     }
 
@@ -352,9 +352,9 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     RUN_KGAPI_JOB_RETVAL(fetchJob, QString());
 
     const ObjectsList objects = fetchJob.items();
-    kDebug() << objects;
+    qCDebug(LOG_KIO_GDRIVE) << objects;
     if (objects.count() == 0) {
-        kWarning() << "Failed to resolve" << path;
+        qCWarning(LOG_KIO_GDRIVE) << "Failed to resolve" << path;
         return QString();
     }
 
@@ -362,7 +362,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     m_cache.insertPath(path, file->id());
 
-    kDebug() << "Resolved" << path << "to" << file->id() << "(from network)";
+    qCDebug(LOG_KIO_GDRIVE) << "Resolved" << path << "to" << file->id() << "(from network)";
     return file->id();
 }
 
@@ -375,7 +375,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
 
         const AboutPtr about = aboutFetch.aboutData();
         if (!about || about->rootFolderId().isEmpty()) {
-            kWarning() << "Failed to obtain root ID";
+            qCWarning(LOG_KIO_GDRIVE) << "Failed to obtain root ID";
             return QString();
         }
 
@@ -388,7 +388,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
 
 void KIOGDrive::listDir(const QUrl &url)
 {
-    kDebug() << url;
+    qCDebug(LOG_KIO_GDRIVE) << url;
 
     const QString accountId = accountFromPath(url);
     if (accountId == QLatin1String("new-account")) {
@@ -447,7 +447,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
     // file permissions.
     Q_UNUSED(permissions);
 
-    kDebug() << url << permissions;
+    qCDebug(LOG_KIO_GDRIVE) << url << permissions;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -485,7 +485,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
 void KIOGDrive::stat(const QUrl &url)
 {
-    kDebug() << url;
+    qCDebug(LOG_KIO_GDRIVE) << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -533,7 +533,7 @@ void KIOGDrive::stat(const QUrl &url)
 
 void KIOGDrive::get(const QUrl &url)
 {
-    kDebug() << url;
+    qCDebug(LOG_KIO_GDRIVE) << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -619,7 +619,7 @@ bool KIOGDrive::readPutData(KTemporaryFile &tempFile)
     tempFile.close();
 
     if (result == -1) {
-        kWarning() << "Could not read source file" << tempFile.fileName();
+        qCWarning(LOG_KIO_GDRIVE) << "Could not read source file" << tempFile.fileName();
         error(KIO::ERR_COULD_NOT_READ, QString());
         return false;
     }
@@ -630,7 +630,7 @@ bool KIOGDrive::readPutData(KTemporaryFile &tempFile)
 bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
 {
     const QString fileId = QUrlQuery(url).queryItemValue(QLatin1String("id"));
-    kDebug() << url << fileId;
+    qCDebug(LOG_KIO_GDRIVE) << url << fileId;
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
     RUN_KGAPI_JOB_RETVAL(fetchJob, false)
@@ -657,7 +657,7 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
 
 bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStringList &components)
 {
-    kDebug() << url;
+    qCDebug(LOG_KIO_GDRIVE) << url;
     ParentReferencesList parentReferences;
     if (components.size() < 2) {
         error(KIO::ERR_ACCESS_DENIED, url.path());
@@ -679,7 +679,7 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
     /*
     if (hasMetaData(QLatin1String("modified"))) {
         const QString modified = metaData(QLatin1String("modified"));
-        kDebug() << modified;
+        qCDebug(LOG_KIO_GDRIVE) << modified;
         file->setModifiedDate(KDateTime::fromString(modified, KDateTime::ISODate));
     }
     */
@@ -699,7 +699,7 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
 
 void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 {
-    kDebug() << url << permissions << flags;
+    qCDebug(LOG_KIO_GDRIVE) << url << permissions << flags;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -814,7 +814,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // their local trashes. This however requires fixing the first FIXME first,
     // otherwise we are risking severe data loss.
 
-    kDebug() << url << isfile;
+    qCDebug(LOG_KIO_GDRIVE) << url << isfile;
 
     const QString fileId
         = isfile && url.hasQueryItem(QLatin1String("id"))
@@ -865,7 +865,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
 
 void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 {
-    kDebug() << src << dest << flags;
+    qCDebug(LOG_KIO_GDRIVE) << src << dest << flags;
 
     const QString sourceAccountId = accountFromPath(src);
     const QString destAccountId = accountFromPath(dest);
@@ -963,7 +963,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
 void KIOGDrive::mimetype(const QUrl &url)
 {
-    kDebug() << url;
+    qCDebug(LOG_KIO_GDRIVE) << url;
 
     const QString fileId
         = url.hasQueryItem(QLatin1String("id"))

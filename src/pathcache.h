@@ -21,7 +21,10 @@
 #define PATHCACHE_H
 
 #include <QHash>
+#include <QLoggingCategory>
 #include <QStringList>
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_KIO_GDRIVE)
 
 class PathCache
 {

@@ -20,12 +20,15 @@
 #ifndef ACCOUNTMANAGER_H
 #define ACCOUNTMANAGER_H
 
+#include <QLoggingCategory>
 #include <QStringList>
 
 #include <KWallet/KWallet>
 #include <kio/udsentry.h>
 
 #include <KGAPI/Account>
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_KIO_GDRIVE)
 
 class AccountManager
 {

@@ -20,8 +20,6 @@
 #include "pathcache.h"
 #include <QDateTime>
 
-#include <KDebug>
-
 PathCache::PathCache()
 {
 }
@@ -78,10 +76,10 @@ void PathCache::removePath(const QString &path)
 
 void PathCache::dump()
 {
-    kDebug() << "==== DUMP ====";
+    qCDebug(LOG_KIO_GDRIVE) << "==== DUMP ====";
     for (auto iter = m_pathIdMap.constBegin(); iter != m_pathIdMap.constEnd(); ++iter) {
-        kDebug() << iter.key() << " => " << iter.value();
+        qCDebug(LOG_KIO_GDRIVE) << iter.key() << " => " << iter.value();
     }
-    kDebug() << "==== DUMP ====";
+    qCDebug(LOG_KIO_GDRIVE) << "==== DUMP ====";
 }
 

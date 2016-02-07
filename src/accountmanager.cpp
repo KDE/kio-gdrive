@@ -19,8 +19,6 @@
 
 #include "accountmanager.h"
 
-#include <KDebug>
-
 #include <LibKGAPI2/AuthJob>
 #include <QEventLoop>
 
@@ -38,7 +36,7 @@ AccountManager::AccountManager()
         KWallet::Wallet::NetworkWallet(), 0,
         KWallet::Wallet::Synchronous);
     if (!m_wallet) {
-        kWarning() << "Failed to open KWallet";
+        qCWarning(LOG_KIO_GDRIVE) << "Failed to open KWallet";
     } else {
         if (!m_wallet->hasFolder(QLatin1String("GDrive"))) {
             m_wallet->createFolder(QLatin1String("GDrive"));
@@ -114,7 +112,7 @@ void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
         return;
     }
 
-    kDebug() << "Storing account" << account->accessToken();
+    qCDebug(LOG_KIO_GDRIVE) << "Storing account" << account->accessToken();
 
     QMap<QString, QString> entry;
     entry[ QLatin1String("accessToken") ] = account->accessToken();
