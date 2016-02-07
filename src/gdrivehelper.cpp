@@ -19,7 +19,7 @@
 
 #include "gdrivehelper.h"
 
-#include <LibKGAPI2/Drive/File>
+#include <KGAPI/Drive/File>
 #include <KIO/Job>
 #include <KLocalizedString>
 
