@@ -67,25 +67,25 @@ static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap = []
 static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > ConversionMap = []() {
     QMap<QString, QStringList> map;
 
-    map[VND_GOOGLE_APPS_DOCUMENT] = {
+    map[VND_GOOGLE_APPS_DOCUMENT] = QStringList {
             VND_OASIS_OPENDOCUMENT_TEXT,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT,
             APPLICATION_PDF
     };
 
-    map[VND_GOOGLE_APPS_DRAWING] = {
+    map[VND_GOOGLE_APPS_DRAWING] = QStringList {
             IMAGE_PNG,
             IMAGE_JPEG,
             APPLICATION_PDF
     };
 
-    map[VND_GOOGLE_APPS_PRESENTATION] = {
+    map[VND_GOOGLE_APPS_PRESENTATION] = QStringList {
             VND_OASIS_OPENDOCUMENT_PRESENTATION,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION,
             APPLICATION_PDF
     };
 
-    map[VND_GOOGLE_APPS_SPREADSHEET] = {
+    map[VND_GOOGLE_APPS_SPREADSHEET] = QStringList {
             VND_OASIS_OPENDOCUMENT_SPREADSHEED,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET,
             APPLICATION_PDF
