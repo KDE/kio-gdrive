@@ -49,18 +49,18 @@ public:
     virtual ~KIOGDrive();
 
     virtual void openConnection();
-    virtual void listDir(const KUrl &url);
-    virtual void mkdir(const KUrl &url, int permissions);
+    virtual void listDir(const QUrl &url);
+    virtual void mkdir(const QUrl &url, int permissions);
 
-    virtual void stat(const KUrl &url);
-    virtual void get(const KUrl &url);
-    virtual void put(const KUrl &url, int permissions, KIO::JobFlags flags);
+    virtual void stat(const QUrl &url);
+    virtual void get(const QUrl &url);
+    virtual void put(const QUrl &url, int permissions, KIO::JobFlags flags);
 
-    virtual void copy(const KUrl &src, const KUrl &dest, int permissions, KIO::JobFlags flags);
-    virtual void rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags);
-    virtual void del(const KUrl &url, bool isfile);
+    virtual void copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags);
+    virtual void rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags);
+    virtual void del(const QUrl &url, bool isfile);
 
-    virtual void mimetype(const KUrl &url);
+    virtual void mimetype(const QUrl &url);
 
 private:
     enum PathFlags {
@@ -74,17 +74,17 @@ private:
 
     QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
 
-    Action handleError(KGAPI2::Job *job, const KUrl &url);
+    Action handleError(KGAPI2::Job *job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
     QStringList pathComponents(const QString &path) const;
-    QStringList pathComponents(const KUrl &url) const {
-        return pathComponents(url.path(KUrl::RemoveTrailingSlash));
+    QStringList pathComponents(const QUrl &url) const {
+        return pathComponents(url.adjusted(QUrl::StripTrailingSlash).path());
     }
 
-    bool isRoot(const KUrl &url) const;
-    bool isAccountRoot(const KUrl &url) const;
-    QString accountFromPath(const KUrl &url) const;
+    bool isRoot(const QUrl &url) const;
+    bool isAccountRoot(const QUrl &url) const;
+    QString accountFromPath(const QUrl &url) const;
 
     KGAPI2::AccountPtr getAccount(const QString &accountName) {
         return m_accountManager.account(accountName);
@@ -92,8 +92,8 @@ private:
 
     QString rootFolderId(const QString &accountId);
 
-    bool putUpdate(const KUrl &url, const QString &accountId, const QStringList &pathComponents);
-    bool putCreate(const KUrl &url, const QString &accountId, const QStringList &pathComponents);
+    bool putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
+    bool putCreate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
     bool readPutData(KTemporaryFile &tmpFile);
 
     AccountManager m_accountManager;

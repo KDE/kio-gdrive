@@ -125,7 +125,7 @@ KIOGDrive::~KIOGDrive()
     closeConnection();
 }
 
-KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
+KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const QUrl &url)
 {
     kDebug() << job->error() << job->errorString();
 
@@ -135,28 +135,28 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const KUrl &url)
             return Success;
         case KGAPI2::AuthCancelled:
         case KGAPI2::AuthError:
-            error(KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl());
+            error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
             return Fail;
         case KGAPI2::Unauthorized: {
             const AccountPtr oldAccount = job->account();
             const AccountPtr account = m_accountManager.refreshAccount(oldAccount);
             if (!account) {
-                error(KIO::ERR_COULD_NOT_LOGIN, url.prettyUrl());
+                error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
                 return Fail;
             }
             return Restart;
         }
         case KGAPI2::Forbidden:
-            error(KIO::ERR_ACCESS_DENIED, url.prettyUrl());
+            error(KIO::ERR_ACCESS_DENIED, url.toDisplayString());
             return Fail;
         case KGAPI2::NotFound:
-            error(KIO::ERR_DOES_NOT_EXIST, url.prettyUrl());
+            error(KIO::ERR_DOES_NOT_EXIST, url.toDisplayString());
             return Fail;
         case KGAPI2::NoContent:
-            error(KIO::ERR_NO_CONTENT, url.prettyUrl());
+            error(KIO::ERR_NO_CONTENT, url.toDisplayString());
             return Fail;
         case KGAPI2::QuotaExceeded:
-            error(KIO::ERR_DISK_FULL, url.prettyUrl());
+            error(KIO::ERR_DISK_FULL, url.toDisplayString());
             return Fail;
         default:
             error(KIO::ERR_SLAVE_DEFINED, job->errorString());
@@ -225,7 +225,7 @@ QStringList KIOGDrive::pathComponents(const QString &path) const
     return path.split(QLatin1Char('/'), QString::SkipEmptyParts);
 }
 
-QString KIOGDrive::accountFromPath(const KUrl& url) const
+QString KIOGDrive::accountFromPath(const QUrl &url) const
 {
     const QStringList components = pathComponents(url);
     if (components.isEmpty()) {
@@ -234,13 +234,13 @@ QString KIOGDrive::accountFromPath(const KUrl& url) const
     return components[0];
 }
 
-bool KIOGDrive::isRoot(const KUrl& url) const
+bool KIOGDrive::isRoot(const QUrl &url) const
 {
     return pathComponents(url).length() == 0;
 }
 
 
-bool KIOGDrive::isAccountRoot(const KUrl& url) const
+bool KIOGDrive::isAccountRoot(const QUrl &url) const
 {
     return pathComponents(url).length() == 1;
 }
@@ -249,7 +249,7 @@ bool KIOGDrive::isAccountRoot(const KUrl& url) const
 void KIOGDrive::createAccount()
 {
     const KGAPI2::AccountPtr account = m_accountManager.account(QString());
-    redirection(KUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
+    redirection(QUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
     finished();
 }
 
@@ -387,7 +387,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
     return m_rootIds[accountId];
 }
 
-void KIOGDrive::listDir(const KUrl &url)
+void KIOGDrive::listDir(const QUrl &url)
 {
     kDebug() << url;
 
@@ -407,7 +407,7 @@ void KIOGDrive::listDir(const KUrl &url)
     } else {
         folderId = m_cache.idForPath(url.path());
         if (folderId.isEmpty()) {
-            folderId = resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+            folderId = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                              KIOGDrive::PathIsFolder);
         }
         if (folderId.isEmpty()) {
@@ -430,10 +430,10 @@ void KIOGDrive::listDir(const KUrl &url)
     Q_FOREACH (const ObjectPtr &object, objects) {
         const FilePtr file = object.dynamicCast<File>();
 
-        const KIO::UDSEntry entry = fileToUDSEntry(file, url.path(KUrl::RemoveTrailingSlash));
+        const KIO::UDSEntry entry = fileToUDSEntry(file, url.adjusted(QUrl::StripTrailingSlash).path());
         listEntry(entry, false);
 
-        m_cache.insertPath(url.path(KUrl::AddTrailingSlash) + file->title(), file->id());
+        m_cache.insertPath(url.path(QUrl::AddTrailingSlash) + file->title(), file->id());
     }
 
     listEntry(KIO::UDSEntry(), true);
@@ -441,7 +441,7 @@ void KIOGDrive::listDir(const KUrl &url)
 }
 
 
-void KIOGDrive::mkdir(const KUrl &url, int permissions)
+void KIOGDrive::mkdir(const QUrl &url, int permissions)
 {
     // NOTE: We deliberately ignore the permissions field here, because GDrive
     // does not recognize any privileges that could be mapped to standard UNIX
@@ -484,7 +484,7 @@ void KIOGDrive::mkdir(const KUrl &url, int permissions)
     finished();
 }
 
-void KIOGDrive::stat(const KUrl &url)
+void KIOGDrive::stat(const QUrl &url)
 {
     kDebug() << url;
 
@@ -503,8 +503,8 @@ void KIOGDrive::stat(const KUrl &url)
 
     const QString fileId
         = url.hasQueryItem(QLatin1String("id"))
-            ? url.queryItem(QLatin1String("id"))
-            : resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+            : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::None);
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
@@ -532,7 +532,7 @@ void KIOGDrive::stat(const KUrl &url)
     finished();
 }
 
-void KIOGDrive::get(const KUrl &url)
+void KIOGDrive::get(const QUrl &url)
 {
     kDebug() << url;
 
@@ -550,8 +550,8 @@ void KIOGDrive::get(const KUrl &url)
 
     const QString fileId =
         url.hasQueryItem(QLatin1String("id"))
-            ? url.queryItem(QLatin1String("id"))
-            : resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+            : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
@@ -628,9 +628,9 @@ bool KIOGDrive::readPutData(KTemporaryFile &tempFile)
     return true;
 }
 
-bool KIOGDrive::putUpdate(const KUrl &url, const QString &accountId, const QStringList &pathComponents)
+bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
 {
-    const QString fileId = url.queryItem(QLatin1String("id"));
+    const QString fileId = QUrlQuery(url).queryItemValue(QLatin1String("id"));
     kDebug() << url << fileId;
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
@@ -656,7 +656,7 @@ bool KIOGDrive::putUpdate(const KUrl &url, const QString &accountId, const QStri
     return true;
 }
 
-bool KIOGDrive::putCreate(const KUrl &url, const QString &accountId, const QStringList &components)
+bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStringList &components)
 {
     kDebug() << url;
     ParentReferencesList parentReferences;
@@ -668,7 +668,7 @@ bool KIOGDrive::putCreate(const KUrl &url, const QString &accountId, const QStri
     } else {
         const QString parentId = resolveFileIdFromPath(joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
         if (parentId.isEmpty()) {
-            error(KIO::ERR_DOES_NOT_EXIST, url.directory());
+            error(KIO::ERR_DOES_NOT_EXIST, url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
             return false;
         }
         parentReferences << ParentReferencePtr(new ParentReference(parentId));
@@ -698,7 +698,7 @@ bool KIOGDrive::putCreate(const KUrl &url, const QString &accountId, const QStri
 }
 
 
-void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
+void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 {
     kDebug() << url << permissions << flags;
 
@@ -721,7 +721,7 @@ void KIOGDrive::put(const KUrl &url, int permissions, KIO::JobFlags flags)
 }
 
 
-void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::JobFlags flags)
+void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags)
 {
     // NOTE: We deliberately ignore the permissions field here, because GDrive
     // does not recognize any privileges that could be mapped to standard UNIX
@@ -756,8 +756,8 @@ void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::Jo
 
     const QString sourceFileId
         = src.hasQueryItem(QLatin1String("id"))
-              ? src.queryItem(QLatin1String("id"))
-              : resolveFileIdFromPath(src.path(KUrl::RemoveTrailingSlash));
+              ? QUrlQuery(src).queryItemValue(QLatin1String("id"))
+              : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
     if (sourceFileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
@@ -801,7 +801,7 @@ void KIOGDrive::copy(const KUrl &src, const KUrl &dest, int permissions, KIO::Jo
     finished();
 }
 
-void KIOGDrive::del(const KUrl &url, bool isfile)
+void KIOGDrive::del(const QUrl &url, bool isfile)
 {
     // FIXME: Verify that a single file cannot actually have multiple parent
     // references. If it can, then we need to be more careful: currently this
@@ -819,8 +819,8 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
 
     const QString fileId
         = isfile && url.hasQueryItem(QLatin1String("id"))
-            ? url.queryItem(QLatin1String("id"))
-            : resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash),
+            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+            : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
@@ -864,7 +864,7 @@ void KIOGDrive::del(const KUrl &url, bool isfile)
 
 }
 
-void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
+void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 {
     kDebug() << src << dest << flags;
 
@@ -887,8 +887,8 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
     }
     const QString sourceFileId
         = src.hasQueryItem(QLatin1String("id"))
-            ? src.queryItem(QLatin1String("id"))
-            : resolveFileIdFromPath(src.path(KUrl::RemoveTrailingSlash),
+            ? QUrlQuery(src).queryItemValue(QLatin1String("id"))
+            : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (sourceFileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
@@ -962,14 +962,14 @@ void KIOGDrive::rename(const KUrl &src, const KUrl &dest, KIO::JobFlags flags)
     finished();
 }
 
-void KIOGDrive::mimetype(const KUrl &url)
+void KIOGDrive::mimetype(const QUrl &url)
 {
     kDebug() << url;
 
     const QString fileId
         = url.hasQueryItem(QLatin1String("id"))
-            ? url.queryItem(QLatin1String("id"))
-            : resolveFileIdFromPath(url.path(KUrl::RemoveTrailingSlash));
+            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+            : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
