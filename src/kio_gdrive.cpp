@@ -22,7 +22,7 @@
 
 #include <QCoreApplication>
 
-#include <KDE/KWallet/Wallet>
+#include <KWallet/KWallet>
 #include <KDE/KTemporaryFile>
 #include <KIO/Job>
 #include <KIO/AccessManager>
