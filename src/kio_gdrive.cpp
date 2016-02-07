@@ -599,7 +599,6 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
 
     // TODO: Support resumable upload (requires support in LibKGAPI)
 
-    tempFile.setPrefix(QLatin1String("gdrive"));
     if (!tempFile.open()) {
         error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
         return false;
