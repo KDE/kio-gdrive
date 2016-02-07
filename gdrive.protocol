@@ -1,5 +1,5 @@
 [Protocol]
-exec=kio_gdrive
+exec=kf5/kio/gdrive
 protocol=gdrive
 Icon=im-google
 input=none
