@@ -19,7 +19,7 @@
 
 #include "accountmanager.h"
 
-#include <LibKGAPI2/AuthJob>
+#include <KGAPI/AuthJob>
 #include <QEventLoop>
 
 //for stat.h
