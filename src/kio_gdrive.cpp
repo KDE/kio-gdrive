@@ -346,7 +346,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, components[1] == QLatin1String("trash"));
 
-    const QString accountId = accountFromPath(path);
+    const QString accountId = accountFromPath(QUrl::fromUserInput(path));
     FileFetchJob fetchJob(query, getAccount(accountId));
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
     QUrl url(path);
@@ -433,7 +433,8 @@ void KIOGDrive::listDir(const QUrl &url)
         const KIO::UDSEntry entry = fileToUDSEntry(file, url.adjusted(QUrl::StripTrailingSlash).path());
         listEntry(entry, false);
 
-        m_cache.insertPath(url.path(QUrl::AddTrailingSlash) + file->title(), file->id());
+        QString path = url.path().endsWith("/") ? url.path() : url.path() + "/";
+        m_cache.insertPath(path + file->title(), file->id());
     }
 
     listEntry(KIO::UDSEntry(), true);
