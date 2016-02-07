@@ -20,9 +20,8 @@
 #include "kio_gdrive.h"
 #include "gdrivehelper.h"
 
-#include <QtGui/QApplication>
+#include <QCoreApplication>
 
-#include <KDE/KComponentData>
 #include <KDE/KDebug>
 #include <KDE/KWallet/Wallet>
 #include <KDE/KTemporaryFile>
@@ -95,10 +94,10 @@ static QString joinSublist(const QStringList &strv, int start, int end, const QC
 
 extern "C"
 {
-    int KDE_EXPORT kdemain(int argc, char **argv)
+    int Q_DECL_EXPORT kdemain(int argc, char **argv)
     {
-        QApplication app(argc, argv);
-        KComponentData("kio_gdrive", "kdelibs4");
+        QCoreApplication app(argc, argv);
+        app.setApplicationName(QLatin1String("kio_gdrive"));
 
         if (argc != 4) {
              fprintf(stderr, "Usage: kio_gdrive protocol domain-socket1 domain-socket2\n");
