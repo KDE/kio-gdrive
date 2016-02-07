@@ -5,7 +5,7 @@ set(kio_gdrive_SRCS
     gdrivehelper.cpp
 )
 
-kde4_add_plugin(kio_gdrive ${kio_gdrive_SRCS})
+add_library(kio_gdrive MODULE ${kio_gdrive_SRCS})
 
 target_link_libraries(kio_gdrive
     Qt5::Core
@@ -16,5 +16,7 @@ target_link_libraries(kio_gdrive
     KF5::KIOWidgets
     KF5::I18n
     KF5::Wallet)
+
+set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")
 
 install(TARGETS kio_gdrive DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/kio)
