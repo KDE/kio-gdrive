@@ -2,7 +2,7 @@ project(kio-gdrive)
 
 cmake_minimum_required(VERSION 2.8.12)
 
-set(QT_MIN_VERSION 5.0.0)
+set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.0.0)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Network)
