@@ -5,7 +5,9 @@ cmake_minimum_required(VERSION 2.8.12)
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.0.0)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Network)
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+    Network
+    Widgets)
 
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})

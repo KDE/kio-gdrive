@@ -20,7 +20,7 @@
 #include "kio_gdrive.h"
 #include "gdrivehelper.h"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QTemporaryFile>
 
 #include <KWallet/KWallet>
@@ -97,7 +97,7 @@ extern "C"
 {
     int Q_DECL_EXPORT kdemain(int argc, char **argv)
     {
-        QCoreApplication app(argc, argv);
+        QApplication app(argc, argv);
         app.setApplicationName(QLatin1String("kio_gdrive"));
 
         if (argc != 4) {
