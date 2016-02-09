@@ -26,8 +26,8 @@
 #include <KIO/Job>
 
 
-QString AccountManager::s_apiKey = QLatin1String("554041944266.apps.googleusercontent.com");
-QString AccountManager::s_apiSecret = QLatin1String("mdT1DjzohxN3npUUzkENT0gO");
+QString AccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");
+QString AccountManager::s_apiSecret = QStringLiteral("mdT1DjzohxN3npUUzkENT0gO");
 
 
 AccountManager::AccountManager()
@@ -91,15 +91,15 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         QMap<QString, QString> entry;
         m_wallet->readMap(accountName, entry);
 
-        const QStringList scopes = entry.value(QLatin1String("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
+        const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
         QList<QUrl> scopeUrls;
         Q_FOREACH (const QString &scope, scopes) {
             scopeUrls << QUrl::fromUserInput(scope);
         }
 
         account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
-                                                         entry.value(QLatin1String("accessToken")),
-                                                         entry.value(QLatin1String("refreshToken")),
+                                                         entry.value(QStringLiteral("accessToken")),
+                                                         entry.value(QStringLiteral("refreshToken")),
                                                          scopeUrls));
     }
 
@@ -115,13 +115,13 @@ void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
     qCDebug(LOG_KIO_GDRIVE) << "Storing account" << account->accessToken();
 
     QMap<QString, QString> entry;
-    entry[ QLatin1String("accessToken") ] = account->accessToken();
-    entry[ QLatin1String("refreshToken") ] = account->refreshToken();
+    entry[ QStringLiteral("accessToken") ] = account->accessToken();
+    entry[ QStringLiteral("refreshToken") ] = account->refreshToken();
     QStringList scopes;
     Q_FOREACH (const QUrl &scope, account->scopes()) {
         scopes << scope.toString();
     }
-    entry[ QLatin1String("scopes") ] = scopes.join(QLatin1String(","));
+    entry[ QStringLiteral("scopes") ] = scopes.join(QLatin1Char(','));
 
     m_wallet->writeMap(account->accountName(), entry);
 }
@@ -151,7 +151,7 @@ KIO::UDSEntry AccountManager::accountToUDSEntry(const QString &accountNAme)
     entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
     entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("im-google"));
+    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("im-google"));
 
     return entry;
 }

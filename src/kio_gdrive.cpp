@@ -98,7 +98,7 @@ extern "C"
     int Q_DECL_EXPORT kdemain(int argc, char **argv)
     {
         QApplication app(argc, argv);
-        app.setApplicationName(QLatin1String("kio_gdrive"));
+        app.setApplicationName(QStringLiteral("kio_gdrive"));
 
         if (argc != 4) {
              fprintf(stderr, "Usage: kio_gdrive protocol domain-socket1 domain-socket2\n");
@@ -266,10 +266,10 @@ void KIOGDrive::listAccounts()
         listEntry(entry);
     }
     KIO::UDSEntry newAccountEntry;
-    newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("new-account"));
+    newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("new-account"));
     newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
     newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("list-add-user"));
+    newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
     listEntry(newAccountEntry);
     finished();
     return;
@@ -432,7 +432,7 @@ void KIOGDrive::listDir(const QUrl &url)
         const KIO::UDSEntry entry = fileToUDSEntry(file, url.adjusted(QUrl::StripTrailingSlash).path());
         listEntry(entry);
 
-        QString path = url.path().endsWith("/") ? url.path() : url.path() + "/";
+        const QString path = url.path().endsWith(QLatin1Char('/')) ? url.path() : url.path() + QLatin1Char('/');
         m_cache.insertPath(path + file->title(), file->id());
     }
 
@@ -628,7 +628,7 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
 
 bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
 {
-    const QString fileId = QUrlQuery(url).queryItemValue(QLatin1String("id"));
+    const QString fileId = QUrlQuery(url).queryItemValue(QStringLiteral("id"));
     qCDebug(LOG_KIO_GDRIVE) << url << fileId;
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
@@ -703,7 +703,7 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
 
-    if (url.hasQueryItem(QLatin1String("id"))) {
+    if (url.hasQueryItem(QStringLiteral("id"))) {
         if (!putUpdate(url, accountId, components)) {
             return;
         }
@@ -754,7 +754,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
 
     const QString sourceFileId
         = src.hasQueryItem(QLatin1String("id"))
-              ? QUrlQuery(src).queryItemValue(QLatin1String("id"))
+              ? QUrlQuery(src).queryItemValue(QStringLiteral("id"))
               : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
     if (sourceFileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());

@@ -25,42 +25,42 @@
 
 using namespace KGAPI2::Drive;
 
-#define VND_GOOGLE_APPS_DOCUMENT        QLatin1String("application/vnd.google-apps.document")
-#define VND_GOOGLE_APPS_DRAWING         QLatin1String("application/vnd.google-apps.drawing")
-#define VND_GOOGLE_APPS_FILE            QLatin1String("application/vnd.google-apps.file")
-#define VND_GOOGLE_APPS_FORM            QLatin1String("application/vnd.google-apps.form")
-#define VND_GOOGLE_APPS_PRESENTATION    QLatin1String("application/vnd.google-apps.presentation")
-#define VND_GOOGLE_APPS_SPREADSHEET     QLatin1String("application/vnd.google-apps.spreadsheet")
-#define VND_GOOGLE_APPS_FOLDER          QLatin1String("application/vnd.google-apps.folder")
+#define VND_GOOGLE_APPS_DOCUMENT        QStringLiteral("application/vnd.google-apps.document")
+#define VND_GOOGLE_APPS_DRAWING         QStringLiteral("application/vnd.google-apps.drawing")
+#define VND_GOOGLE_APPS_FILE            QStringLiteral("application/vnd.google-apps.file")
+#define VND_GOOGLE_APPS_FORM            QStringLiteral("application/vnd.google-apps.form")
+#define VND_GOOGLE_APPS_PRESENTATION    QStringLiteral("application/vnd.google-apps.presentation")
+#define VND_GOOGLE_APPS_SPREADSHEET     QStringLiteral("application/vnd.google-apps.spreadsheet")
+#define VND_GOOGLE_APPS_FOLDER          QStringLiteral("application/vnd.google-apps.folder")
 
-#define VND_OASIS_OPENDOCUMENT_TEXT     QLatin1String("application/vnd.oasis.opendocument.text")
-#define VND_OASIS_OPENDOCUMENT_PRESENTATION QLatin1String("application/vnd.oasis.opendocument.presentation")
-#define VND_OASIS_OPENDOCUMENT_SPREADSHEED QLatin1String("application/x-vnd.oasis.opendocument.spreadsheet")
+#define VND_OASIS_OPENDOCUMENT_TEXT     QStringLiteral("application/vnd.oasis.opendocument.text")
+#define VND_OASIS_OPENDOCUMENT_PRESENTATION QStringLiteral("application/vnd.oasis.opendocument.presentation")
+#define VND_OASIS_OPENDOCUMENT_SPREADSHEED QStringLiteral("application/x-vnd.oasis.opendocument.spreadsheet")
 
 #define VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT \
-            QLatin1String("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            QStringLiteral("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
 #define VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION \
-            QLatin1String("application/vnd.openxmlformats-officedocument.presentationml.presentation")
+            QStringLiteral("application/vnd.openxmlformats-officedocument.presentationml.presentation")
 #define VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET \
-            QLatin1String("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            QStringLiteral("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-#define IMAGE_PNG                       QLatin1String("image/png")
-#define IMAGE_JPEG                      QLatin1String("image/jpeg")
-#define APPLICATION_PDF                 QLatin1String("application/pdf")
+#define IMAGE_PNG                       QStringLiteral("image/png")
+#define IMAGE_JPEG                      QStringLiteral("image/jpeg")
+#define APPLICATION_PDF                 QStringLiteral("application/pdf")
 
 namespace GDriveHelper {
 
 static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap = []() {
     QMap<QString, QString> ext;
-    ext[VND_OASIS_OPENDOCUMENT_TEXT] = QLatin1String(".odt");
-    ext[VND_OASIS_OPENDOCUMENT_SPREADSHEED] = QLatin1String(".ods");
-    ext[VND_OASIS_OPENDOCUMENT_PRESENTATION] = QLatin1String(".odp");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT] = QLatin1String(".docx");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET] = QLatin1String(".xlsx");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION] = QLatin1String(".pptx");
-    ext[IMAGE_PNG] = QLatin1String(".png");
-    ext[IMAGE_JPEG] = QLatin1String(".jpg");
-    ext[APPLICATION_PDF] = QLatin1String(".pdf");
+    ext[VND_OASIS_OPENDOCUMENT_TEXT] = QStringLiteral(".odt");
+    ext[VND_OASIS_OPENDOCUMENT_SPREADSHEED] = QStringLiteral(".ods");
+    ext[VND_OASIS_OPENDOCUMENT_PRESENTATION] = QStringLiteral(".odp");
+    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT] = QStringLiteral(".docx");
+    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET] = QStringLiteral(".xlsx");
+    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION] = QStringLiteral(".pptx");
+    ext[IMAGE_PNG] = QStringLiteral(".png");
+    ext[IMAGE_JPEG] = QStringLiteral(".jpg");
+    ext[APPLICATION_PDF] = QStringLiteral(".pdf");
     return ext;
 }();
 
@@ -130,10 +130,10 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
 KIO::UDSEntry GDriveHelper::trash()
 {
     KIO::UDSEntry trashEntry;
-    trashEntry.insert(KIO::UDSEntry::UDS_NAME, QLatin1String("trash"));
+    trashEntry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("trash"));
     trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
     trashEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QLatin1String("user-trash"));
+    trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("user-trash"));
     return trashEntry;
 }
 
