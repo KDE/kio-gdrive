@@ -2,6 +2,8 @@ project(kio-gdrive)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+include(FeatureSummary)
+
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.0.0)
 
@@ -37,3 +39,4 @@ add_subdirectory(src)
 
 install(FILES gdrive.protocol DESTINATION ${SERVICES_INSTALL_DIR})
 
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
