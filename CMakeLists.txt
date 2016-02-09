@@ -24,6 +24,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 find_package(KF5GAPI 5.0.0 REQUIRED)
 
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+add_definitions(-DTRANSLATION_DOMAIN=\"kio_gdrive\")
 
 include_directories(
    ${CMAKE_SOURCE_DIR}
