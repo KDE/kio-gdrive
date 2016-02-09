@@ -114,7 +114,7 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     }
 
     const auto exportLinks = file->exportLinks();
-    for (const QString &targetMimeType : GDriveHelper::ConversionMap[originalMimeType]) {
+    Q_FOREACH (const QString &targetMimeType, GDriveHelper::ConversionMap[originalMimeType]) {
         if (exportLinks.contains(targetMimeType)) {
             file->setMimeType(targetMimeType);
             file->setTitle(file->title() + GDriveHelper::ExtensionsMap[targetMimeType]);

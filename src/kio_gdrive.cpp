@@ -261,7 +261,7 @@ void KIOGDrive::listAccounts()
         return;
     }
 
-    for (const QString &account : accounts) {
+    Q_FOREACH (const QString &account, accounts) {
         const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
         listEntry(entry);
     }
