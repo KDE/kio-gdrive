@@ -37,6 +37,4 @@ include_directories(
 
 add_subdirectory(src)
 
-install(FILES gdrive.protocol DESTINATION ${SERVICES_INSTALL_DIR})
-
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

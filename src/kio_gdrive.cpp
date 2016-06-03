@@ -81,6 +81,12 @@ Q_LOGGING_CATEGORY(LOG_KIO_GDRIVE, "kde.kio-gdrive")
     }; \
 }
 
+class KIOPluginForMetaData : public QObject
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kde.kio.slave.gdrive" FILE "gdrive.json")
+};
+
 static QString joinSublist(const QStringList &strv, int start, int end, const QChar &joinChar)
 {
     QString res;
@@ -988,3 +994,5 @@ void KIOGDrive::mimetype(const QUrl &url)
     mimeType(file->mimeType());
     finished();
 }
+
+#include "kio_gdrive.moc"
