@@ -28,8 +28,6 @@
 #include "accountmanager.h"
 #include "pathcache.h"
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_KIO_GDRIVE)
-
 class QTemporaryFile;
 namespace KGAPI2
 {

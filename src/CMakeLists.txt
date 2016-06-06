@@ -5,6 +5,12 @@ set(kio_gdrive_SRCS
     gdrivehelper.cpp
 )
 
+ecm_qt_declare_logging_category(kio_gdrive_SRCS
+    HEADER gdrivedebug.h
+    IDENTIFIER GDRIVE
+    CATEGORY_NAME kf5.kio.gdrive)
+
+
 add_library(kio_gdrive MODULE ${kio_gdrive_SRCS})
 
 target_link_libraries(kio_gdrive

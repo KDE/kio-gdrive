@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.12)
 include(FeatureSummary)
 
 set(QT_MIN_VERSION 5.2.0)
-set(KF5_MIN_VERSION 5.0.0)
+set(KF5_MIN_VERSION 5.14.0)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Network
@@ -17,6 +17,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMQtDeclareLoggingCategory)
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n

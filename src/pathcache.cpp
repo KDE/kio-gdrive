@@ -18,6 +18,8 @@
  */
 
 #include "pathcache.h"
+#include "gdrivedebug.h"
+
 #include <QDateTime>
 
 PathCache::PathCache()
@@ -76,10 +78,10 @@ void PathCache::removePath(const QString &path)
 
 void PathCache::dump()
 {
-    qCDebug(LOG_KIO_GDRIVE) << "==== DUMP ====";
+    qCDebug(GDRIVE) << "==== DUMP ====";
     for (auto iter = m_pathIdMap.constBegin(); iter != m_pathIdMap.constEnd(); ++iter) {
-        qCDebug(LOG_KIO_GDRIVE) << iter.key() << " => " << iter.value();
+        qCDebug(GDRIVE) << iter.key() << " => " << iter.value();
     }
-    qCDebug(LOG_KIO_GDRIVE) << "==== DUMP ====";
+    qCDebug(GDRIVE) << "==== DUMP ====";
 }
 
