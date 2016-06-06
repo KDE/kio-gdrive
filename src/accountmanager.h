@@ -22,10 +22,14 @@
 
 #include <QStringList>
 
-#include <KWallet/KWallet>
 #include <kio/udsentry.h>
 
 #include <KGAPI/Account>
+
+namespace KWallet
+{
+class Wallet;
+}
 
 class AccountManager
 {
