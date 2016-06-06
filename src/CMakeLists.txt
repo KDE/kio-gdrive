@@ -10,8 +10,9 @@ ecm_qt_declare_logging_category(kio_gdrive_SRCS
     IDENTIFIER GDRIVE
     CATEGORY_NAME kf5.kio.gdrive)
 
-
-add_library(kio_gdrive MODULE ${kio_gdrive_SRCS})
+kcoreaddons_add_plugin(kio_gdrive
+    SOURCES ${kio_gdrive_SRCS}
+    INSTALL_NAMESPACE kf5/kio)
 
 target_link_libraries(kio_gdrive
     Qt5::Core
@@ -24,5 +25,3 @@ target_link_libraries(kio_gdrive
     KF5::Wallet)
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")
-
-install(TARGETS kio_gdrive DESTINATION ${PLUGIN_INSTALL_DIR}/kf5/kio)
