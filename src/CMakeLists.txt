@@ -1,9 +1,10 @@
+include_directories(${CMAKE_SOURCE_DIR})
+
 set(kio_gdrive_SRCS
     kio_gdrive.cpp
     pathcache.cpp
     accountmanager.cpp
-    gdrivehelper.cpp
-)
+    gdrivehelper.cpp)
 
 ecm_qt_declare_logging_category(kio_gdrive_SRCS
     HEADER gdrivedebug.h

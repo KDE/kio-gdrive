@@ -29,13 +29,6 @@ find_package(KF5GAPI 5.0.0 REQUIRED)
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio_gdrive\")
 
-include_directories(
-   ${CMAKE_SOURCE_DIR}
-   ${CMAKE_BINARY_DIR}
-#    ${KDE4_INCLUDES}
-#    ${LibKGAPI2_INCLUDE_DIR}
-)
-
 add_subdirectory(src)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
