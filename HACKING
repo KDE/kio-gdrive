@@ -1,0 +1,24 @@
+Locate Debug Output
+===================
+
+You will not see the slave's output in the terminal where you started e.g. Dolphin. On systemd distros the output will go in the journalctl. A quick way to locate the relevant logs is the following command:
+
+    journalctl -b | grep kf5.kio.gdrive
+
+This will only show the logs since the last boot. To retrieve also older logs, you can filter the messages by the process who emitted them (kdeinit5):
+
+    journalctl $(which kdeinit5) | grep kf5.kio.gdrive
+
+Enable Debug Output
+===================
+
+Th gdrive slave uses categorized debug output. Normally you would enable its output with a simple:
+
+    export QT_LOGGING_RULES="kf5.kio.gdrive.debug=true"
+
+Unfortunately for some reason the environment of the process starting the gdrive slave (e.g. Dolphin) is not passed to the slave itself. Therefore setting the above variable won't have effect and you won't see any debug message from the slave.
+
+A more robuste alternative is to create (or edit) ~/.config/QtProject/qtlogging.ini with the following content:
+
+[Rules]
+kf5.kio.gdrive.debug=true
