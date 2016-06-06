@@ -22,9 +22,8 @@
 
 #include <QStringList>
 
-#include <kio/udsentry.h>
-
 #include <KGAPI/Account>
+#include <KIO/UDSEntry>
 
 namespace KWallet
 {

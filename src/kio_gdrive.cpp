@@ -24,11 +24,6 @@
 #include <QApplication>
 #include <QTemporaryFile>
 
-#include <KWallet/KWallet>
-#include <KIO/Job>
-#include <KIO/AccessManager>
-#include <KLocalizedString>
-
 #include <KGAPI/Account>
 #include <KGAPI/AuthJob>
 #include <KGAPI/Drive/About>
@@ -46,9 +41,13 @@
 #include <KGAPI/Drive/FileSearchQuery>
 #include <KGAPI/Drive/ParentReference>
 #include <KGAPI/Drive/Permission>
+#include <KIO/AccessManager>
+#include <KIO/Job>
+#include <KLocalizedString>
+#include <KWallet>
 
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 using namespace KGAPI2;
 using namespace Drive;

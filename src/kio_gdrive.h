@@ -20,10 +20,9 @@
 #ifndef GDRIVESLAVE_H
 #define GDRIVESLAVE_H
 
-#include <KIO/SlaveBase>
-
-#include <KGAPI/Types>
 #include <KGAPI/Account>
+#include <KGAPI/Types>
+#include <KIO/SlaveBase>
 
 #include "accountmanager.h"
 #include "pathcache.h"

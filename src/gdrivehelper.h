@@ -21,8 +21,7 @@
 #define GDRIVEHELPER_H
 
 #include <KGAPI/Types>
-
-#include <kio/udsentry.h>
+#include <KIO/UDSEntry>
 
 namespace GDriveHelper
 {

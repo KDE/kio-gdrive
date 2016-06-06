@@ -20,12 +20,10 @@
 #include "accountmanager.h"
 #include "gdrivedebug.h"
 
-#include <KGAPI/AuthJob>
-
 #include <QEventLoop>
 
-//for stat.h
-#include <KIO/Job>
+#include <KIO/Job> //for stat.h
+#include <KGAPI/AuthJob>
 #include <KWallet>
 
 QString AccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");

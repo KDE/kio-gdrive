@@ -19,8 +19,8 @@
 
 #include "gdrivehelper.h"
 
-#include <KGAPI/Drive/File>
 #include <KIO/Job>
+#include <KGAPI/Drive/File>
 #include <KLocalizedString>
 
 using namespace KGAPI2::Drive;
