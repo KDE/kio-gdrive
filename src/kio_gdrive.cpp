@@ -52,33 +52,6 @@
 using namespace KGAPI2;
 using namespace Drive;
 
-#define RUN_KGAPI_JOB(job) \
-    RUN_KGAPI_JOB_PARAMS(job, url, accountId)
-#define RUN_KGAPI_JOB_PARAMS(job, url, accountId) \
-    RUN_KGAPI_JOB_IMPL(job, url, accountId, )
-#define RUN_KGAPI_JOB_RETVAL(job, retval) \
-    RUN_KGAPI_JOB_IMPL(job, url, accountId, retval)
-
-#define RUN_KGAPI_JOB_IMPL(job, url, accountId, retval) \
-{ \
-    KIOGDrive::Action action = KIOGDrive::Fail; \
-    Q_FOREVER { \
-        qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << job.account()->accessToken(); \
-        QEventLoop eventLoop; \
-        QObject::connect(&job, &KGAPI2::Job::finished, \
-                         &eventLoop, &QEventLoop::quit); \
-        eventLoop.exec(); \
-        action = handleError(&job, url); \
-        if (action == KIOGDrive::Success) { \
-            break; \
-        } else if (action == KIOGDrive::Fail) { \
-            return retval; \
-        } \
-        job.setAccount(getAccount(accountId)); \
-        job.restart(); \
-    }; \
-}
-
 class KIOPluginForMetaData : public QObject
 {
     Q_OBJECT
@@ -129,11 +102,11 @@ KIOGDrive::~KIOGDrive()
     closeConnection();
 }
 
-KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const QUrl &url)
+KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url)
 {
-    qCDebug(GDRIVE) << job->error() << job->errorString();
+    qCDebug(GDRIVE) << job.error() << job.errorString();
 
-    switch (job->error()) {
+    switch (job.error()) {
         case KGAPI2::OK:
         case KGAPI2::NoError:
             return Success;
@@ -142,7 +115,7 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const QUrl &url)
             error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
             return Fail;
         case KGAPI2::Unauthorized: {
-            const AccountPtr oldAccount = job->account();
+            const AccountPtr oldAccount = job.account();
             const AccountPtr account = m_accountManager.refreshAccount(oldAccount);
             if (!account) {
                 error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
@@ -163,7 +136,7 @@ KIOGDrive::Action KIOGDrive::handleError(KGAPI2::Job *job, const QUrl &url)
             error(KIO::ERR_DISK_FULL, url.toDisplayString());
             return Fail;
         default:
-            error(KIO::ERR_SLAVE_DEFINED, job->errorString());
+            error(KIO::ERR_SLAVE_DEFINED, job.errorString());
             return Fail;
     }
 
@@ -353,7 +326,9 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     FileFetchJob fetchJob(query, getAccount(accountId));
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
     QUrl url(path);
-    RUN_KGAPI_JOB_RETVAL(fetchJob, QString());
+    if (!runJob(fetchJob, url, accountId)) {
+        return QString();
+    }
 
     const ObjectsList objects = fetchJob.items();
     qCDebug(GDRIVE) << objects;
@@ -375,7 +350,9 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
     if (!m_rootIds.contains(accountId)) {
         AboutFetchJob aboutFetch(getAccount(accountId));
         QUrl url;
-        RUN_KGAPI_JOB_RETVAL(aboutFetch, QString())
+        if (!runJob(aboutFetch, url, accountId)) {
+            return QString();
+        }
 
         const AboutPtr about = aboutFetch.aboutData();
         if (!about || about->rootFolderId().isEmpty()) {
@@ -427,7 +404,7 @@ void KIOGDrive::listDir(const QUrl &url)
                             | FileFetchJob::Labels
                             | FileFetchJob::ExportLinks
                             | FileFetchJob::LastViewedByMeDate);
-    RUN_KGAPI_JOB(fileFetchJob)
+    runJob(fileFetchJob, url, accountId);
 
     ObjectsList objects = fileFetchJob.items();
     Q_FOREACH (const ObjectPtr &object, objects) {
@@ -482,7 +459,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
     file->setParents(ParentReferencesList() << parent);
 
     FileCreateJob createJob(file, getAccount(accountId));
-    RUN_KGAPI_JOB(createJob)
+    runJob(createJob, url, accountId);
 
     finished();
 }
@@ -515,7 +492,7 @@ void KIOGDrive::stat(const QUrl &url)
     }
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
-    RUN_KGAPI_JOB(fileFetchJob)
+    runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
@@ -566,7 +543,7 @@ void KIOGDrive::get(const QUrl &url)
                             | FileFetchJob::MimeType
                             | FileFetchJob::ExportLinks
                             | FileFetchJob::DownloadUrl);
-    RUN_KGAPI_JOB(fileFetchJob)
+    runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
@@ -585,7 +562,7 @@ void KIOGDrive::get(const QUrl &url)
     mimeType(file->mimeType());
 
     FileFetchContentJob contentJob(downloadUrl, getAccount(accountId));
-    RUN_KGAPI_JOB(contentJob)
+    runJob(contentJob, url, accountId);
 
     data(contentJob.data());
     finished();
@@ -630,13 +607,37 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
     return true;
 }
 
+bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId)
+{
+    KIOGDrive::Action action = KIOGDrive::Fail;
+    Q_FOREVER {
+        qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << job.account()->accessToken();
+        QEventLoop eventLoop;
+        QObject::connect(&job, &KGAPI2::Job::finished,
+                         &eventLoop, &QEventLoop::quit);
+        eventLoop.exec();
+        action = handleError(job, url);
+        if (action == KIOGDrive::Success) {
+            break;
+        } else if (action == KIOGDrive::Fail) {
+            return false;
+        }
+        job.setAccount(getAccount(accountId));
+        job.restart();
+    };
+
+    return true;
+}
+
 bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
 {
     const QString fileId = QUrlQuery(url).queryItemValue(QStringLiteral("id"));
     qCDebug(GDRIVE) << url << fileId;
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
-    RUN_KGAPI_JOB_RETVAL(fetchJob, false)
+    if (!runJob(fetchJob, url, accountId)) {
+        return false;
+    }
 
     const ObjectsList objects = fetchJob.items();
     if (objects.size() != 1) {
@@ -653,7 +654,9 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
 
     FileModifyJob modifyJob(tmpFile.fileName(), file, getAccount(accountId));
     modifyJob.setUpdateModifiedDate(true);
-    RUN_KGAPI_JOB_RETVAL(modifyJob, false)
+    if (!runJob(modifyJob, url, accountId)) {
+        return false;
+    }
 
     return true;
 }
@@ -694,7 +697,9 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
     }
 
     FileCreateJob createJob(tmpFile.fileName(), file, getAccount(accountId));
-    RUN_KGAPI_JOB_RETVAL(createJob, false)
+    if (!runJob(createJob, url, accountId)) {
+        return false;
+    }
 
     return true;
 }
@@ -767,7 +772,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
     sourceFileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::ModifiedDate |
                                  FileFetchJob::LastViewedByMeDate | FileFetchJob::Description);
-    RUN_KGAPI_JOB_PARAMS(sourceFileFetchJob, src, sourceAccountId)
+    runJob(sourceFileFetchJob, src, sourceAccountId);
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
@@ -798,7 +803,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     destFile->setParents(destParentReferences);
 
     FileCopyJob copyJob(sourceFile, destFile, getAccount(sourceAccountId));
-    RUN_KGAPI_JOB_PARAMS(copyJob, dest, sourceAccountId)
+    runJob(copyJob, dest, sourceAccountId);
 
     finished();
 }
@@ -848,7 +853,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // child references
     if (!isfile) {
         ChildReferenceFetchJob referencesFetch(fileId, getAccount(accountId));
-        RUN_KGAPI_JOB(referencesFetch);
+        runJob(referencesFetch, url, accountId);
         const bool isEmpty = !referencesFetch.items().count();
 
         if (!isEmpty && metaData("recurse") != QLatin1String("true")) {
@@ -858,7 +863,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     }
 
     FileTrashJob trashJob(fileId, getAccount(accountId));
-    RUN_KGAPI_JOB(trashJob)
+    runJob(trashJob, url, accountId);
 
     m_cache.removePath(url.path());
 
@@ -899,7 +904,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
     // We need to fetch ALL, so that we can do update later
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
-    RUN_KGAPI_JOB_PARAMS(sourceFileFetchJob, src, sourceAccountId)
+    runJob(sourceFileFetchJob, src, sourceAccountId);
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
@@ -959,7 +964,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
     FileModifyJob modifyJob(destFile, getAccount(sourceAccountId));
     modifyJob.setUpdateModifiedDate(true);
-    RUN_KGAPI_JOB_PARAMS(modifyJob, dest, sourceAccountId)
+    runJob(modifyJob, dest, sourceAccountId);
 
     finished();
 }
@@ -980,7 +985,7 @@ void KIOGDrive::mimetype(const QUrl &url)
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);
-    RUN_KGAPI_JOB(fileFetchJob)
+    runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {

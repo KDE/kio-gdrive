@@ -73,7 +73,7 @@ private:
 
     QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
 
-    Action handleError(KGAPI2::Job *job, const QUrl &url);
+    Action handleError(const KGAPI2::Job &job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
     QStringList pathComponents(const QString &path) const;
@@ -94,6 +94,11 @@ private:
     bool putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
     bool putCreate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
     bool readPutData(QTemporaryFile &tmpFile);
+
+    /**
+     * @return Whether @p job succeeded.
+     */
+    bool runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId);
 
     AccountManager m_accountManager;
     PathCache m_cache;
