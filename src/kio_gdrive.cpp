@@ -65,8 +65,8 @@ using namespace Drive;
     Q_FOREVER { \
         qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << job.account()->accessToken(); \
         QEventLoop eventLoop; \
-        QObject::connect(&job, SIGNAL(finished(KGAPI2::Job*)), \
-                          &eventLoop, SLOT(quit())); \
+        QObject::connect(&job, &KGAPI2::Job::finished, \
+                         &eventLoop, &QEventLoop::quit); \
         eventLoop.exec(); \
         action = handleError(&job, url); \
         if (action == KIOGDrive::Success) { \

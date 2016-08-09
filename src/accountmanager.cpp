@@ -79,8 +79,8 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
 
         QEventLoop eventLoop;
-        QObject::connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-                          &eventLoop, SLOT(quit()));
+        QObject::connect(authJob, &KGAPI2::Job::finished,
+                         &eventLoop, &QEventLoop::quit);
         eventLoop.exec();
 
         account = authJob->account();
@@ -130,8 +130,8 @@ KGAPI2::AccountPtr AccountManager::refreshAccount(const KGAPI2::AccountPtr &acco
 {
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
     QEventLoop eventLoop;
-    QObject::connect(authJob, SIGNAL(finished(KGAPI2::Job*)),
-                      &eventLoop, SLOT(quit()));
+    QObject::connect(authJob, &KGAPI2::Job::finished,
+                     &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
     if (authJob->error() != KGAPI2::OK && authJob->error() != KGAPI2::NoError) {
         return KGAPI2::AccountPtr();
