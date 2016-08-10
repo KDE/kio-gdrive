@@ -931,13 +931,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
     } else if (destPathComps.size() == 1) {
         // user is trying to move to root -> we are only renaming
     } else {
-        if (srcPathComps.size() < 3) {
-            // WTF?
-            error(KIO::ERR_DOES_NOT_EXIST, src.path());
-            return;
-        }
-
-        // skip filename and extract the second-to-last component
+         // skip filename and extract the second-to-last component
         const QString destDirId = resolveFileIdFromPath(joinSublist(destPathComps, 0, destPathComps.count() - 2, QLatin1Char('/')),
                                                         KIOGDrive::PathIsFolder);
         const QString srcDirId = resolveFileIdFromPath(joinSublist(srcPathComps, 0, srcPathComps.count() - 2, QLatin1Char('/')),
