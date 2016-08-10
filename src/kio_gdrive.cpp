@@ -104,7 +104,7 @@ KIOGDrive::~KIOGDrive()
 
 KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url)
 {
-    qCDebug(GDRIVE) << job.error() << job.errorString();
+    qCDebug(GDRIVE) << "Job status code:" << job.error() << "- message:" << job.errorString();
 
     switch (job.error()) {
         case KGAPI2::OK:
@@ -278,7 +278,7 @@ int RecursionDepthCounter::sDepth = 0;
 
 QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 {
-    qCDebug(GDRIVE) << path;
+    qCDebug(GDRIVE) << Q_FUNC_INFO << path;
     RecursionDepthCounter recursion;
     if (recursion.depth() == 1) {
         m_cache.dump();
@@ -369,7 +369,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
 
 void KIOGDrive::listDir(const QUrl &url)
 {
-    qCDebug(GDRIVE) << url;
+    qCDebug(GDRIVE) << "Going to list" << url;
 
     const QString accountId = accountFromPath(url);
     if (accountId == QLatin1String("new-account")) {
@@ -428,7 +428,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
     // file permissions.
     Q_UNUSED(permissions);
 
-    qCDebug(GDRIVE) << url << permissions;
+    qCDebug(GDRIVE) << "Creating directory" << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -466,7 +466,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
 void KIOGDrive::stat(const QUrl &url)
 {
-    qCDebug(GDRIVE) << url;
+    qCDebug(GDRIVE) << "Going to stat()" << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -514,7 +514,7 @@ void KIOGDrive::stat(const QUrl &url)
 
 void KIOGDrive::get(const QUrl &url)
 {
-    qCDebug(GDRIVE) << url;
+    qCDebug(GDRIVE) << "Fetching content of" << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -632,7 +632,7 @@ bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &account
 bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
 {
     const QString fileId = QUrlQuery(url).queryItemValue(QStringLiteral("id"));
-    qCDebug(GDRIVE) << url << fileId;
+    qCDebug(GDRIVE) << Q_FUNC_INFO << url << fileId;
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
     if (!runJob(fetchJob, url, accountId)) {
@@ -663,7 +663,7 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
 
 bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStringList &components)
 {
-    qCDebug(GDRIVE) << url;
+    qCDebug(GDRIVE) << Q_FUNC_INFO << url;
     ParentReferencesList parentReferences;
     if (components.size() < 2) {
         error(KIO::ERR_ACCESS_DENIED, url.path());
@@ -707,7 +707,13 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
 
 void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 {
-    qCDebug(GDRIVE) << url << permissions << flags;
+    // NOTE: We deliberately ignore the permissions field here, because GDrive
+    // does not recognize any privileges that could be mapped to standard UNIX
+    // file permissions.
+    Q_UNUSED(permissions)
+    Q_UNUSED(flags)
+
+    qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
@@ -822,7 +828,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // their local trashes. This however requires fixing the first FIXME first,
     // otherwise we are risking severe data loss.
 
-    qCDebug(GDRIVE) << url << isfile;
+    qCDebug(GDRIVE) << "Deleting URL" << url << "- is it a file?" << isfile;
 
     const QString fileId
         = isfile && url.hasQueryItem(QLatin1String("id"))
@@ -873,7 +879,8 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
 
 void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 {
-    qCDebug(GDRIVE) << src << dest << flags;
+    Q_UNUSED(flags)
+    qCDebug(GDRIVE) << "Renaming" << src << "to" << dest;
 
     const QString sourceAccountId = accountFromPath(src);
     const QString destAccountId = accountFromPath(dest);
@@ -908,6 +915,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
+        qCDebug(GDRIVE) << "FileFetchJob retrieved" << objects.count() << "items, while only one was expected.";
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
     }
@@ -948,6 +956,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
             ++iter;
         }
         if (!removed) {
+            qCDebug(GDRIVE) << "Could not remove" << src << "from parent references.";
             error(KIO::ERR_DOES_NOT_EXIST, src.path());
             return;
         }
@@ -971,7 +980,7 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
 void KIOGDrive::mimetype(const QUrl &url)
 {
-    qCDebug(GDRIVE) << url;
+    qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
     const QString fileId
         = url.hasQueryItem(QLatin1String("id"))
