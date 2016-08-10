@@ -24,7 +24,8 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     KIO
     Wallet)
 
-find_package(KF5GAPI 5.0.0 REQUIRED)
+# TODO: we actually need the unreleased 5.3.1
+find_package(KF5GAPI 5.3.0 REQUIRED)
 
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio_gdrive\")
