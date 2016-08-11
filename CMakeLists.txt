@@ -37,7 +37,7 @@ if(NOT Qt5Test_FOUND)
 endif()
 
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
-add_definitions(-DTRANSLATION_DOMAIN=\"kio_gdrive\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 add_subdirectory(autotests)
 add_subdirectory(src)
