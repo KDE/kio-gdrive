@@ -27,9 +27,19 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 # TODO: we actually need the unreleased 5.3.1
 find_package(KF5GAPI 5.3.0 REQUIRED)
 
+find_package(Qt5Test QUIET)
+set_package_properties(Qt5Test PROPERTIES
+    TYPE OPTIONAL
+    PURPOSE "Required for building tests.")
+
+if(NOT Qt5Test_FOUND)
+   set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
+endif()
+
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio_gdrive\")
 
+add_subdirectory(autotests)
 add_subdirectory(src)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
