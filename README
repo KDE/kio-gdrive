@@ -2,6 +2,21 @@
 Hello there, lonely wanderer and welcome to the magical land of Google Drive!
 
 
+INSTALLATION
+============
+
+    $ git clone git://anongit.kde.org/kio-gdrive.git
+    $ cd kio-gdrive
+    $ mkdir build && cd build
+    $ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    $ sudo make install
+    $ kdeinit5 # or just re-login
+
+Now you are ready to use the slave. Either run
+
+    $ kioclient5 exec gdrive:/
+
+or just type `gdrive:/` in Dolphin's URL bar.
 
 
 KNOWN ISSUES
@@ -20,18 +35,7 @@ Folders have "Unknown" size
   hence the size is "unknown".
 
 
-
 TODO
 ===========
 
-Make Trash work again
-  The original plan was to have a virtual "Trash" folder in top-level directory listing,
-  which would contain all trashed files and folders. The feature has been removed
-  though, because it breaks with folders. Trashed folders still have their original
-  parent reference set, so we fail to resolve their UID properly in
-  KIOGDrive::resolveFileIdFromPath(). This could be solved by not using nice file names
-  in trash, but that would mean two codepaths in all io methods just to handle the trash
-  case.
-
-
-
+Open tasks are tracked here: https://phabricator.kde.org/tag/kio_gdrive/
