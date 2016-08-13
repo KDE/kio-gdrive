@@ -6,6 +6,8 @@ include(FeatureSummary)
 
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.14.0)
+# TODO: we actually need the unreleased 5.3.1
+set(KGAPI_MIN_VERSION 5.3.0)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Network
@@ -24,8 +26,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     KIO
     Wallet)
 
-# TODO: we actually need the unreleased 5.3.1
-find_package(KF5GAPI 5.3.0 REQUIRED)
+find_package(KF5GAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
 find_package(Qt5Test QUIET)
 set_package_properties(Qt5Test PROPERTIES
