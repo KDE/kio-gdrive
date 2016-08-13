@@ -127,6 +127,8 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     return file->downloadUrl();
 }
 
+// Currently unused, see https://phabricator.kde.org/T3443
+/*
 KIO::UDSEntry GDriveHelper::trash()
 {
     KIO::UDSEntry trashEntry;
@@ -136,5 +138,5 @@ KIO::UDSEntry GDriveHelper::trash()
     trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("user-trash"));
     return trashEntry;
 }
-
+*/
 

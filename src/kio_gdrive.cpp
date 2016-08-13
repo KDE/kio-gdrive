@@ -244,7 +244,7 @@ void KIOGDrive::listAccounts()
     }
     KIO::UDSEntry newAccountEntry;
     newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("new-account"));
-    newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("New account"));
+    newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("login in a new google account", "New account"));
     newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
     listEntry(newAccountEntry);
