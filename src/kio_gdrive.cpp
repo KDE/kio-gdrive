@@ -20,6 +20,7 @@
 #include "kio_gdrive.h"
 #include "gdrivedebug.h"
 #include "gdrivehelper.h"
+#include "gdriveversion.h"
 
 #include <QApplication>
 #include <QTemporaryFile>
@@ -94,7 +95,7 @@ KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
 {
     Q_UNUSED(protocol);
 
-    qCDebug(GDRIVE) << "GDrive ready";
+    qCDebug(GDRIVE) << "KIO GDrive ready: version" << GDRIVE_VERSION_STRING;
 }
 
 KIOGDrive::~KIOGDrive()

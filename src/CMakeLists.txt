@@ -1,4 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_BINARY_DIR})
 
 set(kio_gdrive_SRCS
     kio_gdrive.cpp

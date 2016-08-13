@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 2.8.12)
 
 include(FeatureSummary)
 
+set(PROJECT_VERSION 0.9.70)
+
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.14.0)
 # TODO: we actually need the unreleased 5.3.1
@@ -21,6 +23,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
+include(ECMSetupVersion)
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n
@@ -37,6 +40,10 @@ set_package_properties(Qt5Test PROPERTIES
 if(NOT Qt5Test_FOUND)
    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
+
+ecm_setup_version(${PROJECT_VERSION}
+    VARIABLE_PREFIX GDRIVE
+    VERSION_HEADER gdriveversion.h)
 
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
