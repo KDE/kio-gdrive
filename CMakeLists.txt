@@ -10,6 +10,7 @@ set(KF5_MIN_VERSION 5.14.0)
 set(KGAPI_MIN_VERSION 5.3.0)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+    Gui
     Network
     Widgets)
 
