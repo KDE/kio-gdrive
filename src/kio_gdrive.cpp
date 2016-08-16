@@ -45,7 +45,6 @@
 #include <KIO/AccessManager>
 #include <KIO/Job>
 #include <KLocalizedString>
-#include <KWallet>
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -233,7 +232,7 @@ void KIOGDrive::createAccount()
 
 void KIOGDrive::listAccounts()
 {
-    const QStringList accounts = m_accountManager.accounts();
+    const auto accounts = m_accountManager.accounts();
     if (accounts.isEmpty()) {
         createAccount();
         return;
@@ -843,7 +842,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     const QString accountId = accountFromPath(url);
     const QStringList components = pathComponents(url);
 
-    // If user tries to delete the account folder, remove the account from KWallet
+    // If user tries to delete the account folder, remove the account from the keychain
     if (components.count() == 1) {
         const KGAPI2::AccountPtr account = m_accountManager.account(accountId);
         if (!account) {

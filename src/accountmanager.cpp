@@ -20,56 +20,39 @@
 #include "accountmanager.h"
 #include "gdrivedebug.h"
 
+#include <QDataStream>
 #include <QEventLoop>
+
+#include <qt5keychain/keychain.h>
 
 #include <KIO/Job> //for stat.h
 #include <KGAPI/AuthJob>
-#include <KWallet>
 
 QString AccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");
 QString AccountManager::s_apiSecret = QStringLiteral("mdT1DjzohxN3npUUzkENT0gO");
 
 
-AccountManager::AccountManager()
+QSet<QString> AccountManager::accounts()
 {
-    m_wallet = KWallet::Wallet::openWallet(
-        KWallet::Wallet::NetworkWallet(), 0,
-        KWallet::Wallet::Synchronous);
-    if (!m_wallet) {
-        qCWarning(GDRIVE) << "Failed to open KWallet";
-    } else {
-        if (!m_wallet->hasFolder(QLatin1String("GDrive"))) {
-            m_wallet->createFolder(QLatin1String("GDrive"));
-        }
+    if (m_accounts.isEmpty()) {
+        auto job = new QKeychain::ReadPasswordJob(QStringLiteral("KIO GDrive"));
+        job->setKey(QStringLiteral("gdrive-accounts"));
+        runKeychainJob(job);
 
-        m_wallet->setFolder(QLatin1String("GDrive"));
-    }
-}
+        auto data = job->binaryData();
+        m_accounts = deserialize<QSet<QString>>(&data);
 
-AccountManager::~AccountManager()
-{
-    if (m_wallet) {
-        m_wallet->closeWallet(KWallet::Wallet::NetworkWallet(), false);
-    }
-}
-
-QStringList AccountManager::accounts()
-{
-    if (!m_wallet) {
-        return QStringList();
+        qCDebug(GDRIVE) << "Fetched" << m_accounts.count() << "account(s) from keychain";
     }
 
-    return m_wallet->entryList();
+    return m_accounts;
 }
 
 KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
 {
-    if (!m_wallet) {
-        return KGAPI2::AccountPtr();
-    }
-
     KGAPI2::AccountPtr account;
-    if (accountName.isEmpty() || !m_wallet->entryList().contains(accountName)) {
+
+    if (accountName.isEmpty() || !accounts().contains(accountName)) {
         account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive"));
         account->addScope(QUrl("https://www.googleapis.com/auth/drive.file"));
@@ -88,8 +71,7 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
 
         storeAccount(account);
     } else {
-        QMap<QString, QString> entry;
-        m_wallet->readMap(accountName, entry);
+        const auto entry = readMap(accountName);
 
         const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
         QList<QUrl> scopeUrls;
@@ -108,10 +90,6 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
 
 void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
 {
-    if (!m_wallet) {
-        return;
-    }
-
     qCDebug(GDRIVE) << "Storing account" << account->accessToken();
 
     QMap<QString, QString> entry;
@@ -123,7 +101,8 @@ void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
     }
     entry[ QStringLiteral("scopes") ] = scopes.join(QLatin1Char(','));
 
-    m_wallet->writeMap(account->accountName(), entry);
+    writeMap(account->accountName(), entry);
+    storeAccountName(account->accountName());
 }
 
 KGAPI2::AccountPtr AccountManager::refreshAccount(const KGAPI2::AccountPtr &account)
@@ -156,11 +135,119 @@ KIO::UDSEntry AccountManager::accountToUDSEntry(const QString &accountNAme)
     return entry;
 }
 
-void AccountManager::removeAccount(const QString &accountName)
+void AccountManager::removeAccountName(const QString &accountName)
 {
-    if (!m_wallet) {
-        return;
+    auto accounts = this->accounts();
+    accounts.remove(accountName);
+
+    const auto data = serialize<QSet<QString>>(accounts);
+
+    auto job = new QKeychain::WritePasswordJob(QStringLiteral("KIO GDrive"));
+    job->setKey(QStringLiteral("gdrive-accounts"));
+    job->setBinaryData(data);
+    runKeychainJob(job);
+
+    m_accounts = accounts;
+}
+
+void AccountManager::storeAccountName(const QString &accountName)
+{
+    auto accounts = this->accounts();
+    accounts.insert(accountName);
+
+    const auto data = serialize<QSet<QString>>(accounts);
+
+    auto job = new QKeychain::WritePasswordJob(QStringLiteral("KIO GDrive"));
+    job->setKey(QStringLiteral("gdrive-accounts"));
+    job->setBinaryData(data);
+    runKeychainJob(job);
+
+    m_accounts = accounts;
+}
+
+QMap<QString, QString> AccountManager::readMap(const QString &accountName)
+{
+    auto job = new QKeychain::ReadPasswordJob(QStringLiteral("KIO GDrive"));
+    job->setKey(accountName);
+    runKeychainJob(job);
+
+    if (job->error()) {
+        return {};
     }
 
-    m_wallet->removeEntry(accountName);
+    auto data = job->binaryData();
+    return deserialize<QMap<QString, QString>>(&data);
+}
+
+void AccountManager::writeMap(const QString &accountName, const QMap<QString, QString> &map)
+{
+    const auto data = serialize<QMap<QString, QString>>(map);
+
+    auto job = new QKeychain::WritePasswordJob(QStringLiteral("KIO GDrive"));
+    job->setKey(accountName);
+    job->setBinaryData(data);
+    runKeychainJob(job);
+}
+
+void AccountManager::runKeychainJob(QKeychain::Job *job)
+{
+    QObject::connect(job, &QKeychain::Job::finished, [](QKeychain::Job *job) {
+        switch (job->error()) {
+        case QKeychain::NoError:
+            return;
+        case QKeychain::EntryNotFound:
+            qCDebug(GDRIVE) << "Keychain job could not find key" << job->key();
+            return;
+        case QKeychain::CouldNotDeleteEntry:
+            qCDebug(GDRIVE) << "Keychain job could not delete key" << job->key();
+            return;
+        case QKeychain::AccessDenied:
+        case QKeychain::AccessDeniedByUser:
+            qCDebug(GDRIVE) << "Keychain job could not access the system keychain";
+            break;
+        default:
+            qCDebug(GDRIVE) << "Keychain job failed:" << job->error() << "-" << job->errorString();
+            return;
+        }
+    });
+
+    QEventLoop eventLoop;
+    QObject::connect(job, &QKeychain::Job::finished, &eventLoop, &QEventLoop::quit);
+    job->start();
+    eventLoop.exec();
+}
+
+void AccountManager::removeAccount(const QString &accountName)
+{
+    auto job = new QKeychain::DeletePasswordJob(QStringLiteral("KIO GDrive"));
+    job->setKey(accountName);
+    runKeychainJob(job);
+    removeAccountName(accountName);
+}
+
+template <typename T>
+QByteArray AccountManager::serialize(const T &object)
+{
+    QByteArray data;
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream.setVersion(QDataStream::Qt_5_0);
+    stream << object;
+
+    return data;
+}
+
+template <typename T>
+T AccountManager::deserialize(QByteArray *data)
+{
+    if (!data) {
+        return {};
+    }
+
+    QDataStream stream(data, QIODevice::ReadOnly);
+    stream.setVersion(QDataStream::Qt_5_0);
+
+    T object;
+    stream >> object;
+
+    return object;
 }

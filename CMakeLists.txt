@@ -27,10 +27,11 @@ include(ECMSetupVersion)
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n
-    KIO
-    Wallet)
+    KIO)
 
 find_package(KF5GAPI ${KGAPI_MIN_VERSION} REQUIRED)
+
+find_package(Qt5Keychain REQUIRED)
 
 find_package(Qt5Test QUIET)
 set_package_properties(Qt5Test PROPERTIES

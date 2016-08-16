@@ -1,5 +1,6 @@
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
+include_directories(${QTKEYCHAIN_INCLUDE_DIRS})
 
 set(kio_gdrive_SRCS
     kio_gdrive.cpp
@@ -19,11 +20,11 @@ kcoreaddons_add_plugin(kio_gdrive
 target_link_libraries(kio_gdrive
     Qt5::Core
     Qt5::Network
+    ${QTKEYCHAIN_LIBRARIES}
     KF5::GAPICore
     KF5::GAPIDrive
     KF5::KIOCore
     KF5::KIOWidgets
-    KF5::I18n
-    KF5::Wallet)
+    KF5::I18n)
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")
