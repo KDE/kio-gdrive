@@ -1,6 +1,5 @@
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${QTKEYCHAIN_INCLUDE_DIRS})
 
 set(kio_gdrive_SRCS
     kio_gdrive.cpp
