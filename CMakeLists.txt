@@ -4,11 +4,12 @@ cmake_minimum_required(VERSION 2.8.12)
 
 include(FeatureSummary)
 
-set(PROJECT_VERSION 0.9.80)
+set(PROJECT_VERSION 0.9.81)
 
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.14.0)
 set(KGAPI_MIN_VERSION 5.3.1)
+set(QTKEYCHAIN_MIN_VERSION 0.6.0)
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Gui
@@ -30,7 +31,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 
 find_package(KF5GAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
-find_package(Qt5Keychain REQUIRED)
+find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
 
 find_package(Qt5Test QUIET)
 set_package_properties(Qt5Test PROPERTIES
