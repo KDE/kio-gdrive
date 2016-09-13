@@ -31,7 +31,11 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 
 find_package(KF5GAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
-find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
+find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION})
+set_package_properties(Qt5Keychain PROPERTIES
+    TYPE REQUIRED
+    URL "https://github.com/frankosterfeld/qtkeychain"
+    PURPOSE "Required for secure storage of accounts secrets.")
 
 find_package(Qt5Test QUIET)
 set_package_properties(Qt5Test PROPERTIES
