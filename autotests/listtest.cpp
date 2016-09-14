@@ -26,6 +26,7 @@ class ListTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void initTestCase();
     void testListJob();
 
 private:
@@ -33,6 +34,12 @@ private:
 };
 
 QTEST_GUILESS_MAIN(ListTest)
+
+void ListTest::initTestCase()
+{
+    // Avoid a runtime dependency on KLauncher.
+    qputenv("KDE_FORK_SLAVES", "yes");
+}
 
 void ListTest::testListJob()
 {
