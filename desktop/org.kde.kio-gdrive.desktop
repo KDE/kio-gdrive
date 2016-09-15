@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Dolphin (KIO GDrive)
+GenericName=Google Drive File Manager
+Categories=Qt;KDE;Network;
+Exec=dolphin gdrive://
+Icon=system-file-manager
+NoDisplay=false
+StartupNotify=true
+Terminal=false
+Type=Application

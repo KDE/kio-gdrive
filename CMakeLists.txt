@@ -55,6 +55,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 # FIXME: tests are currently broken.
 #add_subdirectory(autotests)
+add_subdirectory(desktop)
 add_subdirectory(src)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
