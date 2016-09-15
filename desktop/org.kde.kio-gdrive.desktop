@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Dolphin (KIO GDrive)
+Name=Dolphin (Google Drive)
 GenericName=Google Drive File Manager
 Categories=Qt;KDE;Network;
 Exec=dolphin gdrive://
