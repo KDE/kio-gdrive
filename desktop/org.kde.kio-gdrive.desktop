@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Dolphin (Google Drive)
+Name[ca]=Dolphin (Google Drive)
+Name[ca@valencia]=Dolphin (Google Drive)
+Name[sv]=Dolphin (Google Drive)
+Name[uk]=Dolphin (Google Диск)
+Name[x-test]=xxDolphin (Google Drive)xx
 GenericName=Google Drive File Manager
+GenericName[ca]=Gestor de fitxers amb el Google Drive
+GenericName[ca@valencia]=Gestor de fitxers amb el Google Drive
+GenericName[sv]=Google Drive-filhanterare
+GenericName[uk]=Засіб керування файлами Google Диск
+GenericName[x-test]=xxGoogle Drive File Managerxx
 Categories=Qt;KDE;Network;
 Exec=dolphin gdrive://
 Icon=system-file-manager
