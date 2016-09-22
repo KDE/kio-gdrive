@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.12)
 
 include(FeatureSummary)
 
-set(PROJECT_VERSION 0.9.81)
+set(PROJECT_VERSION 0.9.90)
 
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.14.0)
