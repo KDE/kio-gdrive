@@ -12,11 +12,10 @@ INSTALLATION
     $ sudo make install
     $ kdeinit5 # or just re-login
 
-Now you are ready to use the slave. Either run
+Now you are ready to use the slave. Either click on "Google Drive File Manager"
+in the application launcher (which will open Dolphin with the `gdrive:/` URL) or run:
 
     $ kioclient5 exec gdrive:/
-
-or just type `gdrive:/` in Dolphin's URL bar.
 
 
 KNOWN ISSUES
