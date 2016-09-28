@@ -2,6 +2,7 @@
 Name=Dolphin (Google Drive)
 Name[ca]=Dolphin (Google Drive)
 Name[ca@valencia]=Dolphin (Google Drive)
+Name[de]=Dolphin (Google Drive)
 Name[it]=Dolphin (Google Drive)
 Name[nl]=Dolphin (Google Drive)
 Name[pl]=Dolphin (Dysk Google)
@@ -13,6 +14,7 @@ Name[x-test]=xxDolphin (Google Drive)xx
 GenericName=Google Drive File Manager
 GenericName[ca]=Gestor de fitxers amb el Google Drive
 GenericName[ca@valencia]=Gestor de fitxers amb el Google Drive
+GenericName[de]=„Google Drive“-Dateiverwaltung
 GenericName[it]=Gestione file di Google Drive
 GenericName[nl]=Bestandsbeheerder voor Google Drive
 GenericName[pl]=Zarządzanie plikami Dysku Google
