@@ -322,10 +322,12 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, components[1] == QLatin1String("trash"));
 
-    const QString accountId = accountFromPath(QUrl::fromUserInput(path));
+    QUrl url;
+    url.setScheme(QStringLiteral("gdrive"));
+    url.setPath(path);
+    const QString accountId = accountFromPath(url);
     FileFetchJob fetchJob(query, getAccount(accountId));
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
-    QUrl url(path);
     if (!runJob(fetchJob, url, accountId)) {
         return QString();
     }
