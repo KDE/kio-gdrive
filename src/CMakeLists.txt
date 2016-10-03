@@ -6,7 +6,7 @@ set(kio_gdrive_SRCS
     pathcache.cpp
     accountmanager.cpp
     gdrivehelper.cpp
-    urlhelper.cpp)
+    gdriveurl.cpp)
 
 ecm_qt_declare_logging_category(kio_gdrive_SRCS
     HEADER gdrivedebug.h

@@ -17,7 +17,7 @@
  *
  */
 
-#include "../src/urlhelper.h"
+#include "../src/gdriveurl.h"
 
 #include <QTest>
 
@@ -56,12 +56,14 @@ void UrlTest::testPathComponents()
     QFETCH(QUrl, url);
     QFETCH(QStringList, expectedPathComponents);
 
-    QCOMPARE(UrlHelper::pathComponents(url), expectedPathComponents);
+    const auto gdriveUrl = GDriveUrl(url);
+
+    QCOMPARE(gdriveUrl.pathComponents(), expectedPathComponents);
 
     if (expectedPathComponents.isEmpty()) {
-        QVERIFY(UrlHelper::isRoot(url));
+        QVERIFY(gdriveUrl.isRoot());
     } else if (expectedPathComponents.count() == 1) {
-        QVERIFY(UrlHelper::isAccountRoot(url));
+        QVERIFY(gdriveUrl.isAccountRoot());
     }
 }
 

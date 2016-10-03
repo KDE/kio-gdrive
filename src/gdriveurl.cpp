@@ -18,34 +18,35 @@
  *
  */
 
-#include "urlhelper.h"
+#include "gdriveurl.h"
 
-QString UrlHelper::accountFromPath(const QUrl &url)
+GDriveUrl::GDriveUrl(const QUrl &url)
+    : m_url(url)
 {
-    const QStringList components = pathComponents(url);
-    if (components.isEmpty()) {
+    const auto path = url.adjusted(QUrl::StripTrailingSlash).path();
+    m_components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+}
+
+QString GDriveUrl::account() const
+{
+    if (isRoot()) {
         return QString();
     }
-    return components[0];
+
+    return m_components.at(0);
 }
 
-QStringList UrlHelper::pathComponents(const QString &path)
+bool GDriveUrl::isRoot() const
 {
-    return path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    return m_components.isEmpty();
 }
 
-QStringList UrlHelper::pathComponents(const QUrl &url)
+bool GDriveUrl::isAccountRoot() const
 {
-    return pathComponents(url.adjusted(QUrl::StripTrailingSlash).path());
+    return m_components.length() == 1;
 }
 
-bool UrlHelper::isRoot(const QUrl &url)
+QStringList GDriveUrl::pathComponents() const
 {
-    return pathComponents(url).length() == 0;
+    return m_components;
 }
-
-bool UrlHelper::isAccountRoot(const QUrl &url)
-{
-    return pathComponents(url).length() == 1;
-}
-

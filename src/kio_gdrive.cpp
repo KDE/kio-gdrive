@@ -20,8 +20,8 @@
 #include "kio_gdrive.h"
 #include "gdrivedebug.h"
 #include "gdrivehelper.h"
+#include "gdriveurl.h"
 #include "gdriveversion.h"
-#include "urlhelper.h"
 
 #include <QApplication>
 #include <QTemporaryFile>
@@ -52,7 +52,6 @@
 
 using namespace KGAPI2;
 using namespace Drive;
-using namespace UrlHelper;
 
 class KIOPluginForMetaData : public QObject
 {
@@ -276,7 +275,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return fileId;
     }
 
-    const QStringList components = pathComponents(path);
+    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
     Q_ASSERT(!components.isEmpty());
     if (components.size() == 1 || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
         qCDebug(GDRIVE) << "Resolved" << path << "to \"root\"";
@@ -306,7 +305,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     QUrl url;
     url.setScheme(QStringLiteral("gdrive"));
     url.setPath(path);
-    const QString accountId = accountFromPath(url);
+    const QString accountId = GDriveUrl(url).account();
     FileFetchJob fetchJob(query, getAccount(accountId));
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
     if (!runJob(fetchJob, url, accountId)) {
@@ -355,18 +354,18 @@ void KIOGDrive::listDir(const QUrl &url)
 {
     qCDebug(GDRIVE) << "Going to list" << url;
 
-    const QString accountId = accountFromPath(url);
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
     if (accountId == QLatin1String("new-account")) {
         createAccount();
         return;
     }
 
     QString folderId;
-    const QStringList components = pathComponents(url);
-    if (components.isEmpty())  {
+    if (gdriveUrl.isRoot())  {
         listAccounts();
         return;
-    } else if (components.size() == 1) {
+    } else if (gdriveUrl.isAccountRoot()) {
         folderId = rootFolderId(accountId);
     } else {
         folderId = m_cache.idForPath(url.path());
@@ -422,14 +421,17 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
     qCDebug(GDRIVE) << "Creating directory" << url;
 
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+//    const QStringList components = pathComponents(url);
     QString parentId;
     // At least account and new folder name
-    if (components.size() < 2) {
+    if (gdriveUrl.isRoot() || gdriveUrl.isAccountRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
-    } else if (components.size() == 2) {
+    }
+    const auto components = gdriveUrl.pathComponents();
+    if (components.size() == 2) {
         parentId = rootFolderId(accountId);
     } else {
         const QString subpath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
@@ -460,13 +462,14 @@ void KIOGDrive::stat(const QUrl &url)
 {
     qCDebug(GDRIVE) << "Going to stat()" << url;
 
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
-    if (components.isEmpty()) {
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    if (gdriveUrl.isRoot()) {
         // TODO Can we stat() root?
         finished();
         return;
-    } else if (components.size() == 1) {
+    }
+    if (gdriveUrl.isAccountRoot()) {
         const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(accountId);
         statEntry(entry);
         finished();
@@ -498,6 +501,7 @@ void KIOGDrive::stat(const QUrl &url)
         return;
     }
 
+    const auto components = gdriveUrl.pathComponents();
     const KIO::UDSEntry entry = fileToUDSEntry(file, joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
 
     statEntry(entry);
@@ -508,13 +512,14 @@ void KIOGDrive::get(const QUrl &url)
 {
     qCDebug(GDRIVE) << "Fetching content of" << url;
 
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
 
-    if (components.isEmpty()) {
+    if (gdriveUrl.isRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
-    } else if (components.size() == 1) {
+    }
+    if (gdriveUrl.isAccountRoot()) {
         // You cannot GET an account folder!
         error(KIO::ERR_ACCESS_DENIED, url.path());
         return;
@@ -707,8 +712,9 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    const QStringList components = gdriveUrl.pathComponents();
 
     if (url.hasQueryItem(QStringLiteral("id"))) {
         if (!putUpdate(url, accountId, components)) {
@@ -740,8 +746,10 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     // name will be created.
     Q_UNUSED(flags);
 
-    const QString sourceAccountId = accountFromPath(src);
-    const QString destAccountId = accountFromPath(dest);
+    const auto srcGDriveUrl = GDriveUrl(src);
+    const auto destGDriveUrl = GDriveUrl(dest);
+    const QString sourceAccountId = srcGDriveUrl.account();
+    const QString destAccountId = destGDriveUrl.account();
 
     // TODO: Does this actually happen, or does KIO treat our account name as host?
     if (sourceAccountId != destAccountId) {
@@ -750,11 +758,11 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
         return;
     }
 
-    const QStringList srcPathComps = pathComponents(src);
-    if (srcPathComps.isEmpty()) {
+    if (srcGDriveUrl.isRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
         return;
-    } else if (srcPathComps.size() == 1) {
+    }
+    if (srcGDriveUrl.isAccountRoot()) {
         error(KIO::ERR_ACCESS_DENIED, src.path());
         return;
     }
@@ -780,12 +788,13 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
 
     const FilePtr sourceFile = objects[0].dynamicCast<File>();
 
-    const QStringList destPathComps = pathComponents(dest);
     ParentReferencesList destParentReferences;
-    if (destPathComps.isEmpty()) {
+    if (destGDriveUrl.isRoot()) {
         error(KIO::ERR_ACCESS_DENIED, dest.path());
         return;
-    } else if (destPathComps.size() == 1) {
+    }
+    const auto destPathComps = destGDriveUrl.pathComponents();
+    if (destGDriveUrl.isAccountRoot()) {
         // copy to root
     } else {
         const QString destDirId = destPathComps[destPathComps.count() - 2];
@@ -831,11 +840,11 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
-    const QString accountId = accountFromPath(url);
-    const QStringList components = pathComponents(url);
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
 
     // If user tries to delete the account folder, remove the account from the keychain
-    if (components.count() == 1) {
+    if (gdriveUrl.isAccountRoot()) {
         const KGAPI2::AccountPtr account = m_accountManager.account(accountId);
         if (!account) {
             error(KIO::ERR_DOES_NOT_EXIST, accountId);
@@ -874,8 +883,10 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
     Q_UNUSED(flags)
     qCDebug(GDRIVE) << "Renaming" << src << "to" << dest;
 
-    const QString sourceAccountId = accountFromPath(src);
-    const QString destAccountId = accountFromPath(dest);
+    const auto srcGDriveUrl = GDriveUrl(src);
+    const auto destGDriveUrl = GDriveUrl(dest);
+    const QString sourceAccountId = srcGDriveUrl.account();
+    const QString destAccountId = destGDriveUrl.account();
 
     // TODO: Does this actually happen, or does KIO treat our account name as host?
     if (sourceAccountId != destAccountId) {
@@ -883,11 +894,11 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         return;
     }
 
-    const QStringList srcPathComps = pathComponents(src);
-    if (srcPathComps.isEmpty()) {
+    if (srcGDriveUrl.isRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, dest.path());
         return;
-    } else if (srcPathComps.size() == 1) {
+    }
+    if (srcGDriveUrl.isAccountRoot()) {
         error(KIO::ERR_ACCESS_DENIED, dest.path());
         return;
     }
@@ -915,12 +926,14 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
     const FilePtr sourceFile = objects[0].dynamicCast<File>();
 
     ParentReferencesList parentReferences = sourceFile->parents();
-    const QStringList destPathComps = pathComponents(dest);
-    if (destPathComps.isEmpty()) {
-        // paths.size == 0 -> error, user is trying to move to top-level gdrive:///
+    if (destGDriveUrl.isRoot()) {
+        // user is trying to move to top-level gdrive:///
         error(KIO::ERR_ACCESS_DENIED, dest.fileName());
         return;
-    } else if (destPathComps.size() == 1) {
+    }
+    const auto srcPathComps = srcGDriveUrl.pathComponents();
+    const auto destPathComps = destGDriveUrl.pathComponents();
+    if (destGDriveUrl.isAccountRoot()) {
         // user is trying to move to root -> we are only renaming
     } else {
          // skip filename and extract the second-to-last component
@@ -976,7 +989,7 @@ void KIOGDrive::mimetype(const QUrl &url)
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
-    const QString accountId = accountFromPath(url);
+    const QString accountId = GDriveUrl(url).account();
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);

@@ -18,20 +18,24 @@
  *
  */
 
-#ifndef URLHELPER_H
-#define URLHELPER_H
+#ifndef GDRIVEURL_U
+#define GDRIVEURL_U
 
 #include <QUrl>
 
-namespace UrlHelper
+class GDriveUrl
 {
-    QString accountFromPath(const QUrl &url);
+public:
+    explicit GDriveUrl(const QUrl &url);
 
-    QStringList pathComponents(const QString &path);
-    QStringList pathComponents(const QUrl &url);
+    QString account() const;
+    bool isRoot() const;
+    bool isAccountRoot() const;
+    QStringList pathComponents() const;
 
-    bool isRoot(const QUrl &url);
-    bool isAccountRoot(const QUrl &url);
-}
+private:
+    QUrl m_url;
+    QStringList m_components;
+};
 
-#endif // URLHELPER_H
+#endif // GDRIVEURL_U
