@@ -50,49 +50,40 @@ using namespace KGAPI2::Drive;
 
 namespace GDriveHelper {
 
-static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap = []() {
-    QMap<QString, QString> ext;
-    ext[VND_OASIS_OPENDOCUMENT_TEXT] = QStringLiteral(".odt");
-    ext[VND_OASIS_OPENDOCUMENT_SPREADSHEED] = QStringLiteral(".ods");
-    ext[VND_OASIS_OPENDOCUMENT_PRESENTATION] = QStringLiteral(".odp");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT] = QStringLiteral(".docx");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET] = QStringLiteral(".xlsx");
-    ext[VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION] = QStringLiteral(".pptx");
-    ext[IMAGE_PNG] = QStringLiteral(".png");
-    ext[IMAGE_JPEG] = QStringLiteral(".jpg");
-    ext[APPLICATION_PDF] = QStringLiteral(".pdf");
-    return ext;
-}();
+static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap{
+    { VND_OASIS_OPENDOCUMENT_TEXT, QStringLiteral(".odt") },
+    { VND_OASIS_OPENDOCUMENT_SPREADSHEED, QStringLiteral(".ods") },
+    { VND_OASIS_OPENDOCUMENT_PRESENTATION, QStringLiteral(".odp") },
+    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, QStringLiteral(".docx") },
+    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, QStringLiteral(".xlsx") },
+    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION, QStringLiteral(".pptx") },
+    { IMAGE_PNG, QStringLiteral(".png") },
+    { IMAGE_JPEG, QStringLiteral(".jpg") },
+    { APPLICATION_PDF, QStringLiteral(".pdf") }
+};
 
-static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > ConversionMap = []() {
-    QMap<QString, QStringList> map;
-
-    map[VND_GOOGLE_APPS_DOCUMENT] = QStringList {
+static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > ConversionMap{
+    { VND_GOOGLE_APPS_DOCUMENT, {
             VND_OASIS_OPENDOCUMENT_TEXT,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT,
-            APPLICATION_PDF
-    };
-
-    map[VND_GOOGLE_APPS_DRAWING] = QStringList {
+            APPLICATION_PDF }
+    },
+    { VND_GOOGLE_APPS_DRAWING, {
             IMAGE_PNG,
             IMAGE_JPEG,
-            APPLICATION_PDF
-    };
-
-    map[VND_GOOGLE_APPS_PRESENTATION] = QStringList {
+            APPLICATION_PDF }
+    },
+    { VND_GOOGLE_APPS_PRESENTATION, {
             VND_OASIS_OPENDOCUMENT_PRESENTATION,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION,
-            APPLICATION_PDF
-    };
-
-    map[VND_GOOGLE_APPS_SPREADSHEET] = QStringList {
+            APPLICATION_PDF }
+    },
+    { VND_GOOGLE_APPS_SPREADSHEET, {
             VND_OASIS_OPENDOCUMENT_SPREADSHEED,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET,
-            APPLICATION_PDF
-    };
-
-    return map;
-}();
+            APPLICATION_PDF }
+    }
+};
 
 }
 
