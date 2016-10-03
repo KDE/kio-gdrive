@@ -62,6 +62,7 @@ if(DOLPHIN_INTEGRATION)
     add_subdirectory(desktop)
 endif()
 
+add_subdirectory(doc)
 add_subdirectory(src)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
