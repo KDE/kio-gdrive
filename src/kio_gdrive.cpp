@@ -21,6 +21,7 @@
 #include "gdrivedebug.h"
 #include "gdrivehelper.h"
 #include "gdriveversion.h"
+#include "urlhelper.h"
 
 #include <QApplication>
 #include <QTemporaryFile>
@@ -51,6 +52,7 @@
 
 using namespace KGAPI2;
 using namespace Drive;
+using namespace UrlHelper;
 
 class KIOPluginForMetaData : public QObject
 {
@@ -197,30 +199,7 @@ void KIOGDrive::openConnection()
 
 
 
-QStringList KIOGDrive::pathComponents(const QString &path) const
-{
-    return path.split(QLatin1Char('/'), QString::SkipEmptyParts);
-}
 
-QString KIOGDrive::accountFromPath(const QUrl &url) const
-{
-    const QStringList components = pathComponents(url);
-    if (components.isEmpty()) {
-        return QString();
-    }
-    return components[0];
-}
-
-bool KIOGDrive::isRoot(const QUrl &url) const
-{
-    return pathComponents(url).length() == 0;
-}
-
-
-bool KIOGDrive::isAccountRoot(const QUrl &url) const
-{
-    return pathComponents(url).length() == 1;
-}
 
 
 void KIOGDrive::createAccount()

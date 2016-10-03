@@ -1,5 +1,11 @@
 include(ECMAddTests)
 
+ecm_add_test(
+    urltest.cpp ../src/urlhelper.cpp
+    LINK_LIBRARIES Qt5::Test
+    TEST_NAME urltest
+    NAME_PREFIX kio_gdrive-)
+
 # FIXME: this test is currently broken for Jenkins
 #ecm_add_test(
 #    listtest.cpp

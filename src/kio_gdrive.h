@@ -78,14 +78,7 @@ private:
     Action handleError(const KGAPI2::Job &job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
-    QStringList pathComponents(const QString &path) const;
-    QStringList pathComponents(const QUrl &url) const {
-        return pathComponents(url.adjusted(QUrl::StripTrailingSlash).path());
-    }
 
-    bool isRoot(const QUrl &url) const;
-    bool isAccountRoot(const QUrl &url) const;
-    QString accountFromPath(const QUrl &url) const;
 
     KGAPI2::AccountPtr getAccount(const QString &accountName) {
         return m_accountManager.account(accountName);
