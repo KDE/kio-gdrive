@@ -62,6 +62,8 @@ public:
     virtual void mimetype(const QUrl &url) Q_DECL_OVERRIDE;
 
 private:
+    Q_DISABLE_COPY(KIOGDrive)
+
     enum PathFlags {
         None = 0,
         PathIsFolder = 1,

@@ -58,7 +58,7 @@ class KIOPluginForMetaData : public QObject
     Q_PLUGIN_METADATA(IID "org.kde.kio.slave.gdrive" FILE "gdrive.json")
 };
 
-static QString joinSublist(const QStringList &strv, int start, int end, const QChar &joinChar)
+static QString joinSublist(const QStringList &strv, int start, int end, QChar joinChar)
 {
     QString res;
     for (int i = start; i <= end; ++i) {
@@ -165,7 +165,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
         entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType());
         entry.insert(KIO::UDSEntry::UDS_SIZE, file->fileSize());
-        entry.insert(KIO::UDSEntry::UDS_URL, QString::fromLatin1("gdrive://%1/%2?id=%3").arg(path, origFile->title(), origFile->id()));
+        entry.insert(KIO::UDSEntry::UDS_URL, QStringLiteral("gdrive://%1/%2?id=%3").arg(path, origFile->title(), origFile->id()));
     }
 
     entry.insert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
@@ -226,7 +226,7 @@ bool KIOGDrive::isAccountRoot(const QUrl &url) const
 void KIOGDrive::createAccount()
 {
     const KGAPI2::AccountPtr account = m_accountManager.account(QString());
-    redirection(QUrl(QString::fromLatin1("gdrive:/%1").arg(account->accountName())));
+    redirection(QUrl(QStringLiteral("gdrive:/%1").arg(account->accountName())));
     finished();
 }
 
@@ -263,6 +263,9 @@ public:
     {
         --sDepth;
     }
+
+    RecursionDepthCounter(const RecursionDepthCounter &) = delete;
+    RecursionDepthCounter& operator=(const RecursionDepthCounter &) = delete;
 
     int depth() const
     {
@@ -301,7 +304,6 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return rootFolderId(components[0]);
     }
 
-    QString parentName;
     Q_ASSERT(components.size() >= 2);
     const QString parentPath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
     // Try to recursively resolve ID of parent path - either from cache, or by
@@ -349,7 +351,8 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
 QString KIOGDrive::rootFolderId(const QString &accountId)
 {
-    if (!m_rootIds.contains(accountId)) {
+    auto it = m_rootIds.constFind(accountId);
+    if (it == m_rootIds.cend()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
         QUrl url;
         if (!runJob(aboutFetch, url, accountId)) {
@@ -362,11 +365,11 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
             return QString();
         }
 
-        m_rootIds.insert(accountId, about->rootFolderId());
-        return about->rootFolderId();
+        auto v = m_rootIds.insert(accountId, about->rootFolderId());
+        return *v;
     }
 
-    return m_rootIds[accountId];
+    return *it;
 }
 
 void KIOGDrive::listDir(const QUrl &url)
@@ -492,8 +495,8 @@ void KIOGDrive::stat(const QUrl &url)
     }
 
     const QString fileId
-        = url.hasQueryItem(QLatin1String("id"))
-            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+        = url.hasQueryItem(QStringLiteral("id"))
+            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::None);
     if (fileId.isEmpty()) {
@@ -539,8 +542,8 @@ void KIOGDrive::get(const QUrl &url)
     }
 
     const QString fileId =
-        url.hasQueryItem(QLatin1String("id"))
-            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+        url.hasQueryItem(QStringLiteral("id"))
+            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (fileId.isEmpty()) {
@@ -778,7 +781,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     }
 
     const QString sourceFileId
-        = src.hasQueryItem(QLatin1String("id"))
+        = src.hasQueryItem(QStringLiteral("id"))
               ? QUrlQuery(src).queryItemValue(QStringLiteral("id"))
               : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
     if (sourceFileId.isEmpty()) {
@@ -841,8 +844,8 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     qCDebug(GDRIVE) << "Deleting URL" << url << "- is it a file?" << isfile;
 
     const QString fileId
-        = isfile && url.hasQueryItem(QLatin1String("id"))
-            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+        = isfile && url.hasQueryItem(QStringLiteral("id"))
+            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
     if (fileId.isEmpty()) {
@@ -872,7 +875,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
         runJob(referencesFetch, url, accountId);
         const bool isEmpty = !referencesFetch.items().count();
 
-        if (!isEmpty && metaData("recurse") != QLatin1String("true")) {
+        if (!isEmpty && metaData(QStringLiteral("recurse")) != QLatin1String("true")) {
             error(KIO::ERR_COULD_NOT_RMDIR, url.path());
             return;
         }
@@ -910,8 +913,8 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         return;
     }
     const QString sourceFileId
-        = src.hasQueryItem(QLatin1String("id"))
-            ? QUrlQuery(src).queryItemValue(QLatin1String("id"))
+        = src.hasQueryItem(QStringLiteral("id"))
+            ? QUrlQuery(src).queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (sourceFileId.isEmpty()) {
@@ -987,8 +990,8 @@ void KIOGDrive::mimetype(const QUrl &url)
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
     const QString fileId
-        = url.hasQueryItem(QLatin1String("id"))
-            ? QUrlQuery(url).queryItemValue(QLatin1String("id"))
+        = url.hasQueryItem(QStringLiteral("id"))
+            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());

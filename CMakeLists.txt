@@ -51,6 +51,7 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER gdriveversion.h)
 
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 # FIXME: tests are currently broken.

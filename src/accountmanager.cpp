@@ -54,10 +54,10 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
 
     if (accountName.isEmpty() || !accounts().contains(accountName)) {
         account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.file"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.metadata.readonly"));
-        account->addScope(QUrl("https://www.googleapis.com/auth/drive.readonly"));
+        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive")));
+        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.file")));
+        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.metadata.readonly")));
+        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.readonly")));
 
         KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
 
