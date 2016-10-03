@@ -37,14 +37,14 @@ set_package_properties(Qt5Keychain PROPERTIES
     URL "https://github.com/frankosterfeld/qtkeychain"
     PURPOSE "Required for secure storage of accounts secrets.")
 
-#find_package(Qt5Test QUIET)
-#set_package_properties(Qt5Test PROPERTIES
-#    TYPE OPTIONAL
-#    PURPOSE "Required for building tests.")
+find_package(Qt5Test QUIET)
+set_package_properties(Qt5Test PROPERTIES
+    TYPE OPTIONAL
+    PURPOSE "Required for building tests.")
 
-#if(NOT Qt5Test_FOUND)
-#   set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
-#endif()
+if(NOT Qt5Test_FOUND)
+   set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
+endif()
 
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX GDRIVE
@@ -54,8 +54,7 @@ add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
-# FIXME: tests are currently broken.
-#add_subdirectory(autotests)
+add_subdirectory(autotests)
 
 option(DOLPHIN_INTEGRATION "Whether to install the .desktop file for Dolphin integration." ON)
 if(DOLPHIN_INTEGRATION)
