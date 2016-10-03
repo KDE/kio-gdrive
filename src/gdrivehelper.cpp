@@ -100,16 +100,18 @@ bool GDriveHelper::isGDocsDocument(const KGAPI2::Drive::FilePtr &file)
 QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
 {
     const QString originalMimeType = file->mimeType();
-    if (!GDriveHelper::ConversionMap.contains(originalMimeType)) {
+    auto convIt = GDriveHelper::ConversionMap.constFind(originalMimeType);
+    if (convIt == GDriveHelper::ConversionMap.cend()) {
         return file->downloadUrl();
     }
 
     const auto exportLinks = file->exportLinks();
-    Q_FOREACH (const QString &targetMimeType, GDriveHelper::ConversionMap[originalMimeType]) {
-        if (exportLinks.contains(targetMimeType)) {
+    Q_FOREACH (const QString &targetMimeType, convIt.value()) {
+        const auto linkIt = exportLinks.constFind(targetMimeType);
+        if (linkIt != exportLinks.cend()) {
             file->setMimeType(targetMimeType);
             file->setTitle(file->title() + GDriveHelper::ExtensionsMap[targetMimeType]);
-            return exportLinks[targetMimeType];
+            return *linkIt;
         }
     }
 
