@@ -26,38 +26,57 @@ class UrlTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void testPathComponents_data();
-    void testPathComponents();
+    void testGDriveUrl_data();
+    void testGDriveUrl();
 };
 
 QTEST_GUILESS_MAIN(UrlTest)
 
-void UrlTest::testPathComponents_data()
+void UrlTest::testGDriveUrl_data()
 {
     QTest::addColumn<QUrl>("url");
+    QTest::addColumn<QString>("expectedAccount");
     QTest::addColumn<QStringList>("expectedPathComponents");
 
-    QTest::newRow("root url") << QUrl(QStringLiteral("gdrive://")) << QStringList();
-    QTest::newRow("account root url") << QUrl(QStringLiteral("gdrive://foo@gmail.com")) << QStringList();
-    QTest::newRow("file in account root") << QUrl(QStringLiteral("gdrive://foo@gmail.com/bar.txt"))
-                                 << QStringList {QStringLiteral("bar.txt")};
-    QTest::newRow("folder in account root - no trailing slash") << QUrl(QStringLiteral("gdrive://foo@gmail.com/bar"))
-                                 << QStringList {QStringLiteral("bar")};
-    QTest::newRow("folder in account root - trailing slash") << QUrl(QStringLiteral("gdrive://foo@gmail.com/bar/"))
-                                 << QStringList {QStringLiteral("bar")};
-    QTest::newRow("wrong url (slash before host/authority)") << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar.txt"))
-                                 << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar.txt")};
-    QTest::newRow("file in subfolder") << QUrl(QStringLiteral("gdrive://foo@gmail.com/bar/baz.txt"))
-                                 << QStringList {QStringLiteral("bar"), QStringLiteral("baz.txt")};
+    QTest::newRow("root url")
+            << QUrl(QStringLiteral("gdrive://"))
+            << QString()
+            << QStringList();
+
+    QTest::newRow("account root url")
+            << QUrl(QStringLiteral("gdrive:///foo@gmail.com"))
+            << QStringLiteral("foo@gmail.com")
+            << QStringList {QStringLiteral("foo@gmail.com")};
+
+    QTest::newRow("file in account root")
+            << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar.txt"))
+            << QStringLiteral("foo@gmail.com")
+            << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar.txt")};
+
+    QTest::newRow("folder in account root - no trailing slash")
+            << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar"))
+            << QStringLiteral("foo@gmail.com")
+            << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar")};
+    QTest::newRow("folder in account root - trailing slash")
+            << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar/"))
+            << QStringLiteral("foo@gmail.com")
+            << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar")};
+
+    QTest::newRow("file in subfolder")
+            << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar/baz.txt"))
+            << QStringLiteral("foo@gmail.com")
+            << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar"), QStringLiteral("baz.txt")};
 }
 
-void UrlTest::testPathComponents()
+void UrlTest::testGDriveUrl()
 {
     QFETCH(QUrl, url);
+    QFETCH(QString, expectedAccount);
     QFETCH(QStringList, expectedPathComponents);
 
     const auto gdriveUrl = GDriveUrl(url);
 
+    QCOMPARE(gdriveUrl.account(), expectedAccount);
     QCOMPARE(gdriveUrl.pathComponents(), expectedPathComponents);
 
     if (expectedPathComponents.isEmpty()) {
