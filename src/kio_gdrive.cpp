@@ -248,10 +248,6 @@ int RecursionDepthCounter::sDepth = 0;
 QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 {
     qCDebug(GDRIVE) << Q_FUNC_INFO << path;
-    RecursionDepthCounter recursion;
-    if (recursion.depth() == 1) {
-        m_cache.dump();
-    }
 
     if (path.isEmpty()) {
         return QString();
