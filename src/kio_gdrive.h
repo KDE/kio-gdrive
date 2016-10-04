@@ -86,8 +86,8 @@ private:
 
     QString rootFolderId(const QString &accountId);
 
-    bool putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
-    bool putCreate(const QUrl &url, const QString &accountId, const QStringList &pathComponents);
+    bool putUpdate(const QUrl &url);
+    bool putCreate(const QUrl &url);
     bool readPutData(QTemporaryFile &tmpFile);
 
     /**

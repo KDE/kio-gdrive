@@ -624,10 +624,13 @@ bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &account
     return true;
 }
 
-bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStringList &pathComponents)
+bool KIOGDrive::putUpdate(const QUrl &url)
 {
     const QString fileId = QUrlQuery(url).queryItemValue(QStringLiteral("id"));
     qCDebug(GDRIVE) << Q_FUNC_INFO << url << fileId;
+
+    const auto gdriveUrl = GDriveUrl(url);
+    const auto accountId = gdriveUrl.account();
 
     FileFetchJob fetchJob(fileId, getAccount(accountId));
     if (!runJob(fetchJob, url, accountId)) {
@@ -636,7 +639,7 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
 
     const ObjectsList objects = fetchJob.items();
     if (objects.size() != 1) {
-        putCreate(url, accountId, pathComponents);
+        putCreate(url);
         return false;
     }
 
@@ -656,17 +659,21 @@ bool KIOGDrive::putUpdate(const QUrl &url, const QString &accountId, const QStri
     return true;
 }
 
-bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStringList &components)
+bool KIOGDrive::putCreate(const QUrl &url)
 {
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
     ParentReferencesList parentReferences;
-    if (components.size() < 2) {
+
+    const auto gdriveUrl = GDriveUrl(url);
+    if (gdriveUrl.isRoot() || gdriveUrl.isAccountRoot()) {
         error(KIO::ERR_ACCESS_DENIED, url.path());
         return false;
-    } else if (components.length() == 2) {
+    }
+    const auto components = gdriveUrl.pathComponents();
+    if (components.length() == 2) {
         // Creating in root directory
     } else {
-        const QString parentId = resolveFileIdFromPath(joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
+        const QString parentId = resolveFileIdFromPath(gdriveUrl.parentPath());
         if (parentId.isEmpty()) {
             error(KIO::ERR_DOES_NOT_EXIST, url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
             return false;
@@ -691,6 +698,7 @@ bool KIOGDrive::putCreate(const QUrl &url, const QString &accountId, const QStri
         return false;
     }
 
+    const auto accountId = gdriveUrl.account();
     FileCreateJob createJob(tmpFile.fileName(), file, getAccount(accountId));
     if (!runJob(createJob, url, accountId)) {
         return false;
@@ -710,16 +718,12 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
-    const auto gdriveUrl = GDriveUrl(url);
-    const QString accountId = gdriveUrl.account();
-    const QStringList components = gdriveUrl.pathComponents();
-
     if (url.hasQueryItem(QStringLiteral("id"))) {
-        if (!putUpdate(url, accountId, components)) {
+        if (!putUpdate(url)) {
             return;
         }
     } else {
-        if (!putCreate(url, accountId, components)) {
+        if (!putCreate(url)) {
             return;
         }
     }
