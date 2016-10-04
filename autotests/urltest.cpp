@@ -36,35 +36,42 @@ void UrlTest::testGDriveUrl_data()
 {
     QTest::addColumn<QUrl>("url");
     QTest::addColumn<QString>("expectedAccount");
+    QTest::addColumn<QString>("expectedParentPath");
     QTest::addColumn<QStringList>("expectedPathComponents");
 
     QTest::newRow("root url")
             << QUrl(QStringLiteral("gdrive://"))
+            << QString()
             << QString()
             << QStringList();
 
     QTest::newRow("account root url")
             << QUrl(QStringLiteral("gdrive:///foo@gmail.com"))
             << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/")
             << QStringList {QStringLiteral("foo@gmail.com")};
 
     QTest::newRow("file in account root")
             << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar.txt"))
             << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com")
             << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar.txt")};
 
     QTest::newRow("folder in account root - no trailing slash")
             << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar"))
             << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com")
             << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar")};
     QTest::newRow("folder in account root - trailing slash")
             << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar/"))
             << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com")
             << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar")};
 
     QTest::newRow("file in subfolder")
             << QUrl(QStringLiteral("gdrive:///foo@gmail.com/bar/baz.txt"))
             << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com/bar")
             << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar"), QStringLiteral("baz.txt")};
 }
 
@@ -72,11 +79,13 @@ void UrlTest::testGDriveUrl()
 {
     QFETCH(QUrl, url);
     QFETCH(QString, expectedAccount);
+    QFETCH(QString, expectedParentPath);
     QFETCH(QStringList, expectedPathComponents);
 
     const auto gdriveUrl = GDriveUrl(url);
 
     QCOMPARE(gdriveUrl.account(), expectedAccount);
+    QCOMPARE(gdriveUrl.parentPath(), expectedParentPath);
     QCOMPARE(gdriveUrl.pathComponents(), expectedPathComponents);
 
     if (expectedPathComponents.isEmpty()) {

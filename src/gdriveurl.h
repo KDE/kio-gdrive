@@ -31,6 +31,7 @@ public:
     QString account() const;
     bool isRoot() const;
     bool isAccountRoot() const;
+    QString parentPath() const;
     QStringList pathComponents() const;
 
 private:

@@ -46,6 +46,18 @@ bool GDriveUrl::isAccountRoot() const
     return m_components.length() == 1;
 }
 
+QString GDriveUrl::parentPath() const
+{
+    if (isRoot()) {
+        return QString();
+    }
+
+    auto path = m_components;
+    path.removeLast();
+
+    return QLatin1Char('/') + path.join(QLatin1Char('/'));
+}
+
 QStringList GDriveUrl::pathComponents() const
 {
     return m_components;
