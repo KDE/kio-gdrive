@@ -61,7 +61,7 @@ class KIOPluginForMetaData : public QObject
 
 static QString joinSublist(const QStringList &strv, int start, int end, QChar joinChar)
 {
-    QString res;
+    QString res = joinChar;
     for (int i = start; i <= end; ++i) {
         res += strv[i];
         if (i < end) {
