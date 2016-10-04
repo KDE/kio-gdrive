@@ -59,18 +59,6 @@ class KIOPluginForMetaData : public QObject
     Q_PLUGIN_METADATA(IID "org.kde.kio.slave.gdrive" FILE "gdrive.json")
 };
 
-static QString joinSublist(const QStringList &strv, int start, int end, QChar joinChar)
-{
-    QString res = joinChar;
-    for (int i = start; i <= end; ++i) {
-        res += strv[i];
-        if (i < end) {
-            res += joinChar;
-        }
-    }
-    return res;
-}
-
 extern "C"
 {
     int Q_DECL_EXPORT kdemain(int argc, char **argv)
@@ -275,18 +263,21 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return fileId;
     }
 
-    const QStringList components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
-    Q_ASSERT(!components.isEmpty());
-    if (components.size() == 1 || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
+    QUrl url;
+    url.setScheme(QStringLiteral("gdrive"));
+    url.setPath(path);
+    const auto gdriveUrl = GDriveUrl(url);
+    Q_ASSERT(!gdriveUrl.isRoot());
+
+    const QStringList components = gdriveUrl.pathComponents();
+    if (gdriveUrl.isAccountRoot() || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
         qCDebug(GDRIVE) << "Resolved" << path << "to \"root\"";
         return rootFolderId(components[0]);
     }
 
-    Q_ASSERT(components.size() >= 2);
-    const QString parentPath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
     // Try to recursively resolve ID of parent path - either from cache, or by
     // querying Google
-    const QString parentId = resolveFileIdFromPath(parentPath, KIOGDrive::PathIsFolder);
+    const QString parentId = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
     if (parentId.isEmpty()) {
         // We failed to resolve parent -> error
         return QString();
@@ -302,10 +293,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, components[1] == QLatin1String("trash"));
 
-    QUrl url;
-    url.setScheme(QStringLiteral("gdrive"));
-    url.setPath(path);
-    const QString accountId = GDriveUrl(url).account();
+    const QString accountId = gdriveUrl.account();
     FileFetchJob fetchJob(query, getAccount(accountId));
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
     if (!runJob(fetchJob, url, accountId)) {
