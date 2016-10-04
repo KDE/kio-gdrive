@@ -434,8 +434,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
     if (components.size() == 2) {
         parentId = rootFolderId(accountId);
     } else {
-        const QString subpath = joinSublist(components, 0, components.size() - 2, QLatin1Char('/'));
-        parentId = resolveFileIdFromPath(subpath, KIOGDrive::PathIsFolder);
+        parentId = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
     }
 
     if (parentId.isEmpty()) {
@@ -501,8 +500,7 @@ void KIOGDrive::stat(const QUrl &url)
         return;
     }
 
-    const auto components = gdriveUrl.pathComponents();
-    const KIO::UDSEntry entry = fileToUDSEntry(file, joinSublist(components, 0, components.size() - 2, QLatin1Char('/')));
+    const KIO::UDSEntry entry = fileToUDSEntry(file, gdriveUrl.parentPath());
 
     statEntry(entry);
     finished();
@@ -937,10 +935,8 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         // user is trying to move to root -> we are only renaming
     } else {
          // skip filename and extract the second-to-last component
-        const QString destDirId = resolveFileIdFromPath(joinSublist(destPathComps, 0, destPathComps.count() - 2, QLatin1Char('/')),
-                                                        KIOGDrive::PathIsFolder);
-        const QString srcDirId = resolveFileIdFromPath(joinSublist(srcPathComps, 0, srcPathComps.count() - 2, QLatin1Char('/')),
-                                                       KIOGDrive::PathIsFolder);
+        const QString destDirId = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const QString srcDirId = resolveFileIdFromPath(srcGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         // Remove source from parent references
         auto iter = parentReferences.begin();
