@@ -5,7 +5,7 @@
             "ExtraNames": [
             ],
             "Icon": "im-google",
-            "deleteRecursive": false,
+            "deleteRecursive": true,
             "deleting": true,
             "exec": "kf5/kio/gdrive",
             "input": "none",
