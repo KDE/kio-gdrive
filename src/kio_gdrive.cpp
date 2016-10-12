@@ -101,13 +101,13 @@ KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
             return Success;
         case KGAPI2::AuthCancelled:
         case KGAPI2::AuthError:
-            error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
+            error(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
             return Fail;
         case KGAPI2::Unauthorized: {
             const AccountPtr oldAccount = job.account();
             const AccountPtr account = m_accountManager.refreshAccount(oldAccount);
             if (!account) {
-                error(KIO::ERR_COULD_NOT_LOGIN, url.toDisplayString());
+                error(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
                 return Fail;
             }
             return Restart;
@@ -558,7 +558,7 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
     // TODO: Support resumable upload (requires support in LibKGAPI)
 
     if (!tempFile.open()) {
-        error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+        error(KIO::ERR_CANNOT_WRITE, tempFile.fileName());
         return false;
     }
 
@@ -570,7 +570,7 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
         if (!buffer.isEmpty()) {
             qint64 size = tempFile.write(buffer);
             if (size != buffer.size()) {
-                error(KIO::ERR_COULD_NOT_WRITE, tempFile.fileName());
+                error(KIO::ERR_CANNOT_WRITE, tempFile.fileName());
                 return false;
             }
         }
@@ -579,7 +579,7 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
 
     if (result == -1) {
         qCWarning(GDRIVE) << "Could not read source file" << tempFile.fileName();
-        error(KIO::ERR_COULD_NOT_READ, QString());
+        error(KIO::ERR_CANNOT_READ, QString());
         return false;
     }
 
@@ -630,7 +630,7 @@ bool KIOGDrive::putUpdate(const QUrl &url)
     const FilePtr file = objects[0].dynamicCast<File>();
     QTemporaryFile tmpFile;
     if (!readPutData(tmpFile)) {
-        error(KIO::ERR_COULD_NOT_READ, url.path());
+        error(KIO::ERR_CANNOT_READ, url.path());
         return false;
     }
 
@@ -678,7 +678,7 @@ bool KIOGDrive::putCreate(const QUrl &url)
 
     QTemporaryFile tmpFile;
     if (!readPutData(tmpFile)) {
-        error(KIO::ERR_COULD_NOT_READ, url.path());
+        error(KIO::ERR_CANNOT_READ, url.path());
         return false;
     }
 
@@ -850,7 +850,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
         const bool isEmpty = !referencesFetch.items().count();
 
         if (!isEmpty && metaData(QStringLiteral("recurse")) != QLatin1String("true")) {
-            error(KIO::ERR_COULD_NOT_RMDIR, url.path());
+            error(KIO::ERR_CANNOT_RMDIR, url.path());
             return;
         }
     }
