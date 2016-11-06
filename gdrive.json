@@ -4,7 +4,7 @@
             "Class": ":internet",
             "ExtraNames": [
             ],
-            "Icon": "im-google",
+            "Icon": "folder-gdrive",
             "deleteRecursive": true,
             "deleting": true,
             "exec": "kf5/kio/gdrive",
