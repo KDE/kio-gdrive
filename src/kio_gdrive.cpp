@@ -163,7 +163,6 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
     if (!file->ownerNames().isEmpty()) {
         entry.insert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
     }
-    entry.insert(KIO::UDSEntry::UDS_HIDDEN, file->labels()->hidden());
 
     if (!isFolder) {
         if (file->editable()) {
