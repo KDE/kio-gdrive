@@ -24,6 +24,7 @@ GenericName[sv]=Google Drive-filhanterare
 GenericName[uk]=Засіб керування файлами Google Диск
 GenericName[x-test]=xxGoogle Drive File Managerxx
 Categories=Qt;KDE;Network;
+TryExec=dolphin
 Exec=dolphin gdrive://
 Icon=system-file-manager
 NoDisplay=false
