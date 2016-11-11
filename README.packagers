@@ -5,6 +5,6 @@ KIO GDrive requires a KIO-enabled file manager at runtime,
 otherwise there is no way to setup a Google Drive account.
 This can be Dolphin or Gwenview or (the unreleased) Konqueror.
 
-By default the slave assumes that Dolphin is installed and it installs
-a .desktop file that enables Dolphin integration in the applications launcher.
+The slave installs a .desktop file that enables Dolphin integration
+in the applications launcher (if Dolphin is installed).
 This can be prevented by passing `-DDOLPHIN_INTEGRATION=OFF` to cmake.
