@@ -5,6 +5,7 @@
             "ExtraNames": [
             ],
             "Icon": "folder-gdrive",
+            "X-DocPath": "kioslave5/gdrive/index.html",
             "deleteRecursive": true,
             "deleting": true,
             "exec": "kf5/kio/gdrive",
