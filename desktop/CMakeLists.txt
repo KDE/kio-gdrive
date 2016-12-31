@@ -1,2 +1,2 @@
-install(PROGRAMS org.kde.kio-gdrive.desktop
-        DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES gdrive-network.desktop
+        DESTINATION ${KDE_INSTALL_DATADIR}/remoteview)

@@ -55,12 +55,7 @@ add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 add_subdirectory(autotests)
-
-option(DOLPHIN_INTEGRATION "Whether to install the .desktop file for Dolphin integration." ON)
-if(DOLPHIN_INTEGRATION)
-    add_subdirectory(desktop)
-endif()
-
+add_subdirectory(desktop)
 add_subdirectory(doc)
 add_subdirectory(src)
 
