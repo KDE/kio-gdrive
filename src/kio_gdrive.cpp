@@ -406,13 +406,12 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
     const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
-//    const QStringList components = pathComponents(url);
-    QString parentId;
     // At least account and new folder name
     if (gdriveUrl.isRoot() || gdriveUrl.isAccountRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
+    QString parentId;
     const auto components = gdriveUrl.pathComponents();
     if (components.size() == 2) {
         parentId = rootFolderId(accountId);
