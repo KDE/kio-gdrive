@@ -1,16 +1,5 @@
 [Desktop Entry]
 Icon=folder-gdrive
 Name=Google Drive
-Name[ca]=Google Drive
-Name[ca@valencia]=Google Drive
-Name[de]=Google Drive
-Name[en_GB]=Google Drive
-Name[es]=Google Drive
-Name[it]=Google Drive
-Name[nl]=Google Drive
-Name[pt]=Google Drive
-Name[sv]=Google Drive
-Name[uk]=Google Диск
-Name[x-test]=xxGoogle Drivexx
 Type=Link
 URL=gdrive:/
