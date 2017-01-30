@@ -213,6 +213,15 @@ void KIOGDrive::listAccounts()
     newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
     listEntry(newAccountEntry);
+
+    // Create also non-writable UDSentry for "."
+    KIO::UDSEntry entry;
+    entry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    listEntry(entry);
+
     finished();
     return;
 }
