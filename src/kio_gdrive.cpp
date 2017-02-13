@@ -213,6 +213,15 @@ void KIOGDrive::listAccounts()
     newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
     listEntry(newAccountEntry);
+
+    // Create also non-writable UDSentry for "."
+    KIO::UDSEntry entry;
+    entry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    listEntry(entry);
+
     finished();
     return;
 }
@@ -406,13 +415,12 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
     const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
-//    const QStringList components = pathComponents(url);
-    QString parentId;
     // At least account and new folder name
     if (gdriveUrl.isRoot() || gdriveUrl.isAccountRoot()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
+    QString parentId;
     const auto components = gdriveUrl.pathComponents();
     if (components.size() == 2) {
         parentId = rootFolderId(accountId);
@@ -719,6 +727,8 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
 void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags)
 {
+    qCDebug(GDRIVE) << "Going to copy" << src << "to" << dest;
+
     // NOTE: We deliberately ignore the permissions field here, because GDrive
     // does not recognize any privileges that could be mapped to standard UNIX
     // file permissions.
