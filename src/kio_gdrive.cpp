@@ -727,6 +727,8 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
 void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags)
 {
+    qCDebug(GDRIVE) << "Going to copy" << src << "to" << dest;
+
     // NOTE: We deliberately ignore the permissions field here, because GDrive
     // does not recognize any privileges that could be mapped to standard UNIX
     // file permissions.
