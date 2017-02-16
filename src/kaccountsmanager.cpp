@@ -19,6 +19,9 @@
 
 #include "kaccountsmanager.h"
 
+KAccountsManager::~KAccountsManager()
+{}
+
 KGAPI2::AccountPtr KAccountsManager::account(const QString &accountName)
 {
     if (!accountName.isEmpty() && m_accounts.contains(accountName)) {
