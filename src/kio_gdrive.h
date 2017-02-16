@@ -61,6 +61,9 @@ public:
 
     virtual void mimetype(const QUrl &url) Q_DECL_OVERRIDE;
 
+protected:
+    void virtual_hook(int id, void *data) Q_DECL_OVERRIDE;
+
 private:
     Q_DISABLE_COPY(KIOGDrive)
 
@@ -78,7 +81,7 @@ private:
     Action handleError(const KGAPI2::Job &job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
-
+    void fileSystemFreeSpace(const QUrl &url);
 
     KGAPI2::AccountPtr getAccount(const QString &accountName) {
         return m_accountManager.account(accountName);
