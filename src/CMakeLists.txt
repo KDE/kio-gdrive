@@ -6,6 +6,7 @@ set(kio_gdrive_SRCS
     pathcache.cpp
     abstractaccountmanager.cpp
     accountmanager.cpp
+    kaccountsmanager.cpp
     gdrivehelper.cpp
     gdriveurl.cpp)
 
