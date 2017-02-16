@@ -59,6 +59,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 add_subdirectory(autotests)
 add_subdirectory(desktop)
+add_subdirectory(service)
 add_subdirectory(doc)
 add_subdirectory(src)
 
