@@ -70,6 +70,8 @@ private:
         PathIsFile = 2
     };
 
+    static KIO::UDSEntry accountToUDSEntry(const QString &accountName);
+
     void listAccounts();
     void createAccount();
 

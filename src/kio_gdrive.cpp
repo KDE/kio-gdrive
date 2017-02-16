@@ -182,11 +182,19 @@ void KIOGDrive::openConnection()
     qCDebug(GDRIVE) << "Ready to talk to GDrive";
 }
 
+KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
+{
+    KIO::UDSEntry entry;
 
+    entry.insert(KIO::UDSEntry::UDS_NAME, accountNAme);
+    entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, accountNAme);
+    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
 
-
-
-
+    return entry;
+}
 
 void KIOGDrive::createAccount()
 {
@@ -204,7 +212,7 @@ void KIOGDrive::listAccounts()
     }
 
     Q_FOREACH (const QString &account, accounts) {
-        const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(account);
+        const KIO::UDSEntry entry = accountToUDSEntry(account);
         listEntry(entry);
     }
     KIO::UDSEntry newAccountEntry;
@@ -460,7 +468,7 @@ void KIOGDrive::stat(const QUrl &url)
         return;
     }
     if (gdriveUrl.isAccountRoot()) {
-        const KIO::UDSEntry entry = AccountManager::accountToUDSEntry(accountId);
+        const KIO::UDSEntry entry = accountToUDSEntry(accountId);
         statEntry(entry);
         finished();
         return;

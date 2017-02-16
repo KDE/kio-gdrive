@@ -122,20 +122,6 @@ KGAPI2::AccountPtr AccountManager::refreshAccount(const KGAPI2::AccountPtr &acco
     return newAccount;
 }
 
-KIO::UDSEntry AccountManager::accountToUDSEntry(const QString &accountNAme)
-{
-    KIO::UDSEntry entry;
-
-    entry.insert(KIO::UDSEntry::UDS_NAME, accountNAme);
-    entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, accountNAme);
-    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
-    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
-
-    return entry;
-}
-
 void AccountManager::removeAccountName(const QString &accountName)
 {
     auto accounts = this->accounts();

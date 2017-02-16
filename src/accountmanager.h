@@ -41,8 +41,6 @@ public:
 
     QSet<QString> accounts();
 
-    static KIO::UDSEntry accountToUDSEntry(const QString &accountName);
-
 private:
     template<typename T>
     QByteArray serialize(const T& object);
