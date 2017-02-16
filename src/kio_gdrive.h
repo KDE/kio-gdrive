@@ -25,6 +25,7 @@
 #include <KIO/SlaveBase>
 
 #include "accountmanager.h"
+#include "kaccountsmanager.h"
 #include "pathcache.h"
 
 class QTemporaryFile;
@@ -97,7 +98,8 @@ private:
      */
     bool runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId);
 
-    AccountManager m_accountManager;
+    // AccountManager m_accountManager; TODO: figure out how to use both together.
+    KAccountsManager m_accountManager;
     PathCache m_cache;
 
     QMap<QString /* account */, QString /* rootId */> m_rootIds;

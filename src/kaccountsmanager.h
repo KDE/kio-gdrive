@@ -26,6 +26,7 @@
 class KAccountsManager : public AbstractAccountManager
 {
 public:
+    KAccountsManager();
     virtual ~KAccountsManager();
 
     KGAPI2::AccountPtr account(const QString &accountName) override;
@@ -34,6 +35,8 @@ public:
     QSet<QString> accounts() override;
 
 private:
+    void loadAccounts();
+
     QMap<QString, KGAPI2::AccountPtr> m_accounts;
 };
 
