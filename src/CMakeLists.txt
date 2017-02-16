@@ -22,6 +22,7 @@ kcoreaddons_add_plugin(kio_gdrive
 target_link_libraries(kio_gdrive
     Qt5::Core
     Qt5::Network
+    KAccounts
     ${QTKEYCHAIN_LIBRARIES}
     KF5::GAPICore
     KF5::GAPIDrive
