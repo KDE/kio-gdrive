@@ -21,25 +21,22 @@
 #ifndef ACCOUNTMANAGER_H
 #define ACCOUNTMANAGER_H
 
-#include <QSet>
-
-#include <KGAPI/Account>
-#include <KIO/UDSEntry>
+#include "abstractaccountmanager.h"
 
 namespace QKeychain
 {
     class Job;
 }
 
-class AccountManager
+class AccountManager : public AbstractAccountManager
 {
 public:
-    KGAPI2::AccountPtr account(const QString &accountName);
-    void storeAccount(const KGAPI2::AccountPtr &account);
-    KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account);
-    void removeAccount(const QString &accountName);
+    virtual ~AccountManager() {}
 
-    QSet<QString> accounts();
+    KGAPI2::AccountPtr account(const QString &accountName) override;
+    KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) override;
+    void removeAccount(const QString &accountName) override;
+    QSet<QString> accounts() override;
 
 private:
     template<typename T>
@@ -47,6 +44,8 @@ private:
 
     template<typename T>
     T deserialize(QByteArray *data);
+
+    void storeAccount(const KGAPI2::AccountPtr &account);
 
     // Store/remove account names in/from gdrive-accounts keychain entry.
     void removeAccountName(const QString &accountName);

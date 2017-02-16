@@ -4,6 +4,7 @@ include_directories(${CMAKE_BINARY_DIR})
 set(kio_gdrive_SRCS
     kio_gdrive.cpp
     pathcache.cpp
+    abstractaccountmanager.cpp
     accountmanager.cpp
     gdrivehelper.cpp
     gdriveurl.cpp)
