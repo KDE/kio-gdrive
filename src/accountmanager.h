@@ -33,7 +33,13 @@ class AccountManager : public AbstractAccountManager
 public:
     virtual ~AccountManager() {}
 
+    /**
+     * @return Pointer to the account for @p accountName.
+     * If @p accountName is empty, an authentication job will attempt
+     * to retrieve the credentials.
+     */
     KGAPI2::AccountPtr account(const QString &accountName) override;
+
     KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) override;
     void removeAccount(const QString &accountName) override;
     QSet<QString> accounts() override;

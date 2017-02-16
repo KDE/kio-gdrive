@@ -29,10 +29,24 @@ class AbstractAccountManager
 public:
     virtual ~AbstractAccountManager();
 
+    /**
+     * @return Pointer to the account for @p accountName.
+     * The pointer is valid only if @p accountName is in accounts().
+     * @see accounts()
+     */
     virtual KGAPI2::AccountPtr account(const QString &accountName) = 0;
+
     virtual KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) = 0;
+
+    /**
+     * Remove @p accountName from accounts().
+     * @see accounts()
+     */
     virtual void removeAccount(const QString &accountName) = 0;
 
+    /**
+     * @return The gdrive accounts managed by this object.
+     */
     virtual QSet<QString> accounts() = 0;
 };
 
