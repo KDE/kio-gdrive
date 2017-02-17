@@ -70,7 +70,9 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
         account = authJob->account();
         authJob->deleteLater();
 
-        storeAccount(account);
+        if (!account->accountName().isEmpty()) {
+            storeAccount(account);
+        }
     } else {
         const auto entry = readMap(accountName);
 

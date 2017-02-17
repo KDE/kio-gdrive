@@ -132,6 +132,38 @@ KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
     return Fail;
 }
 
+void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
+{
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    if (!gdriveUrl.isRoot()) {
+        AboutFetchJob aboutFetch(getAccount(accountId));
+        if (runJob(aboutFetch, url, accountId)) {
+            const AboutPtr about = aboutFetch.aboutData();
+            if (about) {
+                setMetaData(QStringLiteral("total"), QString::number(about->quotaBytesTotal()));
+                setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUserAggregate()));
+                finished();
+                return;
+            }
+        }
+    }
+    error(KIO::ERR_CANNOT_STAT, url.toDisplayString());
+}
+
+void KIOGDrive::virtual_hook(int id, void *data)
+{
+    switch (id) {
+        case SlaveBase::GetFileSystemFreeSpace: {
+            QUrl *url = static_cast<QUrl *>(data);
+            fileSystemFreeSpace(*url);
+            break;
+        }
+        default:
+            SlaveBase::virtual_hook(id, data);
+    }
+}
+
 KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &path) const
 {
     KIO::UDSEntry entry;
@@ -199,6 +231,11 @@ KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 void KIOGDrive::createAccount()
 {
     const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+    if (account->accountName().isEmpty()) {
+        qCDebug(GDRIVE) << "Authentication canceled by the user.";
+        error(KIO::ERR_SLAVE_DEFINED, i18n("Log-in canceled, no account available."));
+        return;
+    }
     redirection(QUrl(QStringLiteral("gdrive:/%1").arg(account->accountName())));
     finished();
 }
