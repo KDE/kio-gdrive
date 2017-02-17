@@ -223,6 +223,11 @@ void KIOGDrive::openConnection()
 void KIOGDrive::createAccount()
 {
     const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+    if (account->accountName().isEmpty()) {
+        qCDebug(GDRIVE) << "Authentication canceled by the user.";
+        error(KIO::ERR_SLAVE_DEFINED, i18n("Log-in canceled, no account available."));
+        return;
+    }
     redirection(QUrl(QStringLiteral("gdrive:/%1").arg(account->accountName())));
     finished();
 }
