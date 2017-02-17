@@ -74,7 +74,7 @@ void KAccountsManager::loadAccounts()
             continue;
         }
         qCDebug(GDRIVE) << "Found google-provided account:" << account->displayName();
-        const auto services = account->services();
+        const auto services = account->enabledServices();
         for (const auto &service : services) {
             if (service.name() != QLatin1String("google-drive")) {
                 continue;
