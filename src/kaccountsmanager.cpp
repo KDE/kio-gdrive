@@ -38,7 +38,7 @@ KAccountsManager::~KAccountsManager()
 
 AccountPtr KAccountsManager::account(const QString &accountName)
 {
-    return m_accounts.value(accountName);
+    return m_accounts.value(accountName, AccountPtr(new Account()));
 }
 
 AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
