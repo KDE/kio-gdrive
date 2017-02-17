@@ -136,6 +136,10 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
 {
     const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
+    if (accountId == QLatin1String("new-account")) {
+        finished();
+        return;
+    }
     if (!gdriveUrl.isRoot()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
         if (runJob(aboutFetch, url, accountId)) {
