@@ -48,5 +48,10 @@ public:
      * @return The gdrive accounts managed by this object.
      */
     virtual QSet<QString> accounts() = 0;
+
+    /**
+     * @return Whether the manager can create new accounts.
+     */
+    virtual bool supportsCreation() const;
 };
 

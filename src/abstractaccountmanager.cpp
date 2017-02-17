@@ -21,3 +21,8 @@
 
 AbstractAccountManager::~AbstractAccountManager() {}
 
+bool AbstractAccountManager::supportsCreation() const
+{
+    return false;
+}
+

@@ -250,9 +250,10 @@ void KIOGDrive::createAccount()
         return;
     }
 
-    qCDebug(GDRIVE) << "Authentication canceled by the user.";
     if (m_accountManager->accounts().isEmpty()) {
-        error(KIO::ERR_SLAVE_DEFINED, i18n("Log-in canceled, no account available."));
+        const auto msg = m_accountManager->supportsCreation() ? i18n("Log-in canceled, no account available.")
+                                                              : i18n("There are no Google Drive accounts enabled. You can add one in System Settings.");
+        error(KIO::ERR_SLAVE_DEFINED, msg);
         return;
     }
 

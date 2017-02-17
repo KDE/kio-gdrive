@@ -49,6 +49,11 @@ QSet<QString> KeychainAccountManager::accounts()
     return m_accounts;
 }
 
+bool KeychainAccountManager::supportsCreation() const
+{
+    return true;
+}
+
 KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
 {
     KGAPI2::AccountPtr account;

@@ -42,6 +42,7 @@ public:
     KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) override;
     void removeAccount(const QString &accountName) override;
     QSet<QString> accounts() override;
+    bool supportsCreation() const override;
 
 private:
     template<typename T>
