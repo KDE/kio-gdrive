@@ -18,7 +18,7 @@
  *
  */
 
-#include "accountmanager.h"
+#include "keychainaccountmanager.h"
 #include "gdrivedebug.h"
 
 #include <QDataStream>
@@ -29,11 +29,11 @@
 #include <KIO/Job> //for stat.h
 #include <KGAPI/AuthJob>
 
-QString AccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");
-QString AccountManager::s_apiSecret = QStringLiteral("mdT1DjzohxN3npUUzkENT0gO");
+QString KeychainAccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");
+QString KeychainAccountManager::s_apiSecret = QStringLiteral("mdT1DjzohxN3npUUzkENT0gO");
 
 
-QSet<QString> AccountManager::accounts()
+QSet<QString> KeychainAccountManager::accounts()
 {
     if (m_accounts.isEmpty()) {
         auto job = new QKeychain::ReadPasswordJob(QStringLiteral("KIO GDrive"));
@@ -49,7 +49,7 @@ QSet<QString> AccountManager::accounts()
     return m_accounts;
 }
 
-KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
+KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
 {
     KGAPI2::AccountPtr account;
 
@@ -91,7 +91,7 @@ KGAPI2::AccountPtr AccountManager::account(const QString &accountName)
     return account;
 }
 
-void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
+void KeychainAccountManager::storeAccount(const KGAPI2::AccountPtr &account)
 {
     qCDebug(GDRIVE) << "Storing account" << account->accessToken();
 
@@ -108,7 +108,7 @@ void AccountManager::storeAccount(const KGAPI2::AccountPtr &account)
     storeAccountName(account->accountName());
 }
 
-KGAPI2::AccountPtr AccountManager::refreshAccount(const KGAPI2::AccountPtr &account)
+KGAPI2::AccountPtr KeychainAccountManager::refreshAccount(const KGAPI2::AccountPtr &account)
 {
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
     QEventLoop eventLoop;
@@ -124,7 +124,7 @@ KGAPI2::AccountPtr AccountManager::refreshAccount(const KGAPI2::AccountPtr &acco
     return newAccount;
 }
 
-void AccountManager::removeAccountName(const QString &accountName)
+void KeychainAccountManager::removeAccountName(const QString &accountName)
 {
     auto accounts = this->accounts();
     accounts.remove(accountName);
@@ -139,7 +139,7 @@ void AccountManager::removeAccountName(const QString &accountName)
     m_accounts = accounts;
 }
 
-void AccountManager::storeAccountName(const QString &accountName)
+void KeychainAccountManager::storeAccountName(const QString &accountName)
 {
     auto accounts = this->accounts();
     accounts.insert(accountName);
@@ -154,7 +154,7 @@ void AccountManager::storeAccountName(const QString &accountName)
     m_accounts = accounts;
 }
 
-QMap<QString, QString> AccountManager::readMap(const QString &accountName)
+QMap<QString, QString> KeychainAccountManager::readMap(const QString &accountName)
 {
     auto job = new QKeychain::ReadPasswordJob(QStringLiteral("KIO GDrive"));
     job->setKey(accountName);
@@ -168,7 +168,7 @@ QMap<QString, QString> AccountManager::readMap(const QString &accountName)
     return deserialize<QMap<QString, QString>>(&data);
 }
 
-void AccountManager::writeMap(const QString &accountName, const QMap<QString, QString> &map)
+void KeychainAccountManager::writeMap(const QString &accountName, const QMap<QString, QString> &map)
 {
     const auto data = serialize<QMap<QString, QString>>(map);
 
@@ -178,7 +178,7 @@ void AccountManager::writeMap(const QString &accountName, const QMap<QString, QS
     runKeychainJob(job);
 }
 
-void AccountManager::runKeychainJob(QKeychain::Job *job)
+void KeychainAccountManager::runKeychainJob(QKeychain::Job *job)
 {
     QObject::connect(job, &QKeychain::Job::finished, [](QKeychain::Job *job) {
         switch (job->error()) {
@@ -206,7 +206,7 @@ void AccountManager::runKeychainJob(QKeychain::Job *job)
     eventLoop.exec();
 }
 
-void AccountManager::removeAccount(const QString &accountName)
+void KeychainAccountManager::removeAccount(const QString &accountName)
 {
     auto job = new QKeychain::DeletePasswordJob(QStringLiteral("KIO GDrive"));
     job->setKey(accountName);
@@ -215,7 +215,7 @@ void AccountManager::removeAccount(const QString &accountName)
 }
 
 template <typename T>
-QByteArray AccountManager::serialize(const T &object)
+QByteArray KeychainAccountManager::serialize(const T &object)
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
@@ -226,7 +226,7 @@ QByteArray AccountManager::serialize(const T &object)
 }
 
 template <typename T>
-T AccountManager::deserialize(QByteArray *data)
+T KeychainAccountManager::deserialize(QByteArray *data)
 {
     if (!data) {
         return {};

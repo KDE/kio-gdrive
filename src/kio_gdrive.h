@@ -20,15 +20,18 @@
 #ifndef GDRIVESLAVE_H
 #define GDRIVESLAVE_H
 
+#include "pathcache.h"
+
 #include <KGAPI/Account>
 #include <KGAPI/Types>
 #include <KIO/SlaveBase>
 
-#include "accountmanager.h"
-#include "kaccountsmanager.h"
-#include "pathcache.h"
+#include <memory>
+
+class AbstractAccountManager;
 
 class QTemporaryFile;
+
 namespace KGAPI2
 {
 class Job;
@@ -86,9 +89,7 @@ private:
 
     void fileSystemFreeSpace(const QUrl &url);
 
-    KGAPI2::AccountPtr getAccount(const QString &accountName) {
-        return m_accountManager.account(accountName);
-    }
+    KGAPI2::AccountPtr getAccount(const QString &accountName);
 
     QString rootFolderId(const QString &accountId);
 
@@ -101,8 +102,7 @@ private:
      */
     bool runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId);
 
-    // AccountManager m_accountManager; TODO: figure out how to use both together.
-    KAccountsManager m_accountManager;
+    std::unique_ptr<AbstractAccountManager> m_accountManager;
     PathCache m_cache;
 
     QMap<QString /* account */, QString /* rootId */> m_rootIds;

@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef ACCOUNTMANAGER_H
-#define ACCOUNTMANAGER_H
+#pragma once
 
 #include "abstractaccountmanager.h"
 
@@ -28,10 +27,10 @@ namespace QKeychain
     class Job;
 }
 
-class AccountManager : public AbstractAccountManager
+class KeychainAccountManager : public AbstractAccountManager
 {
 public:
-    virtual ~AccountManager() {}
+    virtual ~KeychainAccountManager() {}
 
     /**
      * @return Pointer to the account for @p accountName.
@@ -67,4 +66,3 @@ private:
     static QString s_apiSecret;
 };
 
-#endif // ACCOUNTMANAGER_H

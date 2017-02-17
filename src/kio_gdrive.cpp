@@ -18,6 +18,7 @@
  */
 
 #include "kio_gdrive.h"
+#include "gdrivebackend.h"
 #include "gdrivedebug.h"
 #include "gdrivehelper.h"
 #include "gdriveurl.h"
@@ -83,6 +84,8 @@ KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
 {
     Q_UNUSED(protocol);
 
+    m_accountManager.reset(new AccountManager);
+
     qCDebug(GDRIVE) << "KIO GDrive ready: version" << GDRIVE_VERSION_STRING;
 }
 
@@ -105,7 +108,7 @@ KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
             return Fail;
         case KGAPI2::Unauthorized: {
             const AccountPtr oldAccount = job.account();
-            const AccountPtr account = m_accountManager.refreshAccount(oldAccount);
+            const AccountPtr account = m_accountManager->refreshAccount(oldAccount);
             if (!account) {
                 error(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
                 return Fail;
@@ -153,6 +156,11 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
         }
     }
     error(KIO::ERR_CANNOT_STAT, url.toDisplayString());
+}
+
+AccountPtr KIOGDrive::getAccount(const QString &accountName)
+{
+    return m_accountManager->account(accountName);
 }
 
 void KIOGDrive::virtual_hook(int id, void *data)
@@ -234,7 +242,7 @@ KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 
 void KIOGDrive::createAccount()
 {
-    const KGAPI2::AccountPtr account = m_accountManager.account(QString());
+    const KGAPI2::AccountPtr account = m_accountManager->account(QString());
     if (!account->accountName().isEmpty()) {
         // Redirect to the account we just created.
         redirection(QUrl(QStringLiteral("gdrive:/%1").arg(account->accountName())));
@@ -243,7 +251,7 @@ void KIOGDrive::createAccount()
     }
 
     qCDebug(GDRIVE) << "Authentication canceled by the user.";
-    if (m_accountManager.accounts().isEmpty()) {
+    if (m_accountManager->accounts().isEmpty()) {
         error(KIO::ERR_SLAVE_DEFINED, i18n("Log-in canceled, no account available."));
         return;
     }
@@ -255,7 +263,7 @@ void KIOGDrive::createAccount()
 
 void KIOGDrive::listAccounts()
 {
-    const auto accounts = m_accountManager.accounts();
+    const auto accounts = m_accountManager->accounts();
     if (accounts.isEmpty()) {
         createAccount();
         return;
@@ -898,12 +906,12 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
 
     // If user tries to delete the account folder, remove the account from the keychain
     if (gdriveUrl.isAccountRoot()) {
-        const KGAPI2::AccountPtr account = m_accountManager.account(accountId);
+        const KGAPI2::AccountPtr account = m_accountManager->account(accountId);
         if (!account) {
             error(KIO::ERR_DOES_NOT_EXIST, accountId);
             return;
         }
-        m_accountManager.removeAccount(accountId);
+        m_accountManager->removeAccount(accountId);
         finished();
         return;
     }

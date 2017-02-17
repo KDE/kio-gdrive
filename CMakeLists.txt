@@ -32,7 +32,11 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 
 find_package(KF5GAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
-find_package(KAccounts ${KACCOUNTS_MIN_VERSION} REQUIRED)
+find_package(KAccounts ${KACCOUNTS_MIN_VERSION})
+set_package_properties(Qt5Keychain PROPERTIES
+    TYPE RECOMMENDED
+    URL "https://commits.kde.org/kaccounts-integration"
+    PURPOSE "Enables integration with system-wide accounts.")
 
 find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION})
 set_package_properties(Qt5Keychain PROPERTIES
@@ -59,8 +63,12 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
 add_subdirectory(autotests)
 add_subdirectory(desktop)
-add_subdirectory(service)
 add_subdirectory(doc)
 add_subdirectory(src)
+
+if (KAccounts_FOUND)
+    add_subdirectory(service)
+endif()
+
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

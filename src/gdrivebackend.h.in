@@ -1,0 +1,4 @@
+#pragma once
+
+#include "@BACKEND_HEADER@"
+using AccountManager = @BACKEND_CLASSNAME@;
