@@ -41,7 +41,5 @@ private:
     void loadAccounts();
 
     QMap<Accounts::AccountId, KGAPI2::AccountPtr> m_accounts;
-    // Keeps track of the latest account put in the map.
-    KGAPI2::AccountPtr m_latestAccount;
 };
 

@@ -66,13 +66,21 @@ AccountPtr KAccountsManager::createAccount()
         loadAccounts();
     }
 
-    // No accounts at all or no new account (latest account was already known).
-    if (accounts().isEmpty() || oldAccounts.contains(m_latestAccount->accountName())) {
-        return AccountPtr(new Account());
+    const auto newAccounts = accounts();
+    for (const auto &accountName : newAccounts) {
+        if (oldAccounts.contains(accountName)) {
+            continue;
+        }
+
+        // The KCM allows to add more than one account, but we can return only one from here.
+        // So we just return the first new account in the set.
+        qCDebug(GDRIVE) << "New account successfully created:" << accountName;
+        return account(accountName);
     }
 
-    qCDebug(GDRIVE) << "New account successfully created:" << m_latestAccount->accountName();
-    return m_latestAccount;
+    // No accounts at all or no new account(s).
+    qCDebug(GDRIVE) << "No new account created.";
+    return AccountPtr(new Account());
 }
 
 AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
@@ -129,10 +137,7 @@ void KAccountsManager::loadAccounts()
                 gapiAccount->addScope(QUrl::fromUserInput(scope));
             }
 
-            if (!accounts().contains(account->displayName())) {
-                m_accounts.insert(id, gapiAccount);
-                m_latestAccount = gapiAccount;
-            }
+            m_accounts.insert(id, gapiAccount);
         }
     }
 }
