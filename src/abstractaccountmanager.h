@@ -31,10 +31,16 @@ public:
 
     /**
      * @return Pointer to the account for @p accountName.
-     * The pointer is valid only if @p accountName is in accounts().
+     * The account is valid only if @p accountName is in accounts().
      * @see accounts()
      */
     virtual KGAPI2::AccountPtr account(const QString &accountName) = 0;
+
+    /**
+     * Creates a new account.
+     * @return The new account if a new account has been created, an invalid account otherwise.
+     */
+    virtual KGAPI2::AccountPtr createAccount() = 0;
 
     virtual KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) = 0;
 
@@ -48,10 +54,5 @@ public:
      * @return The gdrive accounts managed by this object.
      */
     virtual QSet<QString> accounts() = 0;
-
-    /**
-     * @return Whether the manager can create new accounts.
-     */
-    virtual bool supportsCreation() const;
 };
 

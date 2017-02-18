@@ -49,48 +49,46 @@ QSet<QString> KeychainAccountManager::accounts()
     return m_accounts;
 }
 
-bool KeychainAccountManager::supportsCreation() const
-{
-    return true;
-}
-
 KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
 {
-    KGAPI2::AccountPtr account;
+    if (!accounts().contains(accountName)) {
+        return KGAPI2::AccountPtr(new KGAPI2::Account());
+    }
 
-    if (accountName.isEmpty() || !accounts().contains(accountName)) {
-        account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName));
-        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive")));
-        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.file")));
-        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.metadata.readonly")));
-        account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.readonly")));
+    const auto entry = readMap(accountName);
 
-        KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
+    const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
+    QList<QUrl> scopeUrls;
+    Q_FOREACH (const QString &scope, scopes) {
+        scopeUrls << QUrl::fromUserInput(scope);
+    }
 
-        QEventLoop eventLoop;
-        QObject::connect(authJob, &KGAPI2::Job::finished,
-                         &eventLoop, &QEventLoop::quit);
-        eventLoop.exec();
+    return KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
+                                                     entry.value(QStringLiteral("accessToken")),
+                                                     entry.value(QStringLiteral("refreshToken")),
+                                                     scopeUrls));
+}
 
-        account = authJob->account();
-        authJob->deleteLater();
+KGAPI2::AccountPtr KeychainAccountManager::createAccount()
+{
+    auto account = KGAPI2::AccountPtr(new KGAPI2::Account());
+    account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive")));
+    account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.file")));
+    account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.metadata.readonly")));
+    account->addScope(QUrl(QStringLiteral("https://www.googleapis.com/auth/drive.readonly")));
 
-        if (!account->accountName().isEmpty()) {
-            storeAccount(account);
-        }
-    } else {
-        const auto entry = readMap(accountName);
+    KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
 
-        const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
-        QList<QUrl> scopeUrls;
-        Q_FOREACH (const QString &scope, scopes) {
-            scopeUrls << QUrl::fromUserInput(scope);
-        }
+    QEventLoop eventLoop;
+    QObject::connect(authJob, &KGAPI2::Job::finished,
+                     &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
 
-        account = KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
-                                                         entry.value(QStringLiteral("accessToken")),
-                                                         entry.value(QStringLiteral("refreshToken")),
-                                                         scopeUrls));
+    account = authJob->account();
+    authJob->deleteLater();
+
+    if (!account->accountName().isEmpty()) {
+        storeAccount(account);
     }
 
     return account;

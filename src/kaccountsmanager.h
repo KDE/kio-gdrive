@@ -30,6 +30,7 @@ public:
     virtual ~KAccountsManager();
 
     KGAPI2::AccountPtr account(const QString &accountName) override;
+    KGAPI2::AccountPtr createAccount() override;
     KGAPI2::AccountPtr refreshAccount(const KGAPI2::AccountPtr &account) override;
     void removeAccount(const QString &accountName) override;
     QSet<QString> accounts() override;
@@ -38,5 +39,7 @@ private:
     void loadAccounts();
 
     QMap<QString, KGAPI2::AccountPtr> m_accounts;
+    // Keeps track of the latest account put in the map.
+    KGAPI2::AccountPtr m_latestAccount;
 };
 

@@ -26,6 +26,9 @@
 #include <KAccounts/GetCredentialsJob>
 #include <KGAPI/Account>
 
+#include <QProcess>
+#include <QStandardPaths>
+
 using namespace KGAPI2;
 
 KAccountsManager::KAccountsManager()
@@ -39,6 +42,30 @@ KAccountsManager::~KAccountsManager()
 AccountPtr KAccountsManager::account(const QString &accountName)
 {
     return m_accounts.value(accountName, AccountPtr(new Account()));
+}
+
+AccountPtr KAccountsManager::createAccount()
+{
+    if (QStandardPaths::findExecutable(QStringLiteral("kcmshell5")).isEmpty()) {
+        return AccountPtr(new Account());
+    }
+
+    const auto oldAccounts = accounts();
+
+    QProcess process;
+    process.start(QStringLiteral("kcmshell5"), {QStringLiteral("kcm_kaccounts")});
+    qCDebug(GDRIVE) << "Waiting for kcmshell process...";
+    if (process.waitForFinished(-1)) {
+        loadAccounts();
+    }
+
+    // No accounts at all or no new account (latest account was already known).
+    if (accounts().isEmpty() || oldAccounts.contains(m_latestAccount->accountName())) {
+        return AccountPtr(new Account());
+    }
+
+    qCDebug(GDRIVE) << "New account successfully created:" << m_latestAccount->accountName();
+    return m_latestAccount;
 }
 
 AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
@@ -93,7 +120,10 @@ void KAccountsManager::loadAccounts()
                 gapiAccount->addScope(QUrl::fromUserInput(scope));
             }
 
-            m_accounts.insert(account->displayName(), gapiAccount);
+            if (!m_accounts.contains(account->displayName())) {
+                m_accounts.insert(account->displayName(), gapiAccount);
+                m_latestAccount = gapiAccount;
+            }
         }
     }
 }

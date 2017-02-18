@@ -242,7 +242,7 @@ KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 
 void KIOGDrive::createAccount()
 {
-    const KGAPI2::AccountPtr account = m_accountManager->account(QString());
+    const KGAPI2::AccountPtr account = m_accountManager->createAccount();
     if (!account->accountName().isEmpty()) {
         // Redirect to the account we just created.
         redirection(QUrl(QStringLiteral("gdrive:/%1").arg(account->accountName())));
@@ -251,9 +251,7 @@ void KIOGDrive::createAccount()
     }
 
     if (m_accountManager->accounts().isEmpty()) {
-        const auto msg = m_accountManager->supportsCreation() ? i18n("Log-in canceled, no account available.")
-                                                              : i18n("There are no Google Drive accounts enabled. You can add one in System Settings.");
-        error(KIO::ERR_SLAVE_DEFINED, msg);
+        error(KIO::ERR_SLAVE_DEFINED, i18n("There are no Google Drive accounts enabled. Please add at least one."));
         return;
     }
 
