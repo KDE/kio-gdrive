@@ -93,6 +93,8 @@ QSet<QString> KAccountsManager::accounts()
 
 void KAccountsManager::loadAccounts()
 {
+    m_accounts.clear();
+
     auto manager = KAccounts::accountsManager();
     const auto enabledIDs = manager->accountListEnabled();
     for (const auto id : enabledIDs) {
