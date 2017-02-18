@@ -41,7 +41,14 @@ KAccountsManager::~KAccountsManager()
 
 AccountPtr KAccountsManager::account(const QString &accountName)
 {
-    return m_accounts.value(accountName, AccountPtr(new Account()));
+    const auto accounts = m_accounts.values();
+    for (const auto &account : accounts) {
+        if (account->accountName() == accountName) {
+            return account;
+        }
+    }
+
+    return AccountPtr(new Account());
 }
 
 AccountPtr KAccountsManager::createAccount()
@@ -76,19 +83,19 @@ AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
 
 void KAccountsManager::removeAccount(const QString &accountName)
 {
-    m_accounts.remove(accountName);
+    // TODO
 }
 
 QSet<QString> KAccountsManager::accounts()
 {
-    auto accounts = QSet<QString>();
+    auto accountNames = QSet<QString>();
 
-    const auto names = m_accounts.keys();
-    for (const auto &name : names) {
-        accounts << name;
+    const auto accounts = m_accounts.values();
+    for (const auto &account : accounts) {
+        accountNames << account->accountName();
     }
 
-    return accounts;
+    return accountNames;
 }
 
 void KAccountsManager::loadAccounts()
@@ -122,8 +129,8 @@ void KAccountsManager::loadAccounts()
                 gapiAccount->addScope(QUrl::fromUserInput(scope));
             }
 
-            if (!m_accounts.contains(account->displayName())) {
-                m_accounts.insert(account->displayName(), gapiAccount);
+            if (!accounts().contains(account->displayName())) {
+                m_accounts.insert(id, gapiAccount);
                 m_latestAccount = gapiAccount;
             }
         }
