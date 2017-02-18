@@ -91,7 +91,24 @@ AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
 
 void KAccountsManager::removeAccount(const QString &accountName)
 {
-    // TODO
+    if (!accounts().contains(accountName)) {
+        return;
+    }
+
+    for (auto it = m_accounts.constBegin(); it != m_accounts.constEnd(); it++) {
+        if (it.value()->accountName() != accountName) {
+            continue;
+        }
+
+        auto manager = KAccounts::accountsManager();
+        auto account = Accounts::Account::fromId(manager, it.key());
+        Q_ASSERT(account->displayName() == accountName);
+        qCDebug(GDRIVE) << "Going to remove account:" << account->displayName();
+        account->selectService(manager->service(QStringLiteral("google-drive")));
+        account->setEnabled(false);
+        account->sync();
+        return;
+    }
 }
 
 QSet<QString> KAccountsManager::accounts()
