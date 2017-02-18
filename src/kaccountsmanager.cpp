@@ -85,7 +85,8 @@ AccountPtr KAccountsManager::createAccount()
 
 AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
 {
-    // TODO
+    Q_UNUSED(account)
+    qCWarning(GDRIVE) << Q_FUNC_INFO << "not implemented.";
     return {};
 }
 
