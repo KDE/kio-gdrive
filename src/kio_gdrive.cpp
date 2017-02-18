@@ -905,8 +905,8 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
 
     // If user tries to delete the account folder, remove the account from the keychain
     if (gdriveUrl.isAccountRoot()) {
-        const KGAPI2::AccountPtr account = m_accountManager->account(accountId);
-        if (!account) {
+        const KGAPI2::AccountPtr account = getAccount(accountId);
+        if (account->accountName().isEmpty()) {
             error(KIO::ERR_DOES_NOT_EXIST, accountId);
             return;
         }
