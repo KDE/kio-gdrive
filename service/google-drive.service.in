@@ -2,6 +2,7 @@
 <service id="google-drive">
   <type>google-drive</type>
   <name>Drive</name>
+  <description>Integrate your Google Drive documents</description>
   <icon>folder-gdrive</icon>
   <provider>google</provider>
   <translations>kaccounts-providers</translations>
