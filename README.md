@@ -9,7 +9,7 @@ INSTALLATION
     $ git clone git://anongit.kde.org/kio-gdrive.git
     $ cd kio-gdrive
     $ mkdir build && cd build
-    $ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    $ cmake -DCMAKE_INSTALL_PREFIX=`qtpaths --install-prefix` ..
     $ sudo make install
     $ kdeinit5 # or just re-login
 
