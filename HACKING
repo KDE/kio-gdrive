@@ -1,7 +1,15 @@
+Install to custom prefix
+=========================
+
+You can install kio-gdrive to your preferred installation prefix,
+as long as kdeinit5 has been installed in the same prefix.
+
 Locate Debug Output
 ===================
 
-You will not see the slave's output in the terminal where you started e.g. Dolphin. On systemd distros the output will go in the journalctl. A quick way to locate the relevant logs is the following command:
+You will not see the slave's output in the terminal where you started e.g. Dolphin.
+On systemd distros the output will go in the journalctl (assuming Qt built with the -journald option).
+A quick way to locate the relevant logs is the following command:
 
     journalctl -b | grep kf5.kio.gdrive
 
@@ -16,9 +24,10 @@ Th gdrive slave uses categorized debug output. Normally you would enable its out
 
     export QT_LOGGING_RULES="kf5.kio.gdrive.debug=true"
 
-Unfortunately for some reason the environment of the process starting the gdrive slave (e.g. Dolphin) is not passed to the slave itself. Therefore setting the above variable won't have effect and you won't see any debug message from the slave.
+However, you need to make sure this variable is present in the environment of kdeinit5,
+which is the process that starts the ioslave.
 
-A more robuste alternative is to create (or edit) ~/.config/QtProject/qtlogging.ini with the following content:
+A simpler alternative is to create (or edit) ~/.config/QtProject/qtlogging.ini with the following content:
 
 [Rules]
 kf5.kio.gdrive.debug=true

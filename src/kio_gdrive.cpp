@@ -149,7 +149,7 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
             const AboutPtr about = aboutFetch.aboutData();
             if (about) {
                 setMetaData(QStringLiteral("total"), QString::number(about->quotaBytesTotal()));
-                setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUserAggregate()));
+                setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUsedAggregate()));
                 finished();
                 return;
             }
