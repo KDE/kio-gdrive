@@ -1,10 +1,7 @@
-project(kio-gdrive)
+cmake_minimum_required(VERSION 3.0)
 
-cmake_minimum_required(VERSION 2.8.12)
-
-include(FeatureSummary)
-
-set(PROJECT_VERSION 1.1.70)
+set(GDRIVE_VERSION 1.1.70)
+project(kio-gdrive VERSION ${GDRIVE_VERSION})
 
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.14.0)
@@ -19,6 +16,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 find_package(ECM 5.14.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
+include(FeatureSummary)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
@@ -46,7 +44,7 @@ if(NOT Qt5Test_FOUND)
    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
 
-ecm_setup_version(${PROJECT_VERSION}
+ecm_setup_version(PROJECT
     VARIABLE_PREFIX GDRIVE
     VERSION_HEADER gdriveversion.h)
 
