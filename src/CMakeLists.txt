@@ -21,8 +21,8 @@ target_link_libraries(kio_gdrive
     Qt5::Core
     Qt5::Network
     ${QTKEYCHAIN_LIBRARIES}
-    KF5::GAPICore
-    KF5::GAPIDrive
+    KPim::GAPICore
+    KPim::GAPIDrive
     KF5::KIOCore
     KF5::KIOWidgets
     KF5::I18n)
