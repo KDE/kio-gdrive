@@ -36,11 +36,13 @@ set_package_properties(KAccounts PROPERTIES
     URL "https://commits.kde.org/kaccounts-integration"
     PURPOSE "Enables integration with system-wide accounts.")
 
-find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION})
-set_package_properties(Qt5Keychain PROPERTIES
-    TYPE REQUIRED
-    URL "https://github.com/frankosterfeld/qtkeychain"
-    PURPOSE "Required for secure storage of accounts secrets.")
+if (NOT KAccounts_FOUND)
+    find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
+    set_package_properties(Qt5Keychain PROPERTIES
+        URL "https://github.com/frankosterfeld/qtkeychain"
+        PURPOSE "Required for secure storage of accounts secrets.")
+    message(STATUS "Building the QtKeychain backend.")
+endif()
 
 find_package(Qt5Test QUIET)
 set_package_properties(Qt5Test PROPERTIES
@@ -65,6 +67,7 @@ add_subdirectory(doc)
 add_subdirectory(src)
 
 if (KAccounts_FOUND)
+    message(STATUS "Building the KAccounts backend.")
     add_subdirectory(service)
 endif()
 

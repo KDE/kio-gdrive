@@ -1,3 +1,14 @@
+Backend selection
+=================
+
+By default, KIO GDrive looks for kaccounts-integration. If it gets found,
+the KAccounts backend gets built. Otherwise, the QtKeychain backend is used
+as fallback (in which case qtkeychain becomes a required dependency).
+It is possible to disable the KAccounts integration (which again, makes
+qtkeychain a required dependency) with the following cmake switch:
+
+    cmake -DCMAKE_DISABLE_FIND_PACKAGE_KAccounts=ON ..
+
 Implicit dependency on file managers
 =====================================
 
