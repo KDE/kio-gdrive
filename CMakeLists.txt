@@ -31,7 +31,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 find_package(KPimGAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
 find_package(KAccounts ${KACCOUNTS_MIN_VERSION})
-set_package_properties(Qt5Keychain PROPERTIES
+set_package_properties(KAccounts PROPERTIES
     TYPE RECOMMENDED
     URL "https://commits.kde.org/kaccounts-integration"
     PURPOSE "Enables integration with system-wide accounts.")
