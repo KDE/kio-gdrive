@@ -12,10 +12,12 @@ if (KAccounts_FOUND)
     set(BACKEND_SRC kaccountsmanager.cpp)
     set(BACKEND_HEADER kaccountsmanager.h)
     set(BACKEND_CLASSNAME KAccountsManager)
+    set(BACKEND_LIBS KAccounts)
 else()
     set(BACKEND_SRC keychainaccountmanager.cpp)
     set(BACKEND_HEADER keychainaccountmanager.h)
     set(BACKEND_CLASSNAME KeychainAccountManager)
+    set(BACKEND_LIBS ${QTKEYCHAIN_LIBRARIES})
 endif()
 
 set(kio_gdrive_SRCS ${kio_gdrive_SRCS} ${BACKEND_SRC})
@@ -33,15 +35,11 @@ kcoreaddons_add_plugin(kio_gdrive
 target_link_libraries(kio_gdrive
     Qt5::Core
     Qt5::Network
-    ${QTKEYCHAIN_LIBRARIES}
     KPim::GAPICore
     KPim::GAPIDrive
     KF5::KIOCore
     KF5::KIOWidgets
-    KF5::I18n)
-
-if (KAccounts_FOUND)
-    target_link_libraries(kio_gdrive KAccounts)
-endif()
+    KF5::I18n
+    ${BACKEND_LIBS})
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")
