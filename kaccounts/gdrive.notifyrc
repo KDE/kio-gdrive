@@ -1,0 +1,8 @@
+[Global]
+IconName=folder-gdrive
+Comment=KIO GDrive
+
+[Event/new-account-added]
+Name=New Account Added
+Comment= Shortcut to browse Google Drive files as soon as a new Google account has been added.
+Action=Popup

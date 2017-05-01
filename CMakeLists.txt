@@ -68,7 +68,7 @@ add_subdirectory(src)
 
 if (KAccounts_FOUND)
     message(STATUS "Building the KAccounts backend.")
-    add_subdirectory(service)
+    add_subdirectory(kaccounts)
 endif()
 
 
