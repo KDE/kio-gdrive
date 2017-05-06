@@ -25,8 +25,6 @@
 #include <KNotification>
 #include <KRun>
 
-#include <QProcess>
-
 GoogleDrivePlugin::GoogleDrivePlugin(QObject *parent)
     : KAccountsDPlugin(parent)
 {
