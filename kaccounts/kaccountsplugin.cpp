@@ -55,7 +55,6 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
         KRun::runUrl(url, QStringLiteral("inode/directory"), nullptr);
     });
 
-    notification->setUrls({url});
     notification->sendEvent();
 }
 

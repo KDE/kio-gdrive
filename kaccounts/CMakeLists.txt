@@ -1,4 +1,4 @@
-find_package(KF5Notifications 5.29 REQUIRED)
+find_package(KF5Notifications ${KF5_MIN_VERSION} REQUIRED)
 
 kaccounts_add_service(${CMAKE_CURRENT_SOURCE_DIR}/google-drive.service.in)
 
