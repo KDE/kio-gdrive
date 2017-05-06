@@ -43,8 +43,8 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
 
     auto notification = new KNotification(QStringLiteral("new-account-added"));
     notification->setComponentName(QStringLiteral("gdrive"));
-    notification->setTitle(i18n("%1 account added").arg(account->displayName()));
-    notification->setText(i18n("You can now manage your Google Drive files."));
+    notification->setTitle(i18n("New Online Account"));
+    notification->setText(xi18nc("@info", "You can now manage the Google Drive files of your <emphasis strong='true'>%1</emphasis> account.", account->displayName()));
     notification->setActions({i18n("Open")});
 
     QUrl url;
