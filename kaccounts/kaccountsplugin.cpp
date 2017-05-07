@@ -50,7 +50,7 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
     url.setPath(QStringLiteral("/%1").arg(account->displayName()));
 
     connect(notification, static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated), this, [=]() {
-        KRun::runUrl(url, QStringLiteral("inode/directory"), nullptr);
+        KRun::runUrl(url, QStringLiteral("inode/directory"), nullptr, KRun::RunFlags());
     });
 
     notification->sendEvent();
