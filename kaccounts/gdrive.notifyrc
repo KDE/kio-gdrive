@@ -1,8 +1,26 @@
 [Global]
 IconName=folder-gdrive
 Comment=KIO GDrive
+Comment[ca]=KIO GDrive
+Comment[nl]=KIO GDrive
+Comment[pt]=KIO GDrive
+Comment[sv]=KIO Gdrive
+Comment[uk]=KIO GDrive
+Comment[x-test]=xxKIO GDrivexx
 
 [Event/new-account-added]
 Name=New Account Added
+Name[ca]=S'ha afegit un compte nou
+Name[nl]=Nieuw account toegevoegd
+Name[pt]=Nova Conta Adicionada
+Name[sv]=Nytt konto tillagt
+Name[uk]=Додано новий обліковий запис
+Name[x-test]=xxNew Account Addedxx
 Comment= Shortcut to browse Google Drive files as soon as a new Google account has been added.
+Comment[ca]=Drecera per explorar els fitxers de Google Drive tant aviat com s'afegeixi un compte nou de Google.
+Comment[nl]= Sneltoets om door Google Drive bestanden te bladeren zodra een nieuw Google account is toegevoegd.
+Comment[pt]=Um atalho para navegar pelos ficheiros do Google Drive, assim que tiver sido adicionada uma conta da Google.
+Comment[sv]= Genväg för att bläddra i Google Drive-filer så snart ett nytt Google-konto har lagts till.
+Comment[uk]=Кнопка для перегляду файлів Google Диск після додавання нового облікового запису Google.
+Comment[x-test]=xx Shortcut to browse Google Drive files as soon as a new Google account has been added.xx
 Action=Popup
