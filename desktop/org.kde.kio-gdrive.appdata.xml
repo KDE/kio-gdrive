@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+  <id>org.kde.kio-gdrive</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>KIO GDrive</name>
+  <summary>Google Drive integration with KDE Plasma and KDE applications</summary>
+  <description>
+    <p>KIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.</p>
+  </description>
+  <url type="homepage">https://community.kde.org/KIO_GDriver</url>
+  <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
+  <url type="help">https://docs.kde.org/trunk5/en/extragear-network/kioslave5/gdrive/index.html</url>
+  <update_contact>elvis.angelaccio_at_kde.org</update_contact>
+  <project_group>KDE</project_group>
+</component>
