@@ -15,7 +15,7 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Widgets)
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${ECM_MODULE_PATH})
 
 include(FeatureSummary)
 include(KDEInstallDirs)
@@ -61,7 +61,9 @@ add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
 
-add_subdirectory(autotests)
+if(BUILD_TESTING)
+    add_subdirectory(autotests)
+endif()
 add_subdirectory(desktop)
 add_subdirectory(doc)
 add_subdirectory(src)
