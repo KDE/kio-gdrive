@@ -14,6 +14,7 @@
   <name xml:lang="uk">KIO GDrive</name>
   <name xml:lang="x-test">xxKIO GDrivexx</name>
   <summary>Google Drive integration with KDE Plasma and KDE applications</summary>
+  <summary xml:lang="ast">Integración de Google Drive con KDE Plasma y aplicaciones KDE</summary>
   <summary xml:lang="ca">Integració del Drive de Google amb el Plasma del KDE i les aplicacions KDE</summary>
   <summary xml:lang="ca-valencia">Integració del Drive de Google amb el Plasma del KDE i les aplicacions KDE</summary>
   <summary xml:lang="cs">Integrace Google Drive do KDE Plasma a aplikací KDE</summary>
