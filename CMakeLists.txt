@@ -26,6 +26,7 @@ include(ECMSetupVersion)
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n
+    DocTools
     KIO)
 
 find_package(KPimGAPI ${KGAPI_MIN_VERSION} REQUIRED)
