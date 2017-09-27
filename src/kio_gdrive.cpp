@@ -25,6 +25,7 @@
 #include "gdriveversion.h"
 
 #include <QApplication>
+#include <QUrlQuery>
 #include <QTemporaryFile>
 
 #include <KGAPI/Account>
@@ -531,9 +532,10 @@ void KIOGDrive::stat(const QUrl &url)
         return;
     }
 
+    const QUrlQuery urlQuery(url);
     const QString fileId
-        = url.hasQueryItem(QStringLiteral("id"))
-            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
+        = urlQuery.hasQueryItem(QStringLiteral("id"))
+            ? urlQuery.queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::None);
     if (fileId.isEmpty()) {
@@ -579,9 +581,10 @@ void KIOGDrive::get(const QUrl &url)
         return;
     }
 
+    const QUrlQuery urlQuery(url);
     const QString fileId =
-        url.hasQueryItem(QStringLiteral("id"))
-            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
+        urlQuery.hasQueryItem(QStringLiteral("id"))
+            ? urlQuery.queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (fileId.isEmpty()) {
@@ -774,7 +777,7 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
-    if (url.hasQueryItem(QStringLiteral("id"))) {
+    if (QUrlQuery(url).hasQueryItem(QStringLiteral("id"))) {
         if (!putUpdate(url)) {
             return;
         }
@@ -827,9 +830,10 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
         return;
     }
 
+    const QUrlQuery urlQuery(src);
     const QString sourceFileId
-        = src.hasQueryItem(QStringLiteral("id"))
-              ? QUrlQuery(src).queryItemValue(QStringLiteral("id"))
+        = urlQuery.hasQueryItem(QStringLiteral("id"))
+              ? urlQuery.queryItemValue(QStringLiteral("id"))
               : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
     if (sourceFileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
@@ -891,9 +895,10 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
 
     qCDebug(GDRIVE) << "Deleting URL" << url << "- is it a file?" << isfile;
 
+    const QUrlQuery urlQuery(url);
     const QString fileId
-        = isfile && url.hasQueryItem(QStringLiteral("id"))
-            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
+        = isfile && urlQuery.hasQueryItem(QStringLiteral("id"))
+            ? urlQuery.queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
                                     isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
     if (fileId.isEmpty()) {
@@ -962,9 +967,11 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         error(KIO::ERR_ACCESS_DENIED, dest.path());
         return;
     }
+
+    const QUrlQuery urlQuery(src);
     const QString sourceFileId
-        = src.hasQueryItem(QStringLiteral("id"))
-            ? QUrlQuery(src).queryItemValue(QStringLiteral("id"))
+        = urlQuery.hasQueryItem(QStringLiteral("id"))
+            ? urlQuery.queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(),
                                     KIOGDrive::PathIsFile);
     if (sourceFileId.isEmpty()) {
@@ -1039,9 +1046,10 @@ void KIOGDrive::mimetype(const QUrl &url)
 {
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
+    const QUrlQuery urlQuery(url);
     const QString fileId
-        = url.hasQueryItem(QStringLiteral("id"))
-            ? QUrlQuery(url).queryItemValue(QStringLiteral("id"))
+        = urlQuery.hasQueryItem(QStringLiteral("id"))
+            ? urlQuery.queryItemValue(QStringLiteral("id"))
             : resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
     if (fileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
