@@ -13,6 +13,7 @@
   <name xml:lang="nl">KIO GDrive</name>
   <name xml:lang="pl">KIO GDrive</name>
   <name xml:lang="pt">KIO GDrive</name>
+  <name xml:lang="ru">KIO для поддержки Диска Google</name>
   <name xml:lang="sk">KIO GDrive</name>
   <name xml:lang="sv">KIO Gdrive</name>
   <name xml:lang="uk">KIO GDrive</name>
@@ -27,6 +28,7 @@
   <summary xml:lang="nl">Integratie van Google Drive met KDE Plasma en KDE applications</summary>
   <summary xml:lang="pl">Integracja Dysku Google z KDE Plazmą i aplikacjami KDE</summary>
   <summary xml:lang="pt">Integração do Google Drive com o Plasma e as aplicações do KDE</summary>
+  <summary xml:lang="ru">Интеграция Диска Google с KDE Plasma и приложениями от KDE</summary>
   <summary xml:lang="sk">Integrácia Google disku s KDE Plasma a KDE aplikáciami</summary>
   <summary xml:lang="sv">Integrering av Google Drive med KDE Plasma och KDE-program</summary>
   <summary xml:lang="uk">Інтеграція Диска Google із Плазмою KDE та програмами KDE</summary>
