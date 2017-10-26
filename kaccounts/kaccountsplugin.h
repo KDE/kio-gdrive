@@ -28,7 +28,7 @@ class GoogleDrivePlugin : public KAccountsDPlugin
     Q_INTERFACES(KAccountsDPlugin)
 
 public:
-    GoogleDrivePlugin(QObject *parent = nullptr);
+    explicit GoogleDrivePlugin(QObject *parent = nullptr);
 
 public slots:
     void onAccountCreated(const Accounts::AccountId accountId, const Accounts::ServiceList &serviceList) override;
