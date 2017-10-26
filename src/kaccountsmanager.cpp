@@ -96,7 +96,7 @@ void KAccountsManager::removeAccount(const QString &accountName)
         return;
     }
 
-    for (auto it = m_accounts.constBegin(); it != m_accounts.constEnd(); it++) {
+    for (auto it = m_accounts.constBegin(); it != m_accounts.constEnd(); ++it) {
         if (it.value()->accountName() != accountName) {
             continue;
         }
