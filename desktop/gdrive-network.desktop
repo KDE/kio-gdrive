@@ -26,5 +26,6 @@ Name[sv]=Google Drive
 Name[tr]=Google Drive
 Name[uk]=Google Диск
 Name[x-test]=xxGoogle Drivexx
+Name[zh_CN]=Google 云端硬盘
 Type=Link
 URL=gdrive:/
