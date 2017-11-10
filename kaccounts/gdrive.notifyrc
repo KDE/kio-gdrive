@@ -18,6 +18,7 @@ Comment[sk]=KIO GDrive
 Comment[sv]=KIO Gdrive
 Comment[uk]=KIO GDrive
 Comment[x-test]=xxKIO GDrivexx
+Comment[zh_CN]=KIO GDrive
 
 [Event/new-account-added]
 Name=New Account Added
@@ -38,6 +39,7 @@ Name[sk]=Nový účet pridaný
 Name[sv]=Nytt konto tillagt
 Name[uk]=Додано новий обліковий запис
 Name[x-test]=xxNew Account Addedxx
+Name[zh_CN]=新帐户已添加
 Comment= Shortcut to browse Google Drive files as soon as a new Google account has been added.
 Comment[ca]=Drecera per explorar els fitxers de Google Drive tant aviat com s'afegeixi un compte nou de Google.
 Comment[ca@valencia]=Drecera per explorar els fitxers de Google Drive tant prompte com s'afija un compte nou de Google.
