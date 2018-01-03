@@ -56,4 +56,5 @@ Comment[sk]= Skratka na prehliadanie súborov Google disk hneď, ako sa pridá �
 Comment[sv]= Genväg för att bläddra i Google Drive-filer så snart ett nytt Google-konto har lagts till.
 Comment[uk]=Кнопка для перегляду файлів Google Диск після додавання нового облікового запису Google.
 Comment[x-test]=xx Shortcut to browse Google Drive files as soon as a new Google account has been added.xx
+Comment[zh_CN]= 浏览 Google 云端硬盘的文件的快捷方式，只要 Google 账号被添加即可使用。
 Action=Popup
