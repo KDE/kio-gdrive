@@ -857,14 +857,16 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
         error(KIO::ERR_ACCESS_DENIED, dest.path());
         return;
     }
+
+    QString destDirId;
     const auto destPathComps = destGDriveUrl.pathComponents();
-    if (destGDriveUrl.isAccountRoot()) {
-        // copy to root
-    } else {
-        const QString destDirId = destPathComps[destPathComps.count() - 2];
-        destParentReferences << ParentReferencePtr(new ParentReference(destDirId));
-    }
     const QString destFileName = destPathComps.last();
+    if (destPathComps.size() == 2) {
+        destDirId = rootFolderId(destAccountId);
+    } else {
+        destDirId = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+    }
+    destParentReferences << ParentReferencePtr(new ParentReference(destDirId));
 
     FilePtr destFile(new File);
     destFile->setTitle(destFileName);

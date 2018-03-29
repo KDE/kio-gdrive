@@ -35,7 +35,12 @@ using namespace KGAPI2::Drive;
 
 #define VND_OASIS_OPENDOCUMENT_TEXT     QStringLiteral("application/vnd.oasis.opendocument.text")
 #define VND_OASIS_OPENDOCUMENT_PRESENTATION QStringLiteral("application/vnd.oasis.opendocument.presentation")
-#define VND_OASIS_OPENDOCUMENT_SPREADSHEED QStringLiteral("application/x-vnd.oasis.opendocument.spreadsheet")
+// Google's Drive API v2 mistakenly documents an x-vnd style MIME type
+// for .ods files, so we #define both the correct but undocumented,
+// as well as the incorrect but publicly documented MIME type.
+#define VND_OASIS_OPENDOCUMENT_SPREADSHEET QStringLiteral("application/vnd.oasis.opendocument.spreadsheet")
+#define X_VND_OASIS_OPENDOCUMENT_SPREADSHEET QStringLiteral("application/x-vnd.oasis.opendocument.spreadsheet")
+
 
 #define VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT \
             QStringLiteral("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
@@ -52,7 +57,7 @@ namespace GDriveHelper {
 
 static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap{
     { VND_OASIS_OPENDOCUMENT_TEXT, QStringLiteral(".odt") },
-    { VND_OASIS_OPENDOCUMENT_SPREADSHEED, QStringLiteral(".ods") },
+    { VND_OASIS_OPENDOCUMENT_SPREADSHEET, QStringLiteral(".ods") },
     { VND_OASIS_OPENDOCUMENT_PRESENTATION, QStringLiteral(".odp") },
     { VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, QStringLiteral(".docx") },
     { VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, QStringLiteral(".xlsx") },
@@ -79,7 +84,7 @@ static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > C
             APPLICATION_PDF }
     },
     { VND_GOOGLE_APPS_SPREADSHEET, {
-            VND_OASIS_OPENDOCUMENT_SPREADSHEED,
+            VND_OASIS_OPENDOCUMENT_SPREADSHEET,
             VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET,
             APPLICATION_PDF }
     }
@@ -109,7 +114,13 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     Q_FOREACH (const QString &targetMimeType, convIt.value()) {
         const auto linkIt = exportLinks.constFind(targetMimeType);
         if (linkIt != exportLinks.cend()) {
-            file->setMimeType(targetMimeType);
+            // Extra check to safeguard against a mistake in Google's Drive API v2
+            // documentation which lists an invalid MIME type for .ods files.
+            if (targetMimeType == X_VND_OASIS_OPENDOCUMENT_SPREADSHEET) {
+                file->setMimeType(VND_OASIS_OPENDOCUMENT_SPREADSHEET);
+            } else {
+                file->setMimeType(targetMimeType);
+            }
             file->setTitle(file->title() + GDriveHelper::ExtensionsMap[targetMimeType]);
             return *linkIt;
         }
