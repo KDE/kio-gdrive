@@ -24,6 +24,7 @@ Comment[tr]=KIO GDrive
 Comment[uk]=KIO GDrive
 Comment[x-test]=xxKIO GDrivexx
 Comment[zh_CN]=KIO GDrive
+Comment[zh_TW]=KIO GDrive
 
 [Event/new-account-added]
 Name=New Account Added
@@ -50,6 +51,7 @@ Name[tr]=Yeni Hesap Eklendi
 Name[uk]=Додано новий обліковий запис
 Name[x-test]=xxNew Account Addedxx
 Name[zh_CN]=新帐户已添加
+Name[zh_TW]=已新增帳號
 Comment= Shortcut to browse Google Drive files as soon as a new Google account has been added.
 Comment[ca]=Drecera per explorar els fitxers de Google Drive tan aviat com s'afegeixi un compte nou de Google.
 Comment[ca@valencia]=Drecera per explorar els fitxers de Google Drive tan prompte com s'afija un compte nou de Google.
@@ -72,4 +74,5 @@ Comment[tr]=Yeni bir Google hesabı eklendiğinde Google Drive dosyalarına göz
 Comment[uk]=Кнопка для перегляду файлів Google Диск після додавання нового облікового запису Google.
 Comment[x-test]=xx Shortcut to browse Google Drive files as soon as a new Google account has been added.xx
 Comment[zh_CN]= 浏览 Google 云端硬盘的文件的快捷方式，只要 Google 账号被添加即可使用。
+Comment[zh_TW]=只要新增 Google 帳號即可以快速瀏覽 Google 雲端硬碟上的檔案。
 Action=Popup
