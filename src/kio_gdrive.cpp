@@ -199,7 +199,8 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
         entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType());
         entry.insert(KIO::UDSEntry::UDS_SIZE, file->fileSize());
-        entry.insert(KIO::UDSEntry::UDS_URL, QStringLiteral("gdrive://%1/%2?id=%3").arg(path, origFile->title(), origFile->id()));
+
+        entry.insert(KIO::UDSEntry::UDS_URL, fileToUrl(origFile, path).toString());
     }
 
     entry.insert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
@@ -220,6 +221,19 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
     }
 
     return entry;
+}
+
+QUrl KIOGDrive::fileToUrl(const FilePtr &file, const QString &path) const
+{
+    QUrl url;
+    url.setScheme(QStringLiteral("gdrive"));
+    url.setPath(path + QLatin1Char('/') + file->title());
+
+    QUrlQuery urlQuery;
+    urlQuery.addQueryItem(QStringLiteral("id"), file->id());
+    url.setQuery(urlQuery);
+
+    return url;
 }
 
 void KIOGDrive::openConnection()

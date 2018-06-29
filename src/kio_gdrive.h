@@ -86,6 +86,7 @@ private:
 
     Action handleError(const KGAPI2::Job &job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
+    QUrl fileToUrl(const KGAPI2::Drive::FilePtr &file, const QString &path) const;
 
     void fileSystemFreeSpace(const QUrl &url);
 
