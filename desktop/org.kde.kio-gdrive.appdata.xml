@@ -61,7 +61,7 @@
     <p xml:lang="uk">KIO GDrive — допоміжний засіб введення-виведення даних, який уможливлює для програм із підтримкою KIO (зокрема Dolphin, Kate та Gwenview) доступ та редагування даних файлів на Диску Google у обчислювальній «хмарі».</p>
     <p xml:lang="x-test">xxKIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.xx</p>
   </description>
-  <url type="homepage">https://community.kde.org/KIO_GDriver</url>
+  <url type="homepage">https://community.kde.org/KIO_GDrive</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
   <url type="help">https://docs.kde.org/index.php?application=kioslave5%2Fgdrive</url>
   <update_contact>elvis.angelaccio_at_kde.org</update_contact>
