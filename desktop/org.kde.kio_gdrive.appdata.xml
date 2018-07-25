@@ -26,6 +26,7 @@
   <name xml:lang="tr">KIO GDrive</name>
   <name xml:lang="uk">KIO GDrive</name>
   <name xml:lang="x-test">xxKIO GDrivexx</name>
+  <name xml:lang="zh-CN">KIO GDrive</name>
   <summary>Google Drive integration with KDE Plasma and KDE applications</summary>
   <summary xml:lang="ast">Integración de Google Drive con KDE Plasma y aplicaciones KDE</summary>
   <summary xml:lang="ca">Integració del Drive de Google amb el Plasma del KDE i les aplicacions KDE</summary>
@@ -50,6 +51,7 @@
   <summary xml:lang="tr">KDE Plasma ve KDE uygulamaları ile Google Drive tümleştirmesi</summary>
   <summary xml:lang="uk">Інтеграція Диска Google із Плазмою KDE та програмами KDE</summary>
   <summary xml:lang="x-test">xxGoogle Drive integration with KDE Plasma and KDE applicationsxx</summary>
+  <summary xml:lang="zh-CN">KDE Plasma 和 KDE 应用的 Google 云端硬盘整合</summary>
   <description>
     <p>KIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.</p>
     <p xml:lang="ca">El KIO GDrive és un esclau del KIO que habilita les aplicacions preparades per al KIO (com el Dolphin, el Kate o el Gwenview) per accedir i editar fitxers del Drive de Google en el núvol.</p>
