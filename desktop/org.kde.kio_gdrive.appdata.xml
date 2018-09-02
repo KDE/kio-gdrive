@@ -85,5 +85,11 @@
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
   <url type="help">https://docs.kde.org/index.php?application=kioslave5%2Fgdrive</url>
   <update_contact>elvis.angelaccio_at_kde.org</update_contact>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Dolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.</caption>
+      <image type="source" width="1664" height="936">https://cdn.kde.org/screenshots/kio-gdrive/kio-gdrive.png</image>
+    </screenshot>
+  </screenshots>
   <project_group>KDE</project_group>
 </component>
