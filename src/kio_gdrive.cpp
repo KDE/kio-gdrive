@@ -632,7 +632,19 @@ void KIOGDrive::get(const QUrl &url)
     FileFetchContentJob contentJob(downloadUrl, getAccount(accountId));
     runJob(contentJob, url, accountId);
 
-    data(contentJob.data());
+    QByteArray contentData = contentJob.data();
+
+    totalSize(contentData.size());
+
+    // data() has a maximum transfer size of 14 MiB so we need to send it in chunks.
+    // See TransferJob::slotDataReq.
+    int transferred = 0;
+    // do-while loop to call data() even for empty files.
+    do {
+        const size_t nextChunk = qMin(contentData.size() - transferred, 14 * 1024 * 1024);
+        data(QByteArray::fromRawData(contentData.constData() + transferred, nextChunk));
+        transferred += nextChunk;
+    } while (transferred < contentData.size());
     finished();
 }
 
