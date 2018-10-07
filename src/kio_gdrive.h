@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef GDRIVESLAVE_H
-#define GDRIVESLAVE_H
+#ifndef KIO_GDRIVE_H
+#define KIO_GDRIVE_H
 
 #include "pathcache.h"
 
@@ -110,4 +110,4 @@ private:
 
 };
 
-#endif // GDRIVESLAVE_H
+#endif // KIO_GDRIVE_H

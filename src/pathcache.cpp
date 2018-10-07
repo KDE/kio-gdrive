@@ -60,7 +60,7 @@ QStringList PathCache::descendants(const QString &path) const
         }
 
         if (iter.key().lastIndexOf(QLatin1Char('/')) >= fullPath.size()) {
-            // Not a direct descendat
+            // Not a direct descendant
             continue;
         }
 
