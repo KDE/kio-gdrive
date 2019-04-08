@@ -187,37 +187,37 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         GDriveHelper::convertFromGDocs(file);
     }
 
-    entry.insert(KIO::UDSEntry::UDS_NAME, file->title());
-    entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, file->title());
-    entry.insert(KIO::UDSEntry::UDS_COMMENT, file->description());
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, file->title());
+    entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, file->title());
+    entry.fastInsert(KIO::UDSEntry::UDS_COMMENT, file->description());
 
     if (file->isFolder()) {
-        entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-        entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
+        entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+        entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
         isFolder = true;
     } else {
-        entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
-        entry.insert(KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType());
-        entry.insert(KIO::UDSEntry::UDS_SIZE, file->fileSize());
+        entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFREG);
+        entry.fastInsert(KIO::UDSEntry::UDS_MIME_TYPE, file->mimeType());
+        entry.fastInsert(KIO::UDSEntry::UDS_SIZE, file->fileSize());
 
-        entry.insert(KIO::UDSEntry::UDS_URL, fileToUrl(origFile, path).toString());
+        entry.fastInsert(KIO::UDSEntry::UDS_URL, fileToUrl(origFile, path).toString());
     }
 
-    entry.insert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
-    entry.insert(KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t());
-    entry.insert(KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t());
+    entry.fastInsert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
+    entry.fastInsert(KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t());
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t());
     if (!file->ownerNames().isEmpty()) {
-        entry.insert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
+        entry.fastInsert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
     }
 
     if (!isFolder) {
         if (file->editable()) {
-            entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+            entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
         } else {
-            entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IRGRP | S_IROTH);
+            entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IRGRP | S_IROTH);
         }
     } else {
-        entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
+        entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
     }
 
     return entry;
@@ -245,12 +245,12 @@ KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 {
     KIO::UDSEntry entry;
 
-    entry.insert(KIO::UDSEntry::UDS_NAME, accountNAme);
-    entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, accountNAme);
-    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
-    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    entry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, accountNAme);
+    entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, accountNAme);
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    entry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
 
     return entry;
 }
@@ -288,18 +288,18 @@ void KIOGDrive::listAccounts()
         listEntry(entry);
     }
     KIO::UDSEntry newAccountEntry;
-    newAccountEntry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("new-account"));
-    newAccountEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("login in a new google account", "New account"));
-    newAccountEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    newAccountEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
+    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_NAME, QStringLiteral("new-account"));
+    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("login in a new google account", "New account"));
+    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
     listEntry(newAccountEntry);
 
     // Create also non-writable UDSentry for "."
     KIO::UDSEntry entry;
-    entry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
-    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
-    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
     listEntry(entry);
 
     finished();
@@ -474,10 +474,10 @@ void KIOGDrive::listDir(const QUrl &url)
 
     // We also need a non-null and writable UDSentry for "."
     KIO::UDSEntry entry;
-    entry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
-    entry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    entry.insert(KIO::UDSEntry::UDS_SIZE, 0);
-    entry.insert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
     listEntry(entry);
 
     finished();
