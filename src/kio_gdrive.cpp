@@ -146,6 +146,12 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
     }
     if (!gdriveUrl.isRoot()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
+        aboutFetch.setFields({
+            About::Fields::Kind,
+            About::Fields::QuotaBytesTotal,
+            About::Fields::QuotaBytesUsedAggregate,
+            About::Fields::CanCreateTeamDrives,
+        });
         if (runJob(aboutFetch, url, accountId)) {
             const AboutPtr about = aboutFetch.aboutData();
             if (about) {
@@ -379,7 +385,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     const QString accountId = gdriveUrl.account();
     FileFetchJob fetchJob(query, getAccount(accountId));
-    fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
+    fetchJob.setFields({File::Fields::Id, File::Fields::Title, File::Fields::Labels});
     if (!runJob(fetchJob, url, accountId)) {
         return QString();
     }
@@ -404,6 +410,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
     auto it = m_rootIds.constFind(accountId);
     if (it == m_rootIds.cend()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
+        aboutFetch.setFields({About::Fields::Kind, About::Fields::RootFolderId});
         QUrl url;
         if (!runJob(aboutFetch, url, accountId)) {
             return QString();
@@ -455,10 +462,13 @@ void KIOGDrive::listDir(const QUrl &url)
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     FileFetchJob fileFetchJob(query, getAccount(accountId));
-    fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
-                            | FileFetchJob::Labels
-                            | FileFetchJob::ExportLinks
-                            | FileFetchJob::LastViewedByMeDate);
+    const auto extraFields =
+        KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields +
+            QStringList({ KGAPI2::Drive::File::Fields::Labels,
+                          KGAPI2::Drive::File::Fields::ExportLinks,
+                          KGAPI2::Drive::File::Fields::LastViewedByMeDate,
+            });
+    fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
     runJob(fileFetchJob, url, accountId);
 
     ObjectsList objects = fileFetchJob.items();
@@ -607,10 +617,7 @@ void KIOGDrive::get(const QUrl &url)
     }
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
-    fileFetchJob.setFields(FileFetchJob::Id
-                            | FileFetchJob::MimeType
-                            | FileFetchJob::ExportLinks
-                            | FileFetchJob::DownloadUrl);
+    fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType, File::Fields::ExportLinks, File::Fields::DownloadUrl});
     runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
@@ -866,8 +873,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
         return;
     }
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
-    sourceFileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::ModifiedDate |
-                                 FileFetchJob::LastViewedByMeDate | FileFetchJob::Description);
+    sourceFileFetchJob.setFields({File::Fields::Id, File::Fields::ModifiedDate, File::Fields::LastViewedByMeDate, File::Fields::Description});
     runJob(sourceFileFetchJob, src, sourceAccountId);
 
     const ObjectsList objects = sourceFileFetchJob.items();
@@ -1086,7 +1092,7 @@ void KIOGDrive::mimetype(const QUrl &url)
     const QString accountId = GDriveUrl(url).account();
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
-    fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);
+    fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType});
     runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
