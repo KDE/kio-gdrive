@@ -136,7 +136,7 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
 KIO::UDSEntry GDriveHelper::trash()
 {
     KIO::UDSEntry trashEntry;
-    trashEntry.insert(KIO::UDSEntry::UDS_NAME, QStringLiteral("trash"));
+    trashEntry.insert(KIO::UDSEntry::UDS_NAME, GDriveUrl::TrashDir);
     trashEntry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18n("Trash"));
     trashEntry.insert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
     trashEntry.insert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("user-trash"));

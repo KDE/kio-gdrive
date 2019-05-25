@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2014 Daniel Vrátil <dvratil@redhat.com>
  * Copyright (c) 2016 Elvis Angelaccio <elvis.angelaccio@kde.org>
+ * Copyright (c) 2019 David Barchiesi <david@barchie.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,11 +30,18 @@ public:
     explicit GDriveUrl(const QUrl &url);
 
     QString account() const;
+    QString filename() const;
     bool isRoot() const;
     bool isAccountRoot() const;
+    bool isTopLevel() const;
+    bool isTrashDir() const;
+    bool isTrashed() const;
+    QUrl url() const;
     QString parentPath() const;
     QStringList pathComponents() const;
 
+    static const QString Scheme;
+    static const QString TrashDir;
 private:
     QUrl m_url;
     QStringList m_components;

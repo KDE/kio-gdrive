@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2014 Daniel Vrátil <dvratil@redhat.com>
  * Copyright (c) 2016 Elvis Angelaccio <elvis.angelaccio@kde.org>
+ * Copyright (c) 2019 David Barchiesi <david@barchie.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +21,9 @@
 
 #include "gdriveurl.h"
 
+const QString GDriveUrl::Scheme = QStringLiteral("gdrive");
+const QString GDriveUrl::TrashDir = QStringLiteral("trash");
+
 GDriveUrl::GDriveUrl(const QUrl &url)
     : m_url(url)
 {
@@ -36,6 +40,15 @@ QString GDriveUrl::account() const
     return m_components.at(0);
 }
 
+QString GDriveUrl::filename() const
+{
+    if (m_components.isEmpty()) {
+        return QString();
+    }
+
+    return m_components.last();
+}
+
 bool GDriveUrl::isRoot() const
 {
     return m_components.isEmpty();
@@ -44,6 +57,26 @@ bool GDriveUrl::isRoot() const
 bool GDriveUrl::isAccountRoot() const
 {
     return m_components.length() == 1;
+}
+
+bool GDriveUrl::isTopLevel() const
+{
+    return m_components.length() == 2;
+}
+
+bool GDriveUrl::isTrashDir() const
+{
+    return m_components.length() == 2 && m_components.at(1) == TrashDir;
+}
+
+bool GDriveUrl::isTrashed() const
+{
+    return m_components.length() > 2 && m_components.at(1) == TrashDir;
+}
+
+QUrl GDriveUrl::url() const
+{
+    return m_url;
 }
 
 QString GDriveUrl::parentPath() const
