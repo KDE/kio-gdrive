@@ -232,7 +232,7 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
 QUrl KIOGDrive::fileToUrl(const FilePtr &file, const QString &path) const
 {
     QUrl url;
-    url.setScheme(QStringLiteral("gdrive"));
+    url.setScheme(GDriveUrl::Scheme);
     url.setPath(path + QLatin1Char('/') + file->title());
 
     QUrlQuery urlQuery;
@@ -354,15 +354,14 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     }
 
     QUrl url;
-    url.setScheme(QStringLiteral("gdrive"));
+    url.setScheme(GDriveUrl::Scheme);
     url.setPath(path);
     const auto gdriveUrl = GDriveUrl(url);
     Q_ASSERT(!gdriveUrl.isRoot());
 
-    const QStringList components = gdriveUrl.pathComponents();
-    if (gdriveUrl.isAccountRoot() || (components.size() == 2 && components[1] == QLatin1String("trash"))) {
+    if (gdriveUrl.isAccountRoot() || gdriveUrl.isTrashDir()) {
         qCDebug(GDRIVE) << "Resolved" << path << "to \"root\"";
-        return rootFolderId(components[0]);
+        return rootFolderId(gdriveUrl.account());
     }
 
     // Try to recursively resolve ID of parent path - either from cache, or by
@@ -379,9 +378,9 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
                        (flags & KIOGDrive::PathIsFolder ? FileSearchQuery::Equals : FileSearchQuery::NotEquals),
                        GDriveHelper::folderMimeType());
     }
-    query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, components.last());
+    query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, gdriveUrl.filename());
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
-    query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, components[1] == QLatin1String("trash"));
+    query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, gdriveUrl.isTrashed());
 
     const QString accountId = gdriveUrl.account();
     FileFetchJob fetchJob(query, getAccount(accountId));
@@ -511,8 +510,7 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
         return;
     }
     QString parentId;
-    const auto components = gdriveUrl.pathComponents();
-    if (components.size() == 2) {
+    if (gdriveUrl.isTopLevel()) {
         parentId = rootFolderId(accountId);
     } else {
         parentId = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
@@ -523,10 +521,8 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
         return;
     }
 
-    const QString folderName = components.last();
-
     FilePtr file(new File());
-    file->setTitle(folderName);
+    file->setTitle(gdriveUrl.filename());
     file->setMimeType(File::folderMimeType());
 
     ParentReferencePtr parent(new ParentReference(parentId));
@@ -761,10 +757,9 @@ bool KIOGDrive::putCreate(const QUrl &url)
         error(KIO::ERR_ACCESS_DENIED, url.path());
         return false;
     }
-    const auto components = gdriveUrl.pathComponents();
-    if (components.length() == 2) {
-        // Creating in root directory
-    } else {
+
+    if (!gdriveUrl.isTopLevel()) {
+        // Not creating in root directory, fill parent references
         const QString parentId = resolveFileIdFromPath(gdriveUrl.parentPath());
         if (parentId.isEmpty()) {
             error(KIO::ERR_DOES_NOT_EXIST, url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
@@ -774,7 +769,7 @@ bool KIOGDrive::putCreate(const QUrl &url)
     }
 
     FilePtr file(new File);
-    file->setTitle(components.last());
+    file->setTitle(gdriveUrl.filename());
     file->setParents(parentReferences);
     /*
     if (hasMetaData(QLatin1String("modified"))) {
@@ -891,9 +886,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     }
 
     QString destDirId;
-    const auto destPathComps = destGDriveUrl.pathComponents();
-    const QString destFileName = destPathComps.last();
-    if (destPathComps.size() == 2) {
+    if (destGDriveUrl.isTopLevel()) {
         destDirId = rootFolderId(destAccountId);
     } else {
         destDirId = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
@@ -901,7 +894,7 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     destParentReferences << ParentReferencePtr(new ParentReference(destDirId));
 
     FilePtr destFile(new File);
-    destFile->setTitle(destFileName);
+    destFile->setTitle(destGDriveUrl.filename());
     destFile->setModifiedDate(sourceFile->modifiedDate());
     destFile->setLastViewedByMeDate(sourceFile->lastViewedByMeDate());
     destFile->setDescription(sourceFile->description());
@@ -1032,8 +1025,6 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         error(KIO::ERR_ACCESS_DENIED, dest.fileName());
         return;
     }
-    const auto srcPathComps = srcGDriveUrl.pathComponents();
-    const auto destPathComps = destGDriveUrl.pathComponents();
     if (destGDriveUrl.isAccountRoot()) {
         // user is trying to move to root -> we are only renaming
     } else {
@@ -1063,10 +1054,8 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
         parentReferences << ParentReferencePtr(new ParentReference(destDirId));
     }
 
-    const QString destFileName = destPathComps.last();
-
     FilePtr destFile(sourceFile);
-    destFile->setTitle(destFileName);
+    destFile->setTitle(destGDriveUrl.filename());
     destFile->setParents(parentReferences);
 
     FileModifyJob modifyJob(destFile, getAccount(sourceAccountId));
