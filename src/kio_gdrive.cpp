@@ -149,8 +149,7 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
         aboutFetch.setFields({
             About::Fields::Kind,
             About::Fields::QuotaBytesTotal,
-            About::Fields::QuotaBytesUsedAggregate,
-            About::Fields::CanCreateTeamDrives,
+            About::Fields::QuotaBytesUsedAggregate
         });
         if (runJob(aboutFetch, url, accountId)) {
             const AboutPtr about = aboutFetch.aboutData();
@@ -462,11 +461,10 @@ void KIOGDrive::listDir(const QUrl &url)
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     FileFetchJob fileFetchJob(query, getAccount(accountId));
     const auto extraFields =
-        KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields +
-            QStringList({ KGAPI2::Drive::File::Fields::Labels,
-                          KGAPI2::Drive::File::Fields::ExportLinks,
-                          KGAPI2::Drive::File::Fields::LastViewedByMeDate,
-            });
+        QStringList({ KGAPI2::Drive::File::Fields::Labels,
+                      KGAPI2::Drive::File::Fields::ExportLinks,
+                      KGAPI2::Drive::File::Fields::LastViewedByMeDate,
+        });
     fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
     runJob(fileFetchJob, url, accountId);
 
