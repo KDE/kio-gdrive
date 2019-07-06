@@ -34,6 +34,8 @@ public:
     bool isRoot() const;
     bool isAccountRoot() const;
     bool isTopLevel() const;
+    bool isSharedDrivesRoot() const;
+    bool isSharedDrive() const;
     bool isTrashDir() const;
     bool isTrashed() const;
     QUrl url() const;
@@ -41,6 +43,7 @@ public:
     QStringList pathComponents() const;
 
     static const QString Scheme;
+    static const QString SharedDrivesDir;
     static const QString TrashDir;
 private:
     QUrl m_url;

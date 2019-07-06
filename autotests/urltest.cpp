@@ -91,6 +91,16 @@ void UrlTest::testGDriveUrl_data()
             << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::TrashDir, QStringLiteral("baz.txt")}
             << QStringLiteral("baz.txt");
 
+    QTest::newRow("account shared drives url")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedDrivesDir)
+            << QStringLiteral("gdrive:/foo@gmail.com/") + GDriveUrl::SharedDrivesDir
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com")
+            << false
+            << true
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedDrivesDir}
+            << GDriveUrl::SharedDrivesDir;
+
     QTest::newRow("file in account root")
             << gdriveUrl(QStringLiteral("/foo@gmail.com/bar.txt"))
             << QStringLiteral("gdrive:/foo@gmail.com/bar.txt")
