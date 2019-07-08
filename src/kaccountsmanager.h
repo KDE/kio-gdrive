@@ -40,6 +40,8 @@ public:
 private:
     void loadAccounts();
 
+    KGAPI2::AccountPtr getAccountCredentials(Accounts::AccountId id, const QString& displayName);
+
     QMap<Accounts::AccountId, KGAPI2::AccountPtr> m_accounts;
 };
 

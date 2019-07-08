@@ -85,8 +85,19 @@ AccountPtr KAccountsManager::createAccount()
 
 AccountPtr KAccountsManager::refreshAccount(const AccountPtr &account)
 {
-    Q_UNUSED(account)
-    qCWarning(GDRIVE) << Q_FUNC_INFO << "not implemented.";
+    const QString accountName = account->accountName();
+    for (auto it = m_accounts.constBegin(); it != m_accounts.constEnd(); ++it) {
+        if (it.value()->accountName() != accountName) {
+            continue;
+        }
+
+        const auto id = it.key();
+        qCDebug(GDRIVE) << "Refreshing" << accountName;
+        auto gapiAccount = getAccountCredentials(id, accountName);
+        m_accounts.insert(id, gapiAccount);
+        return gapiAccount;
+    }
+
     return {};
 }
 
@@ -143,19 +154,27 @@ void KAccountsManager::loadAccounts()
             }
             qCDebug(GDRIVE) << account->displayName() << "supports gdrive!";
 
-            auto job = new GetCredentialsJob(id, nullptr);
-            job->exec();
-
-            auto gapiAccount = AccountPtr(new Account(account->displayName(),
-                                                      job->credentialsData().value(QStringLiteral("AccessToken")).toString(),
-                                                      job->credentialsData().value(QStringLiteral("RefreshToken")).toString()));
-
-            const auto scopes = job->credentialsData().value(QStringLiteral("Scope")).toStringList();
-            for (const auto &scope : scopes) {
-                gapiAccount->addScope(QUrl::fromUserInput(scope));
-            }
-
+            auto gapiAccount = getAccountCredentials(id, account->displayName());
             m_accounts.insert(id, gapiAccount);
         }
     }
+}
+
+AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const QString& displayName)
+{
+    auto job = new GetCredentialsJob(id, nullptr);
+    job->exec();
+
+    auto gapiAccount = AccountPtr(new Account(displayName,
+                                              job->credentialsData().value(QStringLiteral("AccessToken")).toString(),
+                                              job->credentialsData().value(QStringLiteral("RefreshToken")).toString()));
+
+    const auto scopes = job->credentialsData().value(QStringLiteral("Scope")).toStringList();
+    for (const auto &scope : scopes) {
+        gapiAccount->addScope(QUrl::fromUserInput(scope));
+    }
+
+    qCDebug(GDRIVE) << "Got account credentials for:" << gapiAccount->accountName() << ", accessToken:" << gapiAccount->accessToken() << ", refreshToken:" << gapiAccount->refreshToken();
+
+    return gapiAccount;
 }
