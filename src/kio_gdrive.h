@@ -78,9 +78,16 @@ private:
     };
 
     static KIO::UDSEntry accountToUDSEntry(const QString &accountName);
+    static KIO::UDSEntry sharedDriveToUDSEntry(const KGAPI2::Drive::DrivesPtr sharedDrive);
 
     void listAccounts();
     void createAccount();
+
+    void listSharedDrivesRoot(const QUrl &url);
+    bool createSharedDrive(const QUrl &url);
+    bool deleteSharedDrive(const QUrl url);
+    void statSharedDrive(const QUrl url);
+    KIO::UDSEntry fetchSharedDrivesRootEntry(QString accountId, bool asCurrentDir = false);
 
     QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
 

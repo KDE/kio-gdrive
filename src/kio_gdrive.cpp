@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QUrlQuery>
 #include <QTemporaryFile>
+#include <QUuid>
 
 #include <KGAPI/Account>
 #include <KGAPI/AuthJob>
@@ -45,6 +46,11 @@
 #include <KGAPI/Drive/FileSearchQuery>
 #include <KGAPI/Drive/ParentReference>
 #include <KGAPI/Drive/Permission>
+#include <KGAPI/Drive/Drives>
+#include <KGAPI/Drive/DrivesCreateJob>
+#include <KGAPI/Drive/DrivesFetchJob>
+#include <KGAPI/Drive/DrivesModifyJob>
+#include <KGAPI/Drive/DrivesDeleteJob>
 #include <KIO/AccessManager>
 #include <KIO/Job>
 #include <KLocalizedString>
@@ -265,6 +271,27 @@ KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
     return entry;
 }
 
+KIO::UDSEntry KIOGDrive::sharedDriveToUDSEntry(const DrivesPtr sharedDrive)
+{
+    KIO::UDSEntry entry;
+
+    qlonglong udsAccess = S_IRUSR | S_IXUSR | S_IRGRP;
+    if (sharedDrive->capabilities()->canRenameDrive() || sharedDrive->capabilities()->canDeleteDrive()) {
+        udsAccess |= S_IWUSR;
+    }
+
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, sharedDrive->id());
+    entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, sharedDrive->name());
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.fastInsert(KIO::UDSEntry::UDS_CREATION_TIME, sharedDrive->createdDate().toSecsSinceEpoch());
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, udsAccess);
+    entry.fastInsert(KIO::UDSEntry::UDS_HIDDEN, sharedDrive->hidden());
+    entry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
+
+    return entry;
+}
+
 void KIOGDrive::createAccount()
 {
     const KGAPI2::AccountPtr account = m_accountManager->createAccount();
@@ -314,6 +341,123 @@ void KIOGDrive::listAccounts()
 
     finished();
     return;
+}
+
+void KIOGDrive::listSharedDrivesRoot(const QUrl &url)
+{
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    DrivesFetchJob sharedDrivesFetchJob(getAccount(accountId));
+    sharedDrivesFetchJob.setFields({
+        Drives::Fields::Kind,
+        Drives::Fields::Id,
+        Drives::Fields::Name,
+        Drives::Fields::Hidden,
+        Drives::Fields::CreatedDate,
+        Drives::Fields::Capabilities
+    });
+
+    if (runJob(sharedDrivesFetchJob, url, accountId)) {
+        ObjectsList objects = sharedDrivesFetchJob.items();
+        Q_FOREACH (const ObjectPtr &object, objects) {
+            const DrivesPtr sharedDrive = object.dynamicCast<Drives>();
+            const KIO::UDSEntry entry = sharedDriveToUDSEntry(sharedDrive);
+            listEntry(entry);
+        }
+
+        auto entry = fetchSharedDrivesRootEntry(accountId, true);
+        listEntry(entry);
+
+        finished();
+    }
+}
+
+bool KIOGDrive::createSharedDrive(const QUrl &url) {
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+
+    DrivesPtr sharedDrive = DrivesPtr::create();
+    sharedDrive->setName(gdriveUrl.filename());
+
+    QString requestId = QUuid::createUuid().toString();
+    DrivesCreateJob createJob(requestId, sharedDrive, getAccount(accountId));
+    return runJob(createJob, url, accountId);
+}
+
+bool KIOGDrive::deleteSharedDrive(const QUrl url) {
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    DrivesDeleteJob sharedDriveDeleteJob(gdriveUrl.filename(), getAccount(accountId));
+    return runJob(sharedDriveDeleteJob, url, accountId);
+}
+
+void KIOGDrive::statSharedDrive(const QUrl url) {
+    const auto gdriveUrl = GDriveUrl(url);
+    const QString accountId = gdriveUrl.account();
+    DrivesFetchJob sharedDriveFetchJob(gdriveUrl.filename(), getAccount(accountId));
+    sharedDriveFetchJob.setFields({
+        Drives::Fields::Kind,
+        Drives::Fields::Id,
+        Drives::Fields::Name,
+        Drives::Fields::Hidden,
+        Drives::Fields::CreatedDate,
+        Drives::Fields::Capabilities
+    });
+    if (!runJob(sharedDriveFetchJob, url, accountId)) {
+        // runJob called error()
+        return;
+    }
+
+    ObjectPtr object = sharedDriveFetchJob.items()[0];
+    const DrivesPtr sharedDrive = object.dynamicCast<Drives>();
+    const auto entry = sharedDriveToUDSEntry(sharedDrive);
+    statEntry(entry);
+    finished();
+}
+
+KIO::UDSEntry KIOGDrive::fetchSharedDrivesRootEntry(QString accountId, bool asCurrentDir)
+{
+    // Not every user is allowed to create shared Drives,
+    // check with About resource.
+    bool canCreateDrives = false;
+    AboutFetchJob aboutFetch(getAccount(accountId));
+    aboutFetch.setFields({
+        About::Fields::Kind,
+        About::Fields::CanCreateDrives
+    });
+    QEventLoop eventLoop;
+    QObject::connect(&aboutFetch, &KGAPI2::Job::finished,
+                     &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    if (aboutFetch.error() == KGAPI2::OK || aboutFetch.error() == KGAPI2::NoError) {
+        const AboutPtr about = aboutFetch.aboutData();
+        if (about) {
+            canCreateDrives = about->canCreateDrives();
+        }
+    }
+    qCDebug(GDRIVE) << "Account" << accountId << (canCreateDrives ? "can" : "can't") << "create Drives";
+
+    KIO::UDSEntry entry;
+
+    if (asCurrentDir) {
+        entry.fastInsert(KIO::UDSEntry::UDS_NAME, QStringLiteral("."));
+    }
+    else {
+        entry.fastInsert(KIO::UDSEntry::UDS_NAME, GDriveUrl::SharedDrivesDir);
+        entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, GDriveUrl::SharedDrivesDir);
+    }
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_SIZE, 0);
+    entry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-gdrive"));
+
+    // If user is allowed to create shared Drives, add write bit on directory
+    qlonglong udsAccess = S_IRUSR | S_IXUSR;
+    if (canCreateDrives) {
+        udsAccess |= S_IWUSR;
+    }
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, udsAccess);
+
+    return entry;
 }
 
 class RecursionDepthCounter
@@ -366,6 +510,15 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     if (gdriveUrl.isAccountRoot() || gdriveUrl.isTrashDir()) {
         qCDebug(GDRIVE) << "Resolved" << path << "to \"root\"";
         return rootFolderId(gdriveUrl.account());
+    }
+
+    if (gdriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "Resolved" << path << "to Shared Drive" << gdriveUrl.filename();
+        return gdriveUrl.filename();
+    }
+    else if (gdriveUrl.isSharedDrivesRoot()) {
+        qCDebug(GDRIVE) << "Resolved" << path << "to Shared Drives root";
+        return QString();
     }
 
     // Try to recursively resolve ID of parent path - either from cache, or by
@@ -449,7 +602,12 @@ void KIOGDrive::listDir(const QUrl &url)
         listAccounts();
         return;
     } else if (gdriveUrl.isAccountRoot()) {
+        auto entry = fetchSharedDrivesRootEntry(accountId);
+        listEntry(entry);
         folderId = rootFolderId(accountId);
+    } else if (gdriveUrl.isSharedDrivesRoot()) {
+        listSharedDrivesRoot(url);
+        return;
     } else {
         folderId = m_cache.idForPath(url.path());
         if (folderId.isEmpty()) {
@@ -498,7 +656,6 @@ void KIOGDrive::listDir(const QUrl &url)
     finished();
 }
 
-
 void KIOGDrive::mkdir(const QUrl &url, int permissions)
 {
     // NOTE: We deliberately ignore the permissions field here, because GDrive
@@ -515,6 +672,16 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
+
+    if (gdriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "Directory is shared drive, creating that instead" << url;
+        if (createSharedDrive(url)) {
+            // runJon will have shown an error otherwise
+            finished();
+        }
+        return;
+    }
+
     QString parentId;
     if (gdriveUrl.isTopLevel()) {
         parentId = rootFolderId(accountId);
@@ -557,6 +724,18 @@ void KIOGDrive::stat(const QUrl &url)
         finished();
         return;
     }
+    if (gdriveUrl.isSharedDrivesRoot()) {
+        qCDebug(GDRIVE) << "stat()ing Shared Drives root";
+        const auto entry = fetchSharedDrivesRootEntry(accountId);
+        statEntry(entry);
+        finished();
+        return;
+    }
+    if (gdriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "stat()ing Shared Drive" << url;
+        statSharedDrive(url);
+        return;
+    }
 
     const QUrlQuery urlQuery(url);
     const QString fileId
@@ -571,6 +750,7 @@ void KIOGDrive::stat(const QUrl &url)
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     if (!runJob(fileFetchJob, url, accountId)) {
+        qCDebug(GDRIVE) << "Failed stat()ing file" << fileFetchJob.errorString();
         return;
     }
 
@@ -817,6 +997,14 @@ void KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 
     qCDebug(GDRIVE) << Q_FUNC_INFO << url;
 
+    const auto gdriveUrl = GDriveUrl(url);
+
+    if (gdriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "Can't create files in Shared Drives root" << url;
+        error(KIO::ERR_CANNOT_WRITE, url.path());
+        return;
+    }
+
     if (QUrlQuery(url).hasQueryItem(QStringLiteral("id"))) {
         if (!putUpdate(url)) {
             return;
@@ -934,6 +1122,15 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // their local trashes. This however requires fixing the first FIXME first,
     // otherwise we are risking severe data loss.
 
+    const auto gdriveUrl = GDriveUrl(url);
+
+    // Trying to delete the Team Drive root is pointless
+    if (gdriveUrl.isSharedDrivesRoot()) {
+        qCDebug(GDRIVE) << "Tried deleting Shared Drives root.";
+        error(KIO::ERR_SLAVE_DEFINED, i18n("Can't delete Shared Drives root."));
+        return;
+    }
+
     qCDebug(GDRIVE) << "Deleting URL" << url << "- is it a file?" << isfile;
 
     const QUrlQuery urlQuery(url);
@@ -946,7 +1143,6 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
         error(KIO::ERR_DOES_NOT_EXIST, url.path());
         return;
     }
-    const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
 
     // If user tries to delete the account folder, remove the account from the keychain
@@ -958,6 +1154,15 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
         }
         m_accountManager->removeAccount(accountId);
         finished();
+        return;
+    }
+
+    if (gdriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "Deleting Shared Drive" << url;
+        if (deleteSharedDrive(url)) {
+            // Error will have been called in case of error
+            finished();
+        }
         return;
     }
 
@@ -1017,6 +1222,22 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
                                     KIOGDrive::PathIsFile);
     if (sourceFileId.isEmpty()) {
         error(KIO::ERR_DOES_NOT_EXIST, src.path());
+        return;
+    }
+
+    if (srcGDriveUrl.isSharedDrive()) {
+        qCDebug(GDRIVE) << "Renaming Shared Drive" << srcGDriveUrl.filename() << "to" << destGDriveUrl.filename();
+        DrivesPtr drives = DrivesPtr::create();
+        drives->setId(sourceFileId);
+        drives->setName(destGDriveUrl.filename());
+
+        DrivesModifyJob modifyJob(drives, getAccount(sourceAccountId));
+        if (!runJob(modifyJob, src, sourceAccountId)) {
+            error(KIO::ERR_DOES_NOT_EXIST, src.path());
+            return;
+        }
+
+        finished();
         return;
     }
 
