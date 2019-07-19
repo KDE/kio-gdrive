@@ -121,4 +121,8 @@
     </screenshot>
   </screenshots>
   <project_group>KDE</project_group>
+  <categories>
+    <category>Network</category>
+  </categories>
+  <icon type="stock">folder-gdrive</icon>
 </component>
