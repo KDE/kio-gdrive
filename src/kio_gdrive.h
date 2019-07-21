@@ -99,6 +99,9 @@ private:
     bool readPutData(QTemporaryFile &tmpFile);
 
     /**
+     * Executes a KGAPI2::Job in an event loop, retrying the job until success or failure.
+     * If the Job fails, SlaveBase::error() with an appropriate error message will be called.
+     *
      * @return Whether @p job succeeded.
      */
     bool runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId);

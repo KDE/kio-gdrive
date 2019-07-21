@@ -144,24 +144,27 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
         finished();
         return;
     }
-    if (!gdriveUrl.isRoot()) {
-        AboutFetchJob aboutFetch(getAccount(accountId));
-        aboutFetch.setFields({
-            About::Fields::Kind,
-            About::Fields::QuotaBytesTotal,
-            About::Fields::QuotaBytesUsedAggregate
-        });
-        if (runJob(aboutFetch, url, accountId)) {
-            const AboutPtr about = aboutFetch.aboutData();
-            if (about) {
-                setMetaData(QStringLiteral("total"), QString::number(about->quotaBytesTotal()));
-                setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUsedAggregate()));
-                finished();
-                return;
-            }
+    if (gdriveUrl.isRoot()) {
+        qCDebug(GDRIVE) << "fileSystemFreeSpace is not supported for gdrive root urls";
+        error(KIO::ERR_CANNOT_STAT, url.toDisplayString());
+        return;
+    }
+
+    AboutFetchJob aboutFetch(getAccount(accountId));
+    aboutFetch.setFields({
+        About::Fields::Kind,
+        About::Fields::QuotaBytesTotal,
+        About::Fields::QuotaBytesUsedAggregate
+    });
+    if (runJob(aboutFetch, url, accountId)) {
+        const AboutPtr about = aboutFetch.aboutData();
+        if (about) {
+            setMetaData(QStringLiteral("total"), QString::number(about->quotaBytesTotal()));
+            setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUsedAggregate()));
+            finished();
+            return;
         }
     }
-    error(KIO::ERR_CANNOT_STAT, url.toDisplayString());
 }
 
 AccountPtr KIOGDrive::getAccount(const QString &accountName)
@@ -466,7 +469,9 @@ void KIOGDrive::listDir(const QUrl &url)
                       KGAPI2::Drive::File::Fields::LastViewedByMeDate,
         });
     fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
-    runJob(fileFetchJob, url, accountId);
+    if (!runJob(fileFetchJob, url, accountId)) {
+        return;
+    }
 
     ObjectsList objects = fileFetchJob.items();
     Q_FOREACH (const ObjectPtr &object, objects) {
@@ -527,9 +532,9 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
     file->setParents(ParentReferencesList() << parent);
 
     FileCreateJob createJob(file, getAccount(accountId));
-    runJob(createJob, url, accountId);
-
-    finished();
+    if (runJob(createJob, url, accountId)) {
+        finished();
+    }
 }
 
 void KIOGDrive::stat(const QUrl &url)
@@ -562,7 +567,9 @@ void KIOGDrive::stat(const QUrl &url)
     }
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
-    runJob(fileFetchJob, url, accountId);
+    if (!runJob(fileFetchJob, url, accountId)) {
+        return;
+    }
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
@@ -612,7 +619,9 @@ void KIOGDrive::get(const QUrl &url)
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType, File::Fields::ExportLinks, File::Fields::DownloadUrl});
-    runJob(fileFetchJob, url, accountId);
+    if (!runJob(fileFetchJob, url, accountId)) {
+        return;
+    }
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
@@ -631,7 +640,9 @@ void KIOGDrive::get(const QUrl &url)
     mimeType(file->mimeType());
 
     FileFetchContentJob contentJob(downloadUrl, getAccount(accountId));
-    runJob(contentJob, url, accountId);
+    if (!runJob(contentJob, url, accountId)) {
+        return;
+    }
 
     QByteArray contentData = contentJob.data();
 
@@ -867,7 +878,9 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     }
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
     sourceFileFetchJob.setFields({File::Fields::Id, File::Fields::ModifiedDate, File::Fields::LastViewedByMeDate, File::Fields::Description});
-    runJob(sourceFileFetchJob, src, sourceAccountId);
+    if (!runJob(sourceFileFetchJob, src, sourceAccountId)) {
+        return;
+    }
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
@@ -899,9 +912,9 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
     destFile->setParents(destParentReferences);
 
     FileCopyJob copyJob(sourceFile, destFile, getAccount(sourceAccountId));
-    runJob(copyJob, dest, sourceAccountId);
-
-    finished();
+    if (runJob(copyJob, dest, sourceAccountId)) {
+        finished();
+    }
 }
 
 void KIOGDrive::del(const QUrl &url, bool isfile)
@@ -950,7 +963,9 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // child references
     if (!isfile) {
         ChildReferenceFetchJob referencesFetch(fileId, getAccount(accountId));
-        runJob(referencesFetch, url, accountId);
+        if (!runJob(referencesFetch, url, accountId)) {
+            return;
+        }
         const bool isEmpty = !referencesFetch.items().count();
 
         if (!isEmpty && metaData(QStringLiteral("recurse")) != QLatin1String("true")) {
@@ -960,12 +975,10 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     }
 
     FileTrashJob trashJob(fileId, getAccount(accountId));
-    runJob(trashJob, url, accountId);
-
-    m_cache.removePath(url.path());
-
-    finished();
-
+    if (runJob(trashJob, url, accountId)) {
+        m_cache.removePath(url.path());
+        finished();
+    }
 }
 
 void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
@@ -1006,7 +1019,9 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
     // We need to fetch ALL, so that we can do update later
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
-    runJob(sourceFileFetchJob, src, sourceAccountId);
+    if (!runJob(sourceFileFetchJob, src, sourceAccountId)) {
+        return;
+    }
 
     const ObjectsList objects = sourceFileFetchJob.items();
     if (objects.count() != 1) {
@@ -1058,9 +1073,9 @@ void KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobFlags flags)
 
     FileModifyJob modifyJob(destFile, getAccount(sourceAccountId));
     modifyJob.setUpdateModifiedDate(true);
-    runJob(modifyJob, dest, sourceAccountId);
-
-    finished();
+    if (runJob(modifyJob, dest, sourceAccountId)) {
+        finished();
+    }
 }
 
 void KIOGDrive::mimetype(const QUrl &url)
@@ -1080,7 +1095,9 @@ void KIOGDrive::mimetype(const QUrl &url)
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
     fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType});
-    runJob(fileFetchJob, url, accountId);
+    if (!runJob(fileFetchJob, url, accountId)) {
+        return;
+    }
 
     const ObjectsList objects = fileFetchJob.items();
     if (objects.count() != 1) {
