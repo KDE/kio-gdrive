@@ -19,6 +19,7 @@
 
 #include "kaccountsmanager.h"
 #include "gdrivedebug.h"
+#include "gdrivehelper.h"
 
 #include <Accounts/Manager>
 #include <Accounts/Provider>
@@ -174,7 +175,7 @@ AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const
         gapiAccount->addScope(QUrl::fromUserInput(scope));
     }
 
-    qCDebug(GDRIVE) << "Got account credentials for:" << gapiAccount->accountName() << ", accessToken:" << gapiAccount->accessToken() << ", refreshToken:" << gapiAccount->refreshToken();
+    qCDebug(GDRIVE) << "Got account credentials for:" << gapiAccount->accountName() << ", accessToken:" << GDriveHelper::elideToken(gapiAccount->accessToken()) << ", refreshToken:" << GDriveHelper::elideToken(gapiAccount->refreshToken());
 
     return gapiAccount;
 }

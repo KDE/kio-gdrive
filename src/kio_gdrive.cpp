@@ -97,7 +97,7 @@ KIOGDrive::~KIOGDrive()
 
 KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url)
 {
-    qCDebug(GDRIVE) << "Job status code:" << job.error() << "- message:" << job.errorString();
+    qCDebug(GDRIVE) << "Completed job" << (&job) << "error code:" << job.error() << "- message:" << job.errorString();
 
     switch (job.error()) {
         case KGAPI2::OK:
@@ -141,6 +141,7 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
     const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
     if (accountId == QLatin1String("new-account")) {
+        qCDebug(GDRIVE) << "fileSystemFreeSpace is not supported for new-account url";
         finished();
         return;
     }
@@ -150,6 +151,7 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
         return;
     }
 
+    qCDebug(GDRIVE) << "Getting fileSystemFreeSpace for" << url;
     AboutFetchJob aboutFetch(getAccount(accountId));
     aboutFetch.setFields({
         About::Fields::Kind,
@@ -343,7 +345,7 @@ int RecursionDepthCounter::sDepth = 0;
 
 QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 {
-    qCDebug(GDRIVE) << Q_FUNC_INFO << path;
+    qCDebug(GDRIVE) << "Resolving file ID for" << path;
 
     if (path.isEmpty()) {
         return QString();
@@ -410,6 +412,7 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
 {
     auto it = m_rootIds.constFind(accountId);
     if (it == m_rootIds.cend()) {
+        qCDebug(GDRIVE) << "Getting root ID for" << accountId;
         AboutFetchJob aboutFetch(getAccount(accountId));
         aboutFetch.setFields({About::Fields::Kind, About::Fields::RootFolderId});
         QUrl url;
@@ -703,7 +706,7 @@ bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &account
 {
     KIOGDrive::Action action = KIOGDrive::Fail;
     Q_FOREVER {
-        qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << job.account()->accessToken();
+        qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << GDriveHelper::elideToken(job.account()->accessToken());
         QEventLoop eventLoop;
         QObject::connect(&job, &KGAPI2::Job::finished,
                          &eventLoop, &QEventLoop::quit);
