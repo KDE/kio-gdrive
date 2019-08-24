@@ -48,6 +48,7 @@
 #include <KIO/AccessManager>
 #include <KIO/Job>
 #include <KLocalizedString>
+#include <KPim/kgapi_version.h>
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -146,6 +147,13 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
     }
     if (!gdriveUrl.isRoot()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        aboutFetch.setFields({
+            About::Fields::Kind,
+            About::Fields::QuotaBytesTotal,
+            About::Fields::QuotaBytesUsedAggregate
+        });
+#endif
         if (runJob(aboutFetch, url, accountId)) {
             const AboutPtr about = aboutFetch.aboutData();
             if (about) {
@@ -379,7 +387,11 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     const QString accountId = gdriveUrl.account();
     FileFetchJob fetchJob(query, getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    fetchJob.setFields({File::Fields::Id, File::Fields::Title, File::Fields::Labels});
+#else
     fetchJob.setFields(FileFetchJob::Id | FileFetchJob::Title | FileFetchJob::Labels);
+#endif
     if (!runJob(fetchJob, url, accountId)) {
         return QString();
     }
@@ -404,6 +416,9 @@ QString KIOGDrive::rootFolderId(const QString &accountId)
     auto it = m_rootIds.constFind(accountId);
     if (it == m_rootIds.cend()) {
         AboutFetchJob aboutFetch(getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        aboutFetch.setFields({About::Fields::Kind, About::Fields::RootFolderId});
+#endif
         QUrl url;
         if (!runJob(aboutFetch, url, accountId)) {
             return QString();
@@ -455,10 +470,19 @@ void KIOGDrive::listDir(const QUrl &url)
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
     query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     FileFetchJob fileFetchJob(query, getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    const auto extraFields =
+            QStringList({ KGAPI2::Drive::File::Fields::Labels,
+                          KGAPI2::Drive::File::Fields::ExportLinks,
+                          KGAPI2::Drive::File::Fields::LastViewedByMeDate,
+            });
+    fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
+#else
     fileFetchJob.setFields((FileFetchJob::BasicFields & ~FileFetchJob::Permissions)
                             | FileFetchJob::Labels
                             | FileFetchJob::ExportLinks
                             | FileFetchJob::LastViewedByMeDate);
+#endif
     runJob(fileFetchJob, url, accountId);
 
     ObjectsList objects = fileFetchJob.items();
@@ -607,10 +631,14 @@ void KIOGDrive::get(const QUrl &url)
     }
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType, File::Fields::ExportLinks, File::Fields::DownloadUrl});
+#else
     fileFetchJob.setFields(FileFetchJob::Id
                             | FileFetchJob::MimeType
                             | FileFetchJob::ExportLinks
                             | FileFetchJob::DownloadUrl);
+#endif
     runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
@@ -866,8 +894,12 @@ void KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::Jo
         return;
     }
     FileFetchJob sourceFileFetchJob(sourceFileId, getAccount(sourceAccountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    sourceFileFetchJob.setFields({File::Fields::Id, File::Fields::ModifiedDate, File::Fields::LastViewedByMeDate, File::Fields::Description});
+#else
     sourceFileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::ModifiedDate |
                                  FileFetchJob::LastViewedByMeDate | FileFetchJob::Description);
+#endif
     runJob(sourceFileFetchJob, src, sourceAccountId);
 
     const ObjectsList objects = sourceFileFetchJob.items();
@@ -1086,7 +1118,11 @@ void KIOGDrive::mimetype(const QUrl &url)
     const QString accountId = GDriveUrl(url).account();
 
     FileFetchJob fileFetchJob(fileId, getAccount(accountId));
+#if KGAPI_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    fileFetchJob.setFields({File::Fields::Id, File::Fields::MimeType});
+#else
     fileFetchJob.setFields(FileFetchJob::Id | FileFetchJob::MimeType);
+#endif
     runJob(fileFetchJob, url, accountId);
 
     const ObjectsList objects = fileFetchJob.items();
