@@ -51,6 +51,7 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QMimeDatabase>
 
 using namespace KGAPI2;
 using namespace Drive;
@@ -663,7 +664,7 @@ void KIOGDrive::get(const QUrl &url)
     finished();
 }
 
-bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
+bool KIOGDrive::readPutData(QTemporaryFile &tempFile, FilePtr &fileMetaData)
 {
     // TODO: Instead of using a temp file, upload directly the raw data (requires
     // support in LibKGAPI)
@@ -691,6 +692,10 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile)
             }
         }
     } while (result > 0);
+
+    const QMimeType mime = QMimeDatabase().mimeTypeForFileNameAndData(fileMetaData->title(), &tempFile);
+    fileMetaData->setMimeType(mime.name());
+
     tempFile.close();
 
     if (result == -1) {
@@ -743,9 +748,10 @@ bool KIOGDrive::putUpdate(const QUrl &url)
         return false;
     }
 
-    const FilePtr file = objects[0].dynamicCast<File>();
+    FilePtr file = objects[0].dynamicCast<File>();
+
     QTemporaryFile tmpFile;
-    if (!readPutData(tmpFile)) {
+    if (!readPutData(tmpFile, file)) {
         error(KIO::ERR_CANNOT_READ, url.path());
         return false;
     }
@@ -792,7 +798,7 @@ bool KIOGDrive::putCreate(const QUrl &url)
     */
 
     QTemporaryFile tmpFile;
-    if (!readPutData(tmpFile)) {
+    if (!readPutData(tmpFile, file)) {
         error(KIO::ERR_CANNOT_READ, url.path());
         return false;
     }
