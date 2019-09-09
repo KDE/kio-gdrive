@@ -103,7 +103,7 @@ private:
 
     bool putUpdate(const QUrl &url);
     bool putCreate(const QUrl &url);
-    bool readPutData(QTemporaryFile &tmpFile);
+    bool readPutData(QTemporaryFile &tmpFile, KGAPI2::Drive::FilePtr &file);
 
     /**
      * Executes a KGAPI2::Job in an event loop, retrying the job until success or failure.
