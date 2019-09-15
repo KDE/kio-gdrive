@@ -231,6 +231,8 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
     }
 
+    entry.fastInsert(KIO::UDSEntry::UDS_EXTRA, file->alternateLink().toString());
+
     return entry;
 }
 
@@ -471,6 +473,7 @@ void KIOGDrive::listDir(const QUrl &url)
         QStringList({ KGAPI2::Drive::File::Fields::Labels,
                       KGAPI2::Drive::File::Fields::ExportLinks,
                       KGAPI2::Drive::File::Fields::LastViewedByMeDate,
+                      KGAPI2::Drive::File::Fields::AlternateLink,
         });
     fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
     if (!runJob(fileFetchJob, url, accountId)) {
