@@ -6,8 +6,12 @@
             "inode/directory"
         ],
         "Name": "'Copy Google URL to clipboard' action",
+        "Name[ca]": "Acció «Copia l'URL de Google al porta-retalls»",
+        "Name[cs]": "Činnost 'Kopírovat URL Google do schránky'",
+        "Name[es]": "Acción «Copiar URL de Google en el portapapeles»",
         "Name[nl]": "Actie 'Google-URL kopiëren naar klembord' action",
         "Name[pt]": "Copiar o URL do Google para a acção da área de transferência",
+        "Name[sk]": "Akcia 'Kopírovať Google URL do schránky'",
         "Name[sv]": "Åtgärden 'Kopiera Google webbadress till klippbordet'",
         "Name[uk]": "Дія «Копіювати адресу Google до буфера обміну»",
         "Name[x-test]": "xx'Copy Google URL to clipboard' actionxx",
