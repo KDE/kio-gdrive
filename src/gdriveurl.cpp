@@ -21,8 +21,9 @@
 
 #include "gdriveurl.h"
 
-const QString GDriveUrl::Scheme = QStringLiteral("gdrive");
-const QString GDriveUrl::TrashDir = QStringLiteral("trash");
+const QString GDriveUrl::Scheme = QLatin1String("gdrive");
+const QString GDriveUrl::SharedDrivesDir = QLatin1String("Shared Drives");
+const QString GDriveUrl::TrashDir = QLatin1String("trash");
 
 GDriveUrl::GDriveUrl(const QUrl &url)
     : m_url(url)
@@ -62,6 +63,16 @@ bool GDriveUrl::isAccountRoot() const
 bool GDriveUrl::isTopLevel() const
 {
     return m_components.length() == 2;
+}
+
+bool GDriveUrl::isSharedDrivesRoot() const
+{
+    return m_components.length() == 2 && m_components.at(1) == SharedDrivesDir;
+}
+
+bool GDriveUrl::isSharedDrive() const
+{
+    return m_components.length() == 3 && m_components.at(1) == SharedDrivesDir;
 }
 
 bool GDriveUrl::isTrashDir() const
