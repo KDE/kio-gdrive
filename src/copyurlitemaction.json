@@ -21,6 +21,7 @@
         "Name[sv]": "Åtgärden 'Kopiera Google webbadress till klippbordet'",
         "Name[uk]": "Дія «Копіювати адресу Google до буфера обміну»",
         "Name[x-test]": "xx'Copy Google URL to clipboard' actionxx",
+        "Name[zh_TW]": "「複製 Google 網址至剪貼簿」動作",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
