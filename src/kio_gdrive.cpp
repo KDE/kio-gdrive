@@ -145,19 +145,19 @@ KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
 void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
 {
     const auto gdriveUrl = GDriveUrl(url);
-    const QString accountId = gdriveUrl.account();
-    if (accountId == QLatin1String("new-account")) {
+    if (gdriveUrl.isNewAccountPath()) {
         qCDebug(GDRIVE) << "fileSystemFreeSpace is not supported for new-account url";
         finished();
         return;
     }
     if (gdriveUrl.isRoot()) {
-        qCDebug(GDRIVE) << "fileSystemFreeSpace is not supported for gdrive root urls";
+        qCDebug(GDRIVE) << "fileSystemFreeSpace is not supported for gdrive root url";
         error(KIO::ERR_CANNOT_STAT, url.toDisplayString());
         return;
     }
 
     qCDebug(GDRIVE) << "Getting fileSystemFreeSpace for" << url;
+    const QString accountId = gdriveUrl.account();
     AboutFetchJob aboutFetch(getAccount(accountId));
     aboutFetch.setFields({
         About::Fields::Kind,
@@ -259,6 +259,19 @@ void KIOGDrive::openConnection()
     qCDebug(GDRIVE) << "Ready to talk to GDrive";
 }
 
+KIO::UDSEntry KIOGDrive::newAccountUDSEntry()
+{
+    KIO::UDSEntry entry;
+
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, GDriveUrl::NewAccountPath);
+    entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("login in a new google account", "New account"));
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR);
+
+    return entry;
+}
+
 KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 {
     KIO::UDSEntry entry;
@@ -326,11 +339,8 @@ void KIOGDrive::listAccounts()
         const KIO::UDSEntry entry = accountToUDSEntry(account);
         listEntry(entry);
     }
-    KIO::UDSEntry newAccountEntry;
-    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_NAME, QStringLiteral("new-account"));
-    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("login in a new google account", "New account"));
-    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
-    newAccountEntry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("list-add-user"));
+
+    KIO::UDSEntry newAccountEntry = newAccountUDSEntry();
     listEntry(newAccountEntry);
 
     // Create also non-writable UDSentry for "."
@@ -595,12 +605,12 @@ void KIOGDrive::listDir(const QUrl &url)
     qCDebug(GDRIVE) << "Going to list" << url;
 
     const auto gdriveUrl = GDriveUrl(url);
-    const QString accountId = gdriveUrl.account();
-    if (accountId == QLatin1String("new-account")) {
+    if (gdriveUrl.isNewAccountPath()) {
         createAccount();
         return;
     }
 
+    const QString accountId = gdriveUrl.account();
     QString folderId;
     if (gdriveUrl.isRoot())  {
         listAccounts();
@@ -724,7 +734,15 @@ void KIOGDrive::stat(const QUrl &url)
         return;
     }
     if (gdriveUrl.isAccountRoot()) {
+        qCDebug(GDRIVE) << "stat()ing account root";
         const KIO::UDSEntry entry = accountToUDSEntry(accountId);
+        statEntry(entry);
+        finished();
+        return;
+    }
+    if (gdriveUrl.isNewAccountPath()) {
+        qCDebug(GDRIVE) << "stat()ing new-account path";
+        const KIO::UDSEntry entry = newAccountUDSEntry();
         statEntry(entry);
         finished();
         return;

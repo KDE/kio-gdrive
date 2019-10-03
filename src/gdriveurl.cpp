@@ -24,6 +24,7 @@
 const QString GDriveUrl::Scheme = QLatin1String("gdrive");
 const QString GDriveUrl::SharedDrivesDir = QLatin1String("Shared Drives");
 const QString GDriveUrl::TrashDir = QLatin1String("trash");
+const QString GDriveUrl::NewAccountPath = QLatin1String("new-account");
 
 GDriveUrl::GDriveUrl(const QUrl &url)
     : m_url(url)
@@ -57,7 +58,12 @@ bool GDriveUrl::isRoot() const
 
 bool GDriveUrl::isAccountRoot() const
 {
-    return m_components.length() == 1;
+    return m_components.length() == 1 && !isNewAccountPath();
+}
+
+bool GDriveUrl::isNewAccountPath() const
+{
+    return m_components.length() == 1 && m_components.at(0) == NewAccountPath;
 }
 
 bool GDriveUrl::isTopLevel() const

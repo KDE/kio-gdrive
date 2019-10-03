@@ -33,6 +33,7 @@ public:
     QString filename() const;
     bool isRoot() const;
     bool isAccountRoot() const;
+    bool isNewAccountPath() const;
     bool isTopLevel() const;
     bool isSharedDrivesRoot() const;
     bool isSharedDrive() const;
@@ -45,6 +46,8 @@ public:
     static const QString Scheme;
     static const QString SharedDrivesDir;
     static const QString TrashDir;
+    static const QString NewAccountPath;
+
 private:
     QUrl m_url;
     QStringList m_components;

@@ -82,6 +82,7 @@ private:
         CurrentDir = 1
     };
 
+    static KIO::UDSEntry newAccountUDSEntry();
     static KIO::UDSEntry accountToUDSEntry(const QString &accountName);
     static KIO::UDSEntry sharedDriveToUDSEntry(const KGAPI2::Drive::DrivesPtr &sharedDrive);
 
