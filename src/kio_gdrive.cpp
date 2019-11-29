@@ -562,7 +562,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     const ObjectsList objects = fetchJob.items();
     qCDebug(GDRIVE) << objects;
-    if (objects.count() == 0) {
+    if (objects.isEmpty()) {
         qCWarning(GDRIVE) << "Failed to resolve" << path;
         return QString();
     }

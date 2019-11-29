@@ -54,7 +54,7 @@ void ListTest::testListJob()
         m_entries = list.count();
         foreach (const auto &entry, list) {
             // Check properties of new-account entry.
-            if (entry.stringValue(KIO::UDSEntry::UDS_NAME) == QStringLiteral("new-account")) {
+            if (entry.stringValue(KIO::UDSEntry::UDS_NAME) == QLatin1String("new-account")) {
                 QVERIFY(entry.isDir());
                 QCOMPARE(entry.stringValue(KIO::UDSEntry::UDS_ICON_NAME), QStringLiteral("list-add-user"));
             }
