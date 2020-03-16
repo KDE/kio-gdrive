@@ -4,6 +4,7 @@ find_package(Intltool REQUIRED)
 kaccounts_add_service(${CMAKE_CURRENT_SOURCE_DIR}/google-drive.service.in)
 
 kcoreaddons_add_plugin(kaccounts_gdrive
+    JSON kaccountsplugin.json
     SOURCES kaccountsplugin.cpp
     INSTALL_NAMESPACE kaccounts/daemonplugins)
 

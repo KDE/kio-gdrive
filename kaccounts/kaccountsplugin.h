@@ -24,11 +24,8 @@
 class GoogleDrivePlugin : public KAccountsDPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.kaccounts.DPlugin")
-    Q_INTERFACES(KAccountsDPlugin)
-
 public:
-    explicit GoogleDrivePlugin(QObject *parent = nullptr);
+    explicit GoogleDrivePlugin(QObject *parent, const QVariantList &args);
 
 public slots:
     void onAccountCreated(const Accounts::AccountId accountId, const Accounts::ServiceList &serviceList) override;

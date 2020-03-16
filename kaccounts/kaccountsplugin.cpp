@@ -25,8 +25,12 @@
 #include <KNotification>
 #include <KRun>
 
-GoogleDrivePlugin::GoogleDrivePlugin(QObject *parent)
-    : KAccountsDPlugin(parent)
+#include <KPluginFactory>
+
+K_PLUGIN_CLASS_WITH_JSON(GoogleDrivePlugin, "kaccountsplugin.json")
+
+GoogleDrivePlugin::GoogleDrivePlugin(QObject *parent, const QVariantList &args)
+    : KAccountsDPlugin(parent, args)
 {
 }
 
@@ -72,3 +76,5 @@ void GoogleDrivePlugin::onServiceDisabled(const Accounts::AccountId accountId, c
     Q_UNUSED(accountId)
     Q_UNUSED(service)
 }
+
+#include "kaccountsplugin.moc"

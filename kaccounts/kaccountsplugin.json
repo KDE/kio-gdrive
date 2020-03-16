@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Description": "Integrate KIO gdrive",
+        "EnabledByDefault": true,
+        "Icon": "system-file-manager",
+        "Id": "kaccounts_kio_gdrive",
+        "License": "GPL",
+        "Name": "KIO gdrive",
+        "Version": "0.1"
+    }
+}
+
