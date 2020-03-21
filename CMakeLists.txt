@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(GDRIVE_VERSION 1.2.70)
+set(GDRIVE_VERSION 1.2.80)
 project(kio-gdrive VERSION ${GDRIVE_VERSION})
 
 set(QT_MIN_VERSION 5.2.0)
