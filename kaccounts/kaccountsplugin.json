@@ -1,31 +1,11 @@
 {
     "KPlugin": {
         "Description": "Integrate KIO gdrive",
-        "Description[ca@valencia]": "Integra el KIO del GDrive",
-        "Description[ca]": "Integra el KIO del GDrive",
-        "Description[et]": "KIO GDrive'i lõimimine",
-        "Description[lt]": "Integruoti KIO gdrive",
-        "Description[nl]": "KIO gdrive integreren",
-        "Description[pt]": "Integração do GDrive no KIO",
-        "Description[pt_BR]": "Integra o KIO gdrive",
-        "Description[sv]": "Integrera KIO gdrive",
-        "Description[uk]": "Інтеграція із KIO gdrive",
-        "Description[x-test]": "xxIntegrate KIO gdrivexx",
         "EnabledByDefault": true,
         "Icon": "system-file-manager",
         "Id": "kaccounts_kio_gdrive",
         "License": "GPL",
         "Name": "KIO gdrive",
-        "Name[ca@valencia]": "KIO GDrive",
-        "Name[ca]": "KIO GDrive",
-        "Name[et]": "KIO GDrive",
-        "Name[lt]": "KIO gdrive",
-        "Name[nl]": "KIO gdrive",
-        "Name[pt]": "KIO do GDrive",
-        "Name[pt_BR]": "KIO gdrive",
-        "Name[sv]": "KIO gdrive",
-        "Name[uk]": "KIO GDrive",
-        "Name[x-test]": "xxKIO gdrivexx",
         "Version": "0.1"
     }
 }
