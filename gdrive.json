@@ -24,7 +24,7 @@
             ],
             "makedir": true,
             "moving": true,
-            "opening": true,
+            "opening": false,
             "output": "filesystem",
             "protocol": "gdrive",
             "reading": true,
