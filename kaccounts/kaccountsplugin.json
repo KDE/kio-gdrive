@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Integrate KIO gdrive",
         "Description[ca]": "Integra el KIO del GDrive",
+        "Description[es]": "Integra KIO gdrive",
         "Description[it]": "Integra KIO gdrive",
         "Description[nl]": "KIO gdrive integreren",
         "Description[sv]": "Integrera KIO gdrive",
@@ -14,6 +15,7 @@
         "License": "GPL",
         "Name": "KIO gdrive",
         "Name[ca]": "KIO GDrive",
+        "Name[es]": "KIO gdrive",
         "Name[it]": "KIO gdrive",
         "Name[nl]": "KIO gdrive",
         "Name[sv]": "KIO gdrive",
