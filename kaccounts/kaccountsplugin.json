@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Integrate KIO gdrive",
+        "Description[ca@valencia]": "Integra el KIO del GDrive",
         "Description[ca]": "Integra el KIO del GDrive",
         "Description[es]": "Integra KIO gdrive",
         "Description[it]": "Integra KIO gdrive",
@@ -14,6 +15,7 @@
         "Id": "kaccounts_kio_gdrive",
         "License": "GPL",
         "Name": "KIO gdrive",
+        "Name[ca@valencia]": "KIO GDrive",
         "Name[ca]": "KIO GDrive",
         "Name[es]": "KIO gdrive",
         "Name[it]": "KIO gdrive",
