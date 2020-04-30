@@ -22,6 +22,7 @@
   <name xml:lang="nn">KIO GDrive</name>
   <name xml:lang="pt">KIO GDrive</name>
   <name xml:lang="pt-BR">KIO GDrive</name>
+  <name xml:lang="ru">KIO для поддержки Google Диска</name>
   <name xml:lang="sk">KIO GDrive</name>
   <name xml:lang="sv">KIO GDrive</name>
   <name xml:lang="uk">KIO GDrive</name>
@@ -43,6 +44,7 @@
   <summary xml:lang="nn">Integrering av Google Drive, KDE Plasma og KDE-programma</summary>
   <summary xml:lang="pt">Integração do Google Drive com o Plasma do KDE e as aplicações do KDE</summary>
   <summary xml:lang="pt-BR">Integração do Google Drive com o KDE Plasma e aplicativos do KDE</summary>
+  <summary xml:lang="ru">Интеграция Google Диска с KDE Plasma и приложениями от KDE</summary>
   <summary xml:lang="sk">Integrácia Google Drive integration s KDE Plasma a KDE aplikáciami</summary>
   <summary xml:lang="sv">Google Drive integrering med KDE:s Plasma och KDE-program</summary>
   <summary xml:lang="uk">Інтеграція Диска Google із Плазмою KDE та програмами KDE</summary>
@@ -64,6 +66,7 @@
     <p xml:lang="nn">KIO GDrive er ein KIO-slave som lèt program som brukar KIO (for eksempel Dolphin, Kate og Gwenview) få lese- og skrivetilgang til filene dine på Google Drive.</p>
     <p xml:lang="pt">O KIO GDrive é um 'KIO slave' que permite às aplicações com suporte do KIO (como o Dolphin, o Kate ou o Gwenview) acederem e editarem ficheiros do Google Drive na 'cloud'.</p>
     <p xml:lang="pt-BR">O KIO GDrive é um KIO slave que permite a aplicativos com suporte a KIO (como Dolphin, Kate ou Gwenview) acessar e editar arquivos do Google Drive na nuvem.</p>
+    <p xml:lang="ru">KIO для поддержки Google Диска — это модуль KIO, который обеспечивает доступ с возможностью изменения для файлов, расположенным на Google Диске для приложений, поддерживающих модули KIO, таких как диспетчер файлов Dolphin, текстовый редактор Kate и приложение для просмотра изображений Gwenview.</p>
     <p xml:lang="sk">KIO GDrive je KIO slave, ktorý umožňuje nie KIO aplikáciám (ako Dolphin, Kate alebo Gwenview) pristupovať a upravovať súbory na Google Drive na cloude.</p>
     <p xml:lang="sv">KIO GDrive är en I/O-slav som aktiverar KIO-medvetna program (såsom Dolphin, Kate eller Gwenview) för att komma åt Google Drive filer i molnet.</p>
     <p xml:lang="uk">KIO GDrive — допоміжний засіб введення-виведення даних, який уможливлює для програм із підтримкою KIO (зокрема Dolphin, Kate та Gwenview) доступ та редагування даних файлів на Диску Google у обчислювальній «хмарі».</p>
@@ -90,6 +93,7 @@
       <caption xml:lang="nn">Dolphin-vindauge med KIO GDrive nede til høgre, samt Falkon som viser Google Drive oppe til venstre.</caption>
       <caption xml:lang="pt">O Dolphin a mostrar o KIO GDrive em baixo e à direita, assim como o Falkon a navegar pelo Google Drive em cima e à esquerda.</caption>
       <caption xml:lang="pt-BR">O Dolphin mostrando o KIO GDrive abaixo à direita, assim como o Falkon navegando pelo Google Drive acima à esquerda.</caption>
+      <caption xml:lang="ru">Внизу справа: диспетчер файлов Dolphin, использующий модуль KIO GDrive; вверху слева: Google Диск, открытый в веб-браузере Falkon.</caption>
       <caption xml:lang="sk">Dolphin zobrazuje KIO GDrive vpravo dole a Falkon prehliadajúci Google Drive vpravo hore.</caption>
       <caption xml:lang="sv">Dolphin som visar KIO GDrive nere till höger, och Falkon som bläddrar i Google Drive uppe till vänster.</caption>
       <caption xml:lang="uk">Dolphin із відкритим KIO GDrive внизу праворуч і Falkon з відкритою сторінкою Google Диск вгорі ліворуч.</caption>
