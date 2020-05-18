@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 #include <KNotification>
-#include <KRun>
+#include <KIO/OpenUrlJob>
 
 #include <KPluginFactory>
 
@@ -54,7 +54,8 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
     url.setPath(QStringLiteral("/%1").arg(account->displayName()));
 
     connect(notification, static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated), this, [=]() {
-        KRun::runUrl(url, QStringLiteral("inode/directory"), nullptr, KRun::RunFlags());
+        KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, QStringLiteral("inode/directory"));
+        job->start();
     });
 
     notification->sendEvent();
