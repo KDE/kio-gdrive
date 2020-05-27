@@ -605,17 +605,29 @@ void KIOGDrive::listDir(const QUrl &url)
     qCDebug(GDRIVE) << "Going to list" << url;
 
     const auto gdriveUrl = GDriveUrl(url);
+
+    if (gdriveUrl.isRoot())  {
+        listAccounts();
+        return;
+    }
     if (gdriveUrl.isNewAccountPath()) {
         createAccount();
         return;
     }
 
+    // We are committed to listing an url that belongs to
+    // an account (i.e. not root or new account path), lets
+    // make sure we know about the account
     const QString accountId = gdriveUrl.account();
-    QString folderId;
-    if (gdriveUrl.isRoot())  {
-        listAccounts();
+    const auto account = getAccount(accountId);
+    if (account->accountName().isEmpty()) {
+        qCDebug(GDRIVE) << "Unknown account" << accountId << "for" << url;
+        error(KIO::ERR_SLAVE_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
         return;
-    } else if (gdriveUrl.isAccountRoot()) {
+    }
+
+    QString folderId;
+    if (gdriveUrl.isAccountRoot()) {
         auto entry = fetchSharedDrivesRootEntry(accountId);
         listEntry(entry);
         folderId = rootFolderId(accountId);
@@ -727,22 +739,33 @@ void KIOGDrive::stat(const QUrl &url)
     qCDebug(GDRIVE) << "Going to stat()" << url;
 
     const auto gdriveUrl = GDriveUrl(url);
-    const QString accountId = gdriveUrl.account();
     if (gdriveUrl.isRoot()) {
         // TODO Can we stat() root?
-        finished();
-        return;
-    }
-    if (gdriveUrl.isAccountRoot()) {
-        qCDebug(GDRIVE) << "stat()ing account root";
-        const KIO::UDSEntry entry = accountToUDSEntry(accountId);
-        statEntry(entry);
         finished();
         return;
     }
     if (gdriveUrl.isNewAccountPath()) {
         qCDebug(GDRIVE) << "stat()ing new-account path";
         const KIO::UDSEntry entry = newAccountUDSEntry();
+        statEntry(entry);
+        finished();
+        return;
+    }
+
+    // We are committed to stat()ing an url that belongs to
+    // an account (i.e. not root or new account path), lets
+    // make sure we know about the account
+    const QString accountId = gdriveUrl.account();
+    const auto account = getAccount(accountId);
+    if (account->accountName().isEmpty()) {
+        qCDebug(GDRIVE) << "Unknown account" << accountId << "for" << url;
+        error(KIO::ERR_SLAVE_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
+        return;
+    }
+
+    if (gdriveUrl.isAccountRoot()) {
+        qCDebug(GDRIVE) << "stat()ing account root";
+        const KIO::UDSEntry entry = accountToUDSEntry(accountId);
         statEntry(entry);
         finished();
         return;
