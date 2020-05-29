@@ -1,6 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
 
+add_subdirectory(integration)
+
 set(kio_gdrive_SRCS
     kio_gdrive.cpp
     pathcache.cpp
@@ -43,12 +45,3 @@ target_link_libraries(kio_gdrive
     ${BACKEND_LIBS})
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")
-
-kcoreaddons_add_plugin(copyurlitemaction
-    SOURCES copyurlitemaction.cpp
-    JSON copyurlitemaction.json
-    INSTALL_NAMESPACE "kf5/kfileitemaction")
-
-target_link_libraries(copyurlitemaction
-    KF5::I18n
-    KF5::KIOWidgets)
