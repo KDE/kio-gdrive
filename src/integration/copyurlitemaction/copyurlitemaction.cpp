@@ -18,6 +18,7 @@
  */
 
 #include "copyurlitemaction.h"
+#include "../../gdrive_udsentry.h"
 
 #include <QGuiApplication>
 #include <QClipboard>
@@ -50,7 +51,7 @@ QList<QAction*> CopyUrlItemAction::actions(const KFileItemListProperties& fileIt
     }
 
     const KIO::UDSEntry entry = item.entry();
-    const QString gdriveLink = entry.stringValue(KIO::UDSEntry::UDS_EXTRA);
+    const QString gdriveLink = entry.stringValue(GDriveUDSEntryExtras::Url);
     // Ignore if missing a shareable link
     if (gdriveLink.isEmpty()) {
         return {};
