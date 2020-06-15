@@ -139,6 +139,9 @@
       <image type="source" width="1664" height="936">https://cdn.kde.org/screenshots/kio-gdrive/kio-gdrive.png</image>
     </screenshot>
   </screenshots>
+  <releases>
+    <release date="2020-04-12" version="1.3.0"/>
+  </releases>
   <project_group>KDE</project_group>
   <categories>
     <category>Network</category>
