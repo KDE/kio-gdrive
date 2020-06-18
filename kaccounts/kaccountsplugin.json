@@ -15,9 +15,11 @@
         "Description[nn]": "Integrer KIO-gdrive",
         "Description[pt]": "Integração do GDrive no KIO",
         "Description[pt_BR]": "Integra o KIO gdrive",
+        "Description[sk]": "Integrovať KIO gdrive",
         "Description[sl]": "Integriraj KIO gdrive",
         "Description[sv]": "Integrera KIO gdrive",
         "Description[uk]": "Інтеграція із KIO gdrive",
+        "Description[x-test]": "xxIntegrate KIO gdrivexx",
         "Description[zh_TW]": "整合 KIO gdrive",
         "EnabledByDefault": true,
         "Icon": "system-file-manager",
@@ -38,9 +40,11 @@
         "Name[nn]": "KIO-gdrive",
         "Name[pt]": "KIO do GDrive",
         "Name[pt_BR]": "KIO gdrive",
+        "Name[sk]": "KIO gdrive",
         "Name[sl]": "KIO gdrive",
         "Name[sv]": "KIO gdrive",
         "Name[uk]": "KIO GDrive",
+        "Name[x-test]": "xxKIO gdrivexx",
         "Name[zh_TW]": "KIO gdrive",
         "Version": "0.1"
     }
