@@ -30,7 +30,7 @@ GDriveUrl::GDriveUrl(const QUrl &url)
     : m_url(url)
 {
     const auto path = url.adjusted(QUrl::StripTrailingSlash).path();
-    m_components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+    m_components = path.split(QLatin1Char('/'), Qt::SkipEmptyParts);
 }
 
 QString GDriveUrl::account() const
