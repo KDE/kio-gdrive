@@ -508,7 +508,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return QString();
     }
 
-    QString fileId = m_cache.idForPath(path);
+    const QString fileId = m_cache.idForPath(path);
     if (!fileId.isEmpty()) {
         qCDebug(GDRIVE) << "Resolved" << path << "to" << fileId << "(from cache)";
         return fileId;
