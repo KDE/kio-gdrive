@@ -65,9 +65,6 @@ ecm_setup_version(${RELEASE_SERVICE_VERSION}
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
-if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
-   add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x060000)
-endif()
 
 if(BUILD_TESTING)
     add_subdirectory(autotests)
