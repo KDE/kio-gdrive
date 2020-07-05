@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(GDRIVE_VERSION 1.3.70)
-project(kio-gdrive VERSION ${GDRIVE_VERSION})
+# KDE Application Version, managed by release script
+set (RELEASE_SERVICE_VERSION_MAJOR "20")
+set (RELEASE_SERVICE_VERSION_MINOR "07")
+set (RELEASE_SERVICE_VERSION_MICRO "70")
+set (RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}.${RELEASE_SERVICE_VERSION_MICRO}")
+project(kio-gdrive VERSION ${RELEASE_SERVICE_VERSION})
 
 set(QT_MIN_VERSION 5.2.0)
 set(KF5_MIN_VERSION 5.71.0)
@@ -54,7 +58,7 @@ if(NOT Qt5Test_FOUND)
    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
 
-ecm_setup_version(PROJECT
+ecm_setup_version(${RELEASE_SERVICE_VERSION}
     VARIABLE_PREFIX GDRIVE
     VERSION_HEADER gdriveversion.h)
 
