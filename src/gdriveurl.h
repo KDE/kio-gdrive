@@ -43,6 +43,8 @@ public:
     QString parentPath() const;
     QStringList pathComponents() const;
 
+    static QString buildSharedDrivePath(const QString &accountId, const QString &drive);
+
     static const QString Scheme;
     static const QString SharedDrivesDir;
     static const QString TrashDir;

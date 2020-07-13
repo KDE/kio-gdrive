@@ -112,3 +112,8 @@ QStringList GDriveUrl::pathComponents() const
 {
     return m_components;
 }
+
+QString GDriveUrl::buildSharedDrivePath(const QString &accountId, const QString &drive)
+{
+    return QStringLiteral("/%1/%2/%3").arg(accountId, SharedDrivesDir, drive);
+}

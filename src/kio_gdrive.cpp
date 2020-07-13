@@ -409,7 +409,14 @@ void KIOGDrive::statSharedDrive(const QUrl &url)
 {
     const auto gdriveUrl = GDriveUrl(url);
     const QString accountId = gdriveUrl.account();
-    DrivesFetchJob sharedDriveFetchJob(gdriveUrl.filename(), getAccount(accountId));
+
+    const auto sharedDriveId = resolveSharedDriveId(gdriveUrl.filename(), accountId);
+    if (sharedDriveId.isEmpty()) {
+        error(KIO::ERR_DOES_NOT_EXIST, url.path());
+        return;
+    }
+
+    DrivesFetchJob sharedDriveFetchJob(sharedDriveId, getAccount(accountId));
     sharedDriveFetchJob.setFields({
         Drives::Fields::Kind,
         Drives::Fields::Id,
@@ -426,7 +433,6 @@ void KIOGDrive::statSharedDrive(const QUrl &url)
     const DrivesPtr sharedDrive = object.dynamicCast<Drives>();
     const auto entry = sharedDriveToUDSEntry(sharedDrive);
     statEntry(entry);
-    finished();
 }
 
 KIO::UDSEntry KIOGDrive::fetchSharedDrivesRootEntry(const QString &accountId, FetchEntryFlags flags)
@@ -526,8 +532,11 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     }
 
     if (gdriveUrl.isSharedDrive()) {
-        qCDebug(GDRIVE) << "Resolved" << path << "to Shared Drive" << gdriveUrl.filename();
-        return gdriveUrl.filename();
+        // The gdriveUrl.filename() could be the Shared Drive id or
+        // the name depending on whether we are navigating from a parent
+        // or accessing the url directly, use the shared drive specific
+        // solver to disambiguate
+        return resolveSharedDriveId(gdriveUrl.filename(), gdriveUrl.account());
     }
 
     if (gdriveUrl.isSharedDrivesRoot()) {
@@ -573,6 +582,83 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 
     qCDebug(GDRIVE) << "Resolved" << path << "to" << file->id() << "(from network)";
     return file->id();
+}
+
+QString KIOGDrive::resolveSharedDriveId(const QString &idOrName, const QString &accountId)
+{
+    qCDebug(GDRIVE) << "Resolving shared drive id for" << idOrName;
+
+    const auto idOrNamePath = GDriveUrl::buildSharedDrivePath(accountId, idOrName);
+    QString fileId = m_cache.idForPath(idOrNamePath);
+    if (!fileId.isEmpty()) {
+        qCDebug(GDRIVE) << "Resolved shared drive id" << idOrName << "to" << fileId << "(from cache)";
+        return fileId;
+    }
+
+    // We start by trying to fetch a shared drive with the filename as id
+    DrivesFetchJob searchByIdJob(idOrName, getAccount(accountId));
+    searchByIdJob.setFields({
+        Drives::Fields::Kind,
+        Drives::Fields::Id,
+        Drives::Fields::Name
+    });
+    QEventLoop eventLoop;
+    QObject::connect(&searchByIdJob, &KGAPI2::Job::finished,
+                     &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    if (searchByIdJob.error() == KGAPI2::OK || searchByIdJob.error() == KGAPI2::NoError) {
+        // A Shared Drive with that id exists so we return it
+        const auto objects = searchByIdJob.items();
+        const DrivesPtr sharedDrive = objects.at(0).dynamicCast<Drives>();
+        fileId = sharedDrive->id();
+        qCDebug(GDRIVE) << "Resolved shared drive id" << idOrName << "to" << fileId;
+
+        const auto idPath = idOrNamePath;
+        const auto namePath = GDriveUrl::buildSharedDrivePath(accountId, sharedDrive->name());
+        m_cache.insertPath(idPath, fileId);
+        m_cache.insertPath(namePath, fileId);
+
+        return fileId;
+    }
+
+    // The gdriveUrl's filename is not a shared drive id, we must
+    // search for a shared drive with the filename name.
+    // Unfortunately searching by name is only allowed for admin
+    // accounts (i.e. useDomainAdminAccess=true) so we retrieve all
+    // shared drives and search by name here
+    DrivesFetchJob sharedDrivesFetchJob(getAccount(accountId));
+    sharedDrivesFetchJob.setFields({
+        Drives::Fields::Kind,
+        Drives::Fields::Id,
+        Drives::Fields::Name
+    });
+    QObject::connect(&sharedDrivesFetchJob, &KGAPI2::Job::finished,
+                     &eventLoop, &QEventLoop::quit);
+    eventLoop.exec();
+    if (sharedDrivesFetchJob.error() == KGAPI2::OK || sharedDrivesFetchJob.error() == KGAPI2::NoError) {
+        const auto objects = sharedDrivesFetchJob.items();
+        for (const auto &object : objects) {
+            const DrivesPtr sharedDrive = object.dynamicCast<Drives>();
+
+            // If we have one or more hits we will take the first as good because we
+            // don't have any other measures for picking the correct drive
+            if (sharedDrive->name() == idOrName) {
+                fileId = sharedDrive->id();
+                qCDebug(GDRIVE) << "Resolved shared drive id" << idOrName << "to" << fileId;
+
+                const auto idPath = GDriveUrl::buildSharedDrivePath(accountId, fileId);
+                const auto namePath = idOrNamePath;
+                m_cache.insertPath(idPath, fileId);
+                m_cache.insertPath(namePath, fileId);
+
+                return fileId;
+            }
+        }
+    }
+
+    // We couldn't find any shared drive with that id or name
+    qCDebug(GDRIVE) << "Failed resolving shared drive" << idOrName << "(couldn't find drive with that id or name)";
+    return QString();
 }
 
 QString KIOGDrive::rootFolderId(const QString &accountId)
@@ -780,6 +866,7 @@ void KIOGDrive::stat(const QUrl &url)
     if (gdriveUrl.isSharedDrive()) {
         qCDebug(GDRIVE) << "stat()ing Shared Drive" << url;
         statSharedDrive(url);
+        finished();
         return;
     }
 
