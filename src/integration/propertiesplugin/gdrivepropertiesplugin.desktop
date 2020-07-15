@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Icon=folder-gdrive
+Name=Google Drive Properties Page
+Comment=Properties page showing additional information regarding a Google Drive item
+X-KDE-Library=gdrivepropertiesplugin
+X-KDE-ServiceTypes=KPropertiesDialog/Plugin
+MimeType=inode/directory;application/octet-stream

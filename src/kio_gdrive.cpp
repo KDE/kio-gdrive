@@ -237,7 +237,12 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH);
     }
 
+    entry.fastInsert(GDriveUDSEntryExtras::Id, file->id());
     entry.fastInsert(GDriveUDSEntryExtras::Url, file->alternateLink().toString());
+    entry.fastInsert(GDriveUDSEntryExtras::Version, QString::number(file->version()));
+    entry.fastInsert(GDriveUDSEntryExtras::Md5, file->md5Checksum());
+    entry.fastInsert(GDriveUDSEntryExtras::LastModifyingUser, file->lastModifyingUserName());
+    entry.fastInsert(GDriveUDSEntryExtras::Owners, file->ownerNames().join(QStringLiteral(", ")));
 
     return entry;
 }
@@ -528,7 +533,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     Q_ASSERT(!gdriveUrl.isRoot());
 
     if (gdriveUrl.isAccountRoot() || gdriveUrl.isTrashDir()) {
-        qCDebug(GDRIVE) << "Resolved" << path << "to \"root\"";
+        qCDebug(GDRIVE) << "Resolved" << path << "to account root";
         return rootFolderId(gdriveUrl.account());
     }
 
@@ -553,6 +558,8 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return QString();
     }
 
+    qCDebug(GDRIVE) << "Getting ID for" << gdriveUrl.filename() << "in parent with ID" << parentId;
+
     FileSearchQuery query;
     if (flags != KIOGDrive::None) {
         query.addQuery(FileSearchQuery::MimeType,
@@ -571,7 +578,6 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     }
 
     const ObjectsList objects = fetchJob.items();
-    qCDebug(GDRIVE) << objects;
     if (objects.isEmpty()) {
         qCWarning(GDRIVE) << "Failed to resolve" << path;
         return QString();
@@ -823,7 +829,10 @@ void KIOGDrive::mkdir(const QUrl &url, int permissions)
 
 void KIOGDrive::stat(const QUrl &url)
 {
-    qCDebug(GDRIVE) << "Going to stat()" << url;
+    // TODO We should be using StatDetails to limit how we respond to a stat request
+    // const QString statDetails = metaData(QStringLiteral("statDetails"));
+    // KIO::StatDetails details = statDetails.isEmpty() ? KIO::StatDefaultDetails : static_cast<KIO::StatDetails>(statDetails.toInt());
+    // qCDebug(GDRIVE) << "Going to stat()" << url << "for details" << details;
 
     const auto gdriveUrl = GDriveUrl(url);
     if (gdriveUrl.isRoot()) {

@@ -1,1 +1,2 @@
 add_subdirectory(copyurlitemaction)
+add_subdirectory(propertiesplugin)
