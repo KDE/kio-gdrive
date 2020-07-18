@@ -96,6 +96,7 @@ private:
     KIO::UDSEntry fetchSharedDrivesRootEntry(const QString &accountId, FetchEntryFlags flags = FetchEntryFlags::None);
 
     QString resolveFileIdFromPath(const QString &path, PathFlags flags = None);
+    QString resolveSharedDriveId(const QString &idOrName, const QString &accountId);
 
     Action handleError(const KGAPI2::Job &job, const QUrl &url);
     KIO::UDSEntry fileToUDSEntry(const KGAPI2::Drive::FilePtr &file, const QString &path) const;

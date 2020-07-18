@@ -30,7 +30,11 @@ GDriveUrl::GDriveUrl(const QUrl &url)
     : m_url(url)
 {
     const auto path = url.adjusted(QUrl::StripTrailingSlash).path();
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    m_components = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+#else
     m_components = path.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+#endif
 }
 
 QString GDriveUrl::account() const
@@ -111,4 +115,9 @@ QString GDriveUrl::parentPath() const
 QStringList GDriveUrl::pathComponents() const
 {
     return m_components;
+}
+
+QString GDriveUrl::buildSharedDrivePath(const QString &accountId, const QString &drive)
+{
+    return QStringLiteral("/%1/%2/%3").arg(accountId, SharedDrivesDir, drive);
 }
