@@ -105,7 +105,7 @@
   </description>
   <url type="homepage">https://community.kde.org/KIO_GDrive</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
-  <url type="help">https://docs.kde.org/index.php?application=kioslave5%2Fgdrive</url>
+  <url type="help">https://docs.kde.org/?application=kioslave5%2Fgdrive</url>
   <update_contact>elvis.angelaccio_at_kde.org</update_contact>
   <screenshots>
     <screenshot type="default">
