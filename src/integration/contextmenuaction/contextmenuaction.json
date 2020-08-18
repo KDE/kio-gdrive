@@ -1,0 +1,14 @@
+{
+    "KPlugin": {
+        "Icon": "folder-gdrive",
+        "MimeTypes": [
+            "application/octet-stream",
+            "inode/directory"
+        ],
+        "Name": "'Google Drive' actions menu",
+        "ServiceTypes": [
+            "KFileItemAction/Plugin"
+        ]
+    },
+    "MimeType": "application/octet-stream;inode/directory;"
+}

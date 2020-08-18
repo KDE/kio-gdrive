@@ -1,2 +1,2 @@
-add_subdirectory(copyurlitemaction)
+add_subdirectory(contextmenuaction)
 add_subdirectory(propertiesplugin)

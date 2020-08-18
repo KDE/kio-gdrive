@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 David Barchiesi <david@barchie.si>
+ * Copyright (C) 2020 David Barchiesi <david@barchie.si>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,25 @@
  *
  */
 
-#ifndef COPYURLITEMACTION_H
-#define COPYURLITEMACTION_H
+#ifndef CONTEXTMENUACTION_H
+#define CONTEXTMENUACTION_H
 
+#include <KFileItem>
 #include <KAbstractFileItemActionPlugin>
 
 
-class CopyUrlItemAction : public KAbstractFileItemActionPlugin
+class ContextMenuAction : public KAbstractFileItemActionPlugin
 {
 
     Q_OBJECT
 
-    public:
-        CopyUrlItemAction(QObject* parent, const QVariantList& args);
-        QList<QAction*> actions(const KFileItemListProperties& fileItemInfos, QWidget* parentWidget) override;
+public:
+    ContextMenuAction(QObject *parent, const QVariantList &args);
+    QList<QAction*> actions(const KFileItemListProperties &fileItemInfos, QWidget *parentWidget) override;
 
-    private:
-        QAction *createCopyUrlAction(QWidget *parent, const QString& gdriveLink);
-
+private:
+    QAction *createCopyUrlAction(QWidget *parent, const QString &gdriveLink);
+    QAction *createOpenUrlAction(QWidget *parent, const QString &gdriveLink);
 };
 
 #endif
