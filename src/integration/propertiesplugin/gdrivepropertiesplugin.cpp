@@ -28,7 +28,7 @@
 #include <QDesktopServices>
 #include <KIO/StatJob>
 
-K_PLUGIN_FACTORY(GDrivePropertiesPluginFactory, registerPlugin<GDrivePropertiesPlugin>();)
+K_PLUGIN_CLASS_WITH_JSON(GDrivePropertiesPlugin, "gdrivepropertiesplugin.json")
 
 GDrivePropertiesPlugin::GDrivePropertiesPlugin(QObject *parent, const QList<QVariant> &args)
 : KPropertiesDialogPlugin(qobject_cast<KPropertiesDialog *>(parent))
