@@ -1,21 +1,9 @@
 #
-# cmake/Intltool.cmake
-# Copyright (C) 2013, Valama development team
+# SPDX-FileCopyrightText: 2013 Valama development team
 #
-# Valama is free software: you can redistribute it and/or modify it
-# under the terms of the GNU General Public License as published by the
-# Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Valama is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along
-# with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##
+
 find_program(INTLTOOL_EXTRACT_EXECUTABLE intltool-extract)
 find_program(INTLTOOL_MERGE_EXECUTABLE intltool-merge)
 mark_as_advanced(INTLTOOL_EXTRACT_EXECUTABLE)
