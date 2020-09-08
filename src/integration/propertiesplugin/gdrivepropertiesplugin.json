@@ -1,12 +1,14 @@
 {
     "KPlugin": {
         "Description": "Properties page showing additional information regarding a Google Drive item",
+        "Description[x-test]": "xxProperties page showing additional information regarding a Google Drive itemxx",
         "Icon": "folder-gdrive",
         "MimeTypes": [
             "inode/directory",
             "application/octet-stream"
         ],
         "Name": "Google Drive Properties Page",
+        "Name[x-test]": "xxGoogle Drive Properties Pagexx",
         "ServiceTypes": [
             "KPropertiesDialog/Plugin"
         ]

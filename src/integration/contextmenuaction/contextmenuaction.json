@@ -6,6 +6,7 @@
             "inode/directory"
         ],
         "Name": "'Google Drive' actions menu",
+        "Name[x-test]": "xx'Google Drive' actions menuxx",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
