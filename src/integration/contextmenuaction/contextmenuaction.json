@@ -6,6 +6,13 @@
             "inode/directory"
         ],
         "Name": "'Google Drive' actions menu",
+        "Name[ca@valencia]": "Menú d'accions del «Google Drive»",
+        "Name[ca]": "Menú d'accions del «Google Drive»",
+        "Name[nl]": "Actiemenu van Google Drive",
+        "Name[pt]": "Menu de acções do 'Google Drive'",
+        "Name[pt_BR]": "Menu de ação do Google Drive",
+        "Name[sv]": "'Google Drive' åtgärdsmeny",
+        "Name[uk]": "Меню дій «Диска Google»",
         "Name[x-test]": "xx'Google Drive' actions menuxx",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
