@@ -159,7 +159,6 @@ void KIOGDrive::fileSystemFreeSpace(const QUrl &url)
             setMetaData(QStringLiteral("total"), QString::number(about->quotaBytesTotal()));
             setMetaData(QStringLiteral("available"), QString::number(about->quotaBytesTotal() - about->quotaBytesUsedAggregate()));
             finished();
-            return;
         }
     }
 }
@@ -346,7 +345,6 @@ void KIOGDrive::listAccounts()
     listEntry(entry);
 
     finished();
-    return;
 }
 
 void KIOGDrive::listSharedDrivesRoot(const QUrl &url)
