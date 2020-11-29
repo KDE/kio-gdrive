@@ -9,7 +9,6 @@
 #include "../../gdrive_udsentry.h"
 
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <QClipboard>
 #include <QDesktopServices>
 #include <KIO/StatJob>
