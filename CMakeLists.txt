@@ -35,6 +35,10 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 
 find_package(KPimGAPI ${KGAPI_MIN_VERSION} REQUIRED)
 
+find_package(KF5Purpose ${KF5_MIN_VERSION}) # Optional since it depends on KAccounts
+
+set_package_properties(KF5Purpose PROPERTIES TYPE RECOMMENDED PURPOSE "Enables the Share menu plugin.")
+
 find_package(KAccounts ${KACCOUNTS_MIN_VERSION})
 set_package_properties(KAccounts PROPERTIES
     TYPE RECOMMENDED
@@ -72,6 +76,10 @@ endif()
 add_subdirectory(desktop)
 add_subdirectory(doc)
 add_subdirectory(src)
+
+if (KF5Purpose_FOUND)
+    add_subdirectory(purpose)
+endif()
 
 if (KAccounts_FOUND)
     message(STATUS "Building the KAccounts backend.")

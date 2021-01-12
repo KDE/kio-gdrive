@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nicolas Fella"
+            }
+        ],
+        "Category": "Utilities",
+        "Description": "Upload files to Google Drive",
+        "Icon": "folder-gdrive",
+        "License": "GPL",
+        "Name": "Google Drive",
+        "X-Purpose-ActionDisplay": "Google Drive..."
+    },
+    "X-Purpose-Configuration": [
+        "folder",
+        "accountName"
+    ],
+    "X-Purpose-PluginTypes": [
+        "Export"
+    ]
+}
