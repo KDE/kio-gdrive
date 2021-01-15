@@ -1,3 +1,2 @@
-#! /usr/bin/env bash
-
-$XGETTEXT $(find . -name "*.cpp") -o $podir/kio5_gdrive.pot
+#!/bin/sh
+$XGETTEXT `find . -not -path \*/tests/\* -name \*.cpp -o -name \*.qml -o -name \*.cc -o -name \*.h` -o $podir/kio5_gdrive.pot
