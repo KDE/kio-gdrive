@@ -2,14 +2,35 @@
     "KPlugin": {
         "Authors": [
             {
-                "Name": "Nicolas Fella"
+                "Name": "Nicolas Fella",
+                "Name[ca@valencia]": "Nicolas Fella",
+                "Name[ca]": "Nicolas Fella",
+                "Name[nl]": "Nicolas Fella",
+                "Name[nn]": "Nicolas Fella",
+                "Name[sv]": "Nicolas Fella",
+                "Name[uk]": "Nicolas Fella",
+                "Name[x-test]": "xxNicolas Fellaxx"
             }
         ],
         "Category": "Utilities",
         "Description": "Upload files to Google Drive",
+        "Description[ca@valencia]": "Puja els fitxers al Google Drive",
+        "Description[ca]": "Puja els fitxers al Google Drive",
+        "Description[nl]": "Bestanden naar Google Drive uploaden",
+        "Description[nn]": "Last opp filer til Google Drive",
+        "Description[sv]": "Ladda upp filer till Google Drive",
+        "Description[uk]": "Вивантаження файлів на Google Диск",
+        "Description[x-test]": "xxUpload files to Google Drivexx",
         "Icon": "folder-gdrive",
         "License": "GPL",
         "Name": "Google Drive",
+        "Name[ca@valencia]": "Google Drive",
+        "Name[ca]": "Google Drive",
+        "Name[nl]": "Google Drive",
+        "Name[nn]": "Google Drive",
+        "Name[sv]": "Google Drive",
+        "Name[uk]": "Google Диск",
+        "Name[x-test]": "xxGoogle Drivexx",
         "X-Purpose-ActionDisplay": "Google Drive..."
     },
     "X-Purpose-Configuration": [
