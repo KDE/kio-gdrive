@@ -282,7 +282,7 @@
         </sizepolicy>
        </property>
        <property name="toolTip">
-        <string>Click to copy the checksum to the clipboard.</string>
+        <string>Click to copy the Google Drive URL to the clipboard.</string>
        </property>
        <property name="text">
         <string>Copy URL to Clipboard</string>
