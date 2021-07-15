@@ -1,6 +1,7 @@
 [Global]
 IconName=folder-gdrive
 Comment=KIO GDrive
+Comment[ar]=KIO GDrive
 Comment[ast]=KIO GDrive
 Comment[ca]=KIO GDrive
 Comment[ca@valencia]=KIO GDrive
@@ -39,6 +40,7 @@ Comment[zh_TW]=KIO GDrive
 
 [Event/new-account-added]
 Name=New Account Added
+Name[ar]=أضيف حساب جديد
 Name[ast]=Amestóse una cuenta nueva
 Name[ca]=S'ha afegit un compte nou
 Name[ca@valencia]=S'ha afegit un compte nou
@@ -75,6 +77,7 @@ Name[x-test]=xxNew Account Addedxx
 Name[zh_CN]=新帐户已添加
 Name[zh_TW]=已新增帳號
 Comment= Shortcut to browse Google Drive files as soon as a new Google account has been added.
+Comment[ar]=اختصار لتصفح ملفات غوغل درايف بمجرد إضافة حساب غوغل جديد.
 Comment[ast]=Un atayu pa restolar los ficheros de Google Drive namás que s'amieste la cuenta nueva de Google.
 Comment[ca]=Drecera per a explorar els fitxers de Google Drive tan aviat com s'afegeixi un compte nou de Google.
 Comment[ca@valencia]=Drecera per a explorar els fitxers de Google Drive tan prompte com s'afija un compte nou de Google.
