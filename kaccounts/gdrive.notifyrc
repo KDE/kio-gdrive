@@ -110,6 +110,6 @@ Comment[sv]= Genväg för att bläddra i Google Drive-filer så snart ett nytt G
 Comment[tr]=Yeni bir Google hesabı eklendiğinde Google Drive dosyalarına göz atma kısayolu.
 Comment[uk]=Кнопка для перегляду файлів Google Диск після додавання нового облікового запису Google.
 Comment[x-test]=xx Shortcut to browse Google Drive files as soon as a new Google account has been added.xx
-Comment[zh_CN]= 浏览 Google 云端硬盘的文件的快捷方式，只要 Google 账号被添加即可使用。
+Comment[zh_CN]= 浏览 Google Drive 文件的快捷方式，添加 Google 账号之后即可使用。
 Comment[zh_TW]=只要新增 Google 帳號即可以快速瀏覽 Google 雲端硬碟上的檔案。
 Action=Popup
