@@ -151,7 +151,7 @@
       <caption xml:lang="sv">Dolphin som visar KIO GDrive nere till höger, och Falkon som bläddrat till Google Drive uppe till vänster.</caption>
       <caption xml:lang="uk">Dolphin із відкритим KIO GDrive внизу праворуч і Falkon з відкритою сторінкою Google Диск вгорі ліворуч.</caption>
       <caption xml:lang="x-test">xxDolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.xx</caption>
-      <caption xml:lang="zh-CN">右下角 Dolphin 显示 KIO GDrive，左上角 Falkon 浏览 Google 云端硬盘网页版。</caption>
+      <caption xml:lang="zh-CN">位于右下方的 Dolphin 正在显示 KIO GDrive，位于左上方的 Falkon 正在浏览 Google Drive 网页版。</caption>
       <image type="source" width="1664" height="936">https://cdn.kde.org/screenshots/kio-gdrive/kio-gdrive.png</image>
     </screenshot>
   </screenshots>
