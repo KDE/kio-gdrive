@@ -33,6 +33,7 @@
         "Name[sv]": "'Google Drive' åtgärdsmeny",
         "Name[uk]": "Меню дій «Диска Google»",
         "Name[x-test]": "xx'Google Drive' actions menuxx",
+        "Name[zh_CN]": "“Google Drive”操作菜单",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]

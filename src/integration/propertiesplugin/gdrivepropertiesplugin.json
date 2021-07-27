@@ -27,6 +27,7 @@
         "Description[sv]": "Egenskapssida som visar ytterligare information om ett objekt på Google Drive",
         "Description[uk]": "На сторінці властивостей показано додаткові відомості щодо запису Диска Google",
         "Description[x-test]": "xxProperties page showing additional information regarding a Google Drive itemxx",
+        "Description[zh_CN]": "显示 Google Drive 项目额外信息的属性页面",
         "Icon": "folder-gdrive",
         "MimeTypes": [
             "inode/directory",
@@ -60,6 +61,7 @@
         "Name[sv]": "Google Drive egenskapssida",
         "Name[uk]": "Сторінка властивостей Диска Google",
         "Name[x-test]": "xxGoogle Drive Properties Pagexx",
+        "Name[zh_CN]": "Google Drive 属性页面",
         "ServiceTypes": [
             "KPropertiesDialog/Plugin"
         ]
