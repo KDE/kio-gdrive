@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Description": "Properties page showing additional information regarding a Google Drive item",
-        "Description[ca@valencia]": "Pàgina de propietats que mostra informació addicional relativa a un element del Google Drive",
+        "Description[ca@valencia]": "Pàgina de propietats que mostra informació addicional relativa a un element de Google Drive",
         "Description[ca]": "Pàgina de propietats que mostra informació addicional relativa a un element del Google Drive",
         "Description[da]": "Egenskabsside som viser yderligere information om et Google Drev-element",
         "Description[de]": "Eigenschaftenseite mit zusätzliche Informationen zu einem Eintrag in Google Drive",
@@ -14,6 +14,7 @@
         "Description[fr]": "Affichage dans la page de propriétés d'informations supplémentaires concernant un élément « Google Drive »",
         "Description[hi]": "गूगल डिस्क वस्तु के संबंध में अतिरिक्त जानकारी दिखाने वाला गुण पृष्ठ",
         "Description[hu]": "Egy Google Drive elemmel kapcsolatos további információkat megjelenítő oldal",
+        "Description[id]": "Halaman properti menampilkan informasi tambahan tentang item Google Drive",
         "Description[it]": "Pagina delle proprietà che mostra informazioni aggiuntive relative a un elemento di Google Drive",
         "Description[ko]": "Google 드라이브 항목의 추가 정보를 표시하는 속성 페이지",
         "Description[lt]": "Savybių puslapis, rodantis papildomą informaciją, susijusią su Google disko elementu",
@@ -36,7 +37,7 @@
             "application/octet-stream"
         ],
         "Name": "Google Drive Properties Page",
-        "Name[ca@valencia]": "Pàgina de propietats del Google Drive",
+        "Name[ca@valencia]": "Pàgina de propietats de Google Drive",
         "Name[ca]": "Pàgina de propietats del Google Drive",
         "Name[cs]": "Stránka vlastností 'Google Drive'",
         "Name[da]": "Egenskabsside for Google Drev",
@@ -50,6 +51,7 @@
         "Name[fr]": "Page de propriétés de « Google Drive »",
         "Name[hi]": "गूगल ड्राइव गुण पृष्ठ",
         "Name[hu]": "Google Drive tulajdonságok oldal",
+        "Name[id]": "Halaman Properti Google Drive",
         "Name[it]": "Pagina delle proprietà di Google Drive",
         "Name[ko]": "Google 드라이브 속성 페이지",
         "Name[lt]": "Google disko savybių puslapis",
