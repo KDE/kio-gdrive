@@ -30,6 +30,7 @@
                 "Name[sk]": "Nicolas Fella",
                 "Name[sl]": "Nicolas Fella",
                 "Name[sv]": "Nicolas Fella",
+                "Name[tr]": "Nicolas Fella",
                 "Name[uk]": "Nicolas Fella",
                 "Name[x-test]": "xxNicolas Fellaxx",
                 "Name[zh_CN]": "Nicolas Fella"
@@ -63,6 +64,7 @@
         "Description[sk]": "Nahrať súbory na Google Drive",
         "Description[sl]": "Pošlji datoteke na Google Drive",
         "Description[sv]": "Ladda upp filer till Google Drive",
+        "Description[tr]": "Google Drive'a dosyalar yükle",
         "Description[uk]": "Вивантаження файлів на Google Диск",
         "Description[x-test]": "xxUpload files to Google Drivexx",
         "Description[zh_CN]": "将文件上传到 Google Drive",
@@ -96,6 +98,7 @@
         "Name[sk]": "Google Drive",
         "Name[sl]": "Google Drive",
         "Name[sv]": "Google Drive",
+        "Name[tr]": "Google Drive",
         "Name[uk]": "Google Диск",
         "Name[x-test]": "xxGoogle Drivexx",
         "Name[zh_CN]": "Google Drive",
