@@ -112,7 +112,7 @@
     <p xml:lang="sk">KIO GDrive je KIO slave, ktorý umožňuje nie KIO aplikáciám (ako Dolphin, Kate alebo Gwenview) pristupovať a upravovať súbory na Google Drive na cloude.</p>
     <p xml:lang="sl">KIO GDrive je odvisen od KIO, ki omogoča aplikacijam, ki se zavedajo KIO (npr. Dolphin, Kate ali Gwenview) za dostop do datotek Google Drive in urejajo datoteke v storitvi oblaka Google Drive.</p>
     <p xml:lang="sv">KIO GDrive är en I/O-slav som gör det möjligt för program medvetna om KIO (såsom Dolphin, Kate eller Gwenview) att komma åt och redigera Google Drive-filer i molnet.</p>
-    <p xml:lang="tr">KIO GDrive, buluttaki Google Drive dosylarına erişimek ve düzenleme yapmak için, KIO uygulamalarını etkinleştiren bir KIO bağımlılığıdır.</p>
+    <p xml:lang="tr">KIO GDrive, buluttaki Google Drive dosyalarına erişimek ve düzenleme yapmak için, KIO uygulamalarını etkinleştiren bir KIO bağımlılığıdır.</p>
     <p xml:lang="uk">KIO GDrive — допоміжний засіб введення-виведення даних, який уможливлює для програм із підтримкою KIO (зокрема Dolphin, Kate та Gwenview) доступ та редагування даних файлів на Диску Google у обчислювальній «хмарі».</p>
     <p xml:lang="x-test">xxKIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.xx</p>
     <p xml:lang="zh-CN">KIO GDrive 是 Google 云端硬盘的 KIO 从属，它能够让支持 KIO 的程序 (例如 Dolphin，Kate 或 Gwenview) 访问和编辑 Google 云端硬盘上的文件。</p>
@@ -153,6 +153,7 @@
       <caption xml:lang="sk">Dolphin zobrazuje KIO GDrive vpravo dole a Falkon prehliadajúci Google Drive vpravo hore.</caption>
       <caption xml:lang="sl">Dolphin prikazuje KIO GDrive v spodnjem desnem kotu in Falkon brska po Googlu Drive v zgornjem levem kotu.</caption>
       <caption xml:lang="sv">Dolphin som visar KIO GDrive nere till höger, och Falkon som bläddrat till Google Drive uppe till vänster.</caption>
+      <caption xml:lang="tr">Dolphin KIO GDrive'ı sağ altta gösterirken ve Falkon Google Drive'a sol üstte göz atarken.</caption>
       <caption xml:lang="uk">Dolphin із відкритим KIO GDrive внизу праворуч і Falkon з відкритою сторінкою Google Диск вгорі ліворуч.</caption>
       <caption xml:lang="x-test">xxDolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.xx</caption>
       <caption xml:lang="zh-CN">位于右下方的 Dolphin 正在显示 KIO GDrive，位于左上方的 Falkon 正在浏览 Google Drive 网页版。</caption>
