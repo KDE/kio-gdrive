@@ -99,7 +99,8 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     }
 
     const auto exportLinks = file->exportLinks();
-    Q_FOREACH (const QString &targetMimeType, convIt.value()) {
+    const QStringList targetMimeTypeList{convIt.value()};
+    for (const QString &targetMimeType : targetMimeTypeList) {
         const auto linkIt = exportLinks.constFind(targetMimeType);
         if (linkIt != exportLinks.cend()) {
             // Extra check to safeguard against a mistake in Google's Drive API v2
@@ -134,5 +135,5 @@ KIO::UDSEntry GDriveHelper::trash()
 
 QString GDriveHelper::elideToken(const QString &token)
 {
-    return token.mid(0, 30).append("...");
+    return token.mid(0, 30).append(QStringLiteral("..."));
 }

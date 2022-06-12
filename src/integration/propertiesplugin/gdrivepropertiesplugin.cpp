@@ -12,6 +12,7 @@
 #include <QClipboard>
 #include <QDesktopServices>
 #include <KIO/StatJob>
+#include <KLocalizedString>
 
 K_PLUGIN_CLASS_WITH_JSON(GDrivePropertiesPlugin, "gdrivepropertiesplugin.json")
 
@@ -92,7 +93,7 @@ void GDrivePropertiesPlugin::statJobFinished(KJob *job)
     }
     const KIO::UDSEntry entry = statJob->statResult();
     showEntryDetails(entry);
-    properties->addPage(&m_widget, "G&oogle Drive");
+    properties->addPage(&m_widget, i18n("G&oogle Drive"));
 }
 
 #include "gdrivepropertiesplugin.moc"

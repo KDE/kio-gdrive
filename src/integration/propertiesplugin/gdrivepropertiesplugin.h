@@ -25,7 +25,7 @@ private:
 
     void showEntryDetails(const KIO::UDSEntry &entry);
 
-private slots:
+private Q_SLOTS:
     void statJobFinished(KJob *job);
 };
 

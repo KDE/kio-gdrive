@@ -15,7 +15,7 @@ class GoogleDrivePlugin : public KAccountsDPlugin
 public:
     explicit GoogleDrivePlugin(QObject *parent, const QVariantList &args);
 
-public slots:
+public Q_SLOTS:
     void onAccountCreated(const Accounts::AccountId accountId, const Accounts::ServiceList &serviceList) override;
     void onAccountRemoved(const Accounts::AccountId accountId) override;
     void onServiceEnabled(const Accounts::AccountId accountId, const Accounts::Service &service) override;

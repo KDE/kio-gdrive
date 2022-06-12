@@ -328,7 +328,7 @@ void KIOGDrive::listAccounts()
         return;
     }
 
-    Q_FOREACH (const QString &account, accounts) {
+    for (const QString &account : accounts) {
         const KIO::UDSEntry entry = accountToUDSEntry(account);
         listEntry(entry);
     }
@@ -740,8 +740,8 @@ void KIOGDrive::listDir(const QUrl &url)
         return;
     }
 
-    ObjectsList objects = fileFetchJob.items();
-    Q_FOREACH (const ObjectPtr &object, objects) {
+    const ObjectsList objects = fileFetchJob.items();
+    for (const ObjectPtr &object : objects) {
         const FilePtr file = object.dynamicCast<File>();
 
         const KIO::UDSEntry entry = fileToUDSEntry(file, url.adjusted(QUrl::StripTrailingSlash).path());

@@ -70,8 +70,8 @@ void UrlTest::testGDriveUrl_data()
             << GDriveUrl::TrashDir;
 
     QTest::newRow("file in trash")
-            << gdriveUrl(QStringLiteral("/foo@gmail.com/") + GDriveUrl::TrashDir + ("/baz.txt"))
-            << QStringLiteral("gdrive:/foo@gmail.com/") + GDriveUrl::TrashDir + ("/baz.txt")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/") + GDriveUrl::TrashDir + QStringLiteral("/baz.txt"))
+            << QStringLiteral("gdrive:/foo@gmail.com/") + GDriveUrl::TrashDir + QStringLiteral("/baz.txt")
             << QStringLiteral("foo@gmail.com")
             << QStringLiteral("/foo@gmail.com/") + GDriveUrl::TrashDir
             << true
