@@ -207,9 +207,9 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
         entry.fastInsert(KIO::UDSEntry::UDS_URL, fileToUrl(origFile, path).toString());
     }
 
-    entry.fastInsert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toTime_t());
-    entry.fastInsert(KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toTime_t());
-    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toTime_t());
+    entry.fastInsert(KIO::UDSEntry::UDS_CREATION_TIME, file->createdDate().toSecsSinceEpoch());
+    entry.fastInsert(KIO::UDSEntry::UDS_MODIFICATION_TIME, file->modifiedDate().toSecsSinceEpoch());
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS_TIME, file->lastViewedByMeDate().toSecsSinceEpoch());
     if (!file->ownerNames().isEmpty()) {
         entry.fastInsert(KIO::UDSEntry::UDS_USER, file->ownerNames().first());
     }
