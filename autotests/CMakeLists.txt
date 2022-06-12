@@ -2,7 +2,7 @@ include(ECMAddTests)
 
 ecm_add_test(
     urltest.cpp ../src/gdriveurl.cpp
-    LINK_LIBRARIES Qt5::Test
+    LINK_LIBRARIES Qt::Test
     TEST_NAME urltest
     NAME_PREFIX kio_gdrive-)
 

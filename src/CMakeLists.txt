@@ -32,11 +32,11 @@ ecm_qt_declare_logging_category(kio_gdrive_SRCS
 
 kcoreaddons_add_plugin(kio_gdrive
     SOURCES ${kio_gdrive_SRCS}
-    INSTALL_NAMESPACE kf5/kio)
+    INSTALL_NAMESPACE kf${QT_MAJOR_VERSION}/kio)
 
 target_link_libraries(kio_gdrive
-    Qt5::Core
-    Qt5::Network
+    Qt::Core
+    Qt::Network
     KPim::GAPICore
     KPim::GAPIDrive
     KF5::KIOCore

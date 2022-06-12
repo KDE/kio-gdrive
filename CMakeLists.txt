@@ -8,15 +8,10 @@ set (RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE
 project(kio-gdrive VERSION ${RELEASE_SERVICE_VERSION})
 
 set(QT_MIN_VERSION 5.15.0)
-set(KF5_MIN_VERSION 5.71.0)
+set(KF5_MIN_VERSION 5.90.0)
 set(KGAPI_MIN_VERSION 5.11.41)
 set(KACCOUNTS_MIN_VERSION 20.03.80)
 set(QTKEYCHAIN_MIN_VERSION 0.6.0)
-
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
-    Gui
-    Network
-    Widgets)
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${ECM_MODULE_PATH})
@@ -27,6 +22,12 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 include(ECMSetupVersion)
+
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+    Gui
+    Network
+    Widgets)
+
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n

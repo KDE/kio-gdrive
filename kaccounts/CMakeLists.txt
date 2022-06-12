@@ -15,4 +15,4 @@ target_link_libraries(kaccounts_gdrive
     KF5::I18n
     KF5::Notifications)
 
-install(FILES gdrive.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})
+install(FILES gdrive.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
