@@ -21,7 +21,6 @@
 #include <QUrlQuery>
 #include <QUuid>
 
-#include <KGAPI/Account>
 #include <KGAPI/AuthJob>
 #include <KGAPI/Drive/About>
 #include <KGAPI/Drive/AboutFetchJob>
