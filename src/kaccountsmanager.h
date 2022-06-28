@@ -17,7 +17,7 @@ class KAccountsManager : public AbstractAccountManager
 {
 public:
     KAccountsManager();
-    virtual ~KAccountsManager();
+    ~KAccountsManager() override;
 
     KGAPI2::AccountPtr account(const QString &accountName) override;
     KGAPI2::AccountPtr createAccount() override;

@@ -37,7 +37,7 @@ public:
     explicit KIOGDrive(const QByteArray &protocol,
                        const QByteArray &pool_socket,
                        const QByteArray &app_socket);
-    virtual ~KIOGDrive();
+    ~KIOGDrive() override;
 
     virtual void openConnection() Q_DECL_OVERRIDE;
     virtual void listDir(const QUrl &url) Q_DECL_OVERRIDE;
