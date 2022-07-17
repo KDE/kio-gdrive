@@ -79,7 +79,7 @@
   <summary xml:lang="tr">KDE Plasma ve KDE uygulamaları ile Google Drive tümleştirmesi</summary>
   <summary xml:lang="uk">Інтеграція Диска Google із Плазмою KDE та програмами KDE</summary>
   <summary xml:lang="x-test">xxGoogle Drive integration with KDE Plasma and KDE applicationsxx</summary>
-  <summary xml:lang="zh-CN">KDE Plasma 和 KDE 应用的 Google 云端硬盘整合</summary>
+  <summary xml:lang="zh-CN">KDE Plasma 和 KDE 应用的 Google Drive 集成插件</summary>
   <summary xml:lang="zh-TW">適用於 KDE Plasma 和 KDE 應用程式的 Google Drive 整合</summary>
   <description>
     <p>KIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.</p>
@@ -116,7 +116,7 @@
     <p xml:lang="tr">KIO GDrive, buluttaki Google Drive dosyalarına erişimek ve düzenleme yapmak için, KIO uygulamalarını etkinleştiren bir KIO bağımlılığıdır.</p>
     <p xml:lang="uk">KIO GDrive — допоміжний засіб введення-виведення даних, який уможливлює для програм із підтримкою KIO (зокрема Dolphin, Kate та Gwenview) доступ та редагування даних файлів на Диску Google у обчислювальній «хмарі».</p>
     <p xml:lang="x-test">xxKIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.xx</p>
-    <p xml:lang="zh-CN">KIO GDrive 是 Google 云端硬盘的 KIO 从属，它能够让支持 KIO 的程序 (例如 Dolphin，Kate 或 Gwenview) 访问和编辑 Google 云端硬盘上的文件。</p>
+    <p xml:lang="zh-CN">KIO GDrive 是 Google Drive 的 KIO 从属程序，它能够让支持 KIO 的程序 (例如 Dolphin、Kate 或者 Gwenview) 访问和编辑 Google Drive 上的文件。</p>
   </description>
   <url type="homepage">https://community.kde.org/KIO_GDrive</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
