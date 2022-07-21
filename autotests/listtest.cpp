@@ -40,7 +40,7 @@ void ListTest::testListJob()
 
     connect(listJob, &KIO::ListJob::entries, this, [=](KIO::Job*, const KIO::UDSEntryList& list) {
         m_entries = list.count();
-        foreach (const auto &entry, list) {
+        for (const auto &entry : list) {
             // Check properties of new-account entry.
             if (entry.stringValue(KIO::UDSEntry::UDS_NAME) == QLatin1String("new-account")) {
                 QVERIFY(entry.isDir());
