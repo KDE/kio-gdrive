@@ -47,7 +47,7 @@ KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
 
     const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
     QList<QUrl> scopeUrls;
-    Q_FOREACH (const QString &scope, scopes) {
+    for (const QString &scope : scopes) {
         scopeUrls << QUrl::fromUserInput(scope);
     }
 
@@ -90,7 +90,8 @@ void KeychainAccountManager::storeAccount(const KGAPI2::AccountPtr &account)
     entry[ QStringLiteral("accessToken") ] = account->accessToken();
     entry[ QStringLiteral("refreshToken") ] = account->refreshToken();
     QStringList scopes;
-    Q_FOREACH (const QUrl &scope, account->scopes()) {
+    const auto accountScopes = account->scopes();
+    for (const QUrl &scope : accountScopes) {
         scopes << scope.toString();
     }
     entry[ QStringLiteral("scopes") ] = scopes.join(QLatin1Char(','));
