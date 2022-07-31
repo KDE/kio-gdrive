@@ -75,10 +75,7 @@
         "Name[tr]": "Google Drive Özellikler Sayfası",
         "Name[uk]": "Сторінка властивостей Диска Google",
         "Name[x-test]": "xxGoogle Drive Properties Pagexx",
-        "Name[zh_CN]": "Google Drive 属性页面",
-        "ServiceTypes": [
-            "KPropertiesDialog/Plugin"
-        ]
+        "Name[zh_CN]": "Google Drive 属性页面"
     },
     "MimeType": "inode/directory;application/octet-stream"
 }
