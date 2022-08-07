@@ -123,7 +123,7 @@ KIOGDrive::Action KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
             error(KIO::ERR_DISK_FULL, url.toDisplayString());
             return Fail;
         default:
-            error(KIO::ERR_SLAVE_DEFINED, job.errorString());
+            error(KIO::ERR_WORKER_DEFINED, job.errorString());
             return Fail;
     }
 
@@ -310,7 +310,7 @@ void KIOGDrive::createAccount()
     }
 
     if (m_accountManager->accounts().isEmpty()) {
-        error(KIO::ERR_SLAVE_DEFINED, i18n("There are no Google Drive accounts enabled. Please add at least one."));
+        error(KIO::ERR_WORKER_DEFINED, i18n("There are no Google Drive accounts enabled. Please add at least one."));
         return;
     }
 
@@ -700,7 +700,7 @@ void KIOGDrive::listDir(const QUrl &url)
     const auto account = getAccount(accountId);
     if (account->accountName().isEmpty()) {
         qCDebug(GDRIVE) << "Unknown account" << accountId << "for" << url;
-        error(KIO::ERR_SLAVE_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
+        error(KIO::ERR_WORKER_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
         return;
     }
 
@@ -840,7 +840,7 @@ void KIOGDrive::stat(const QUrl &url)
     const auto account = getAccount(accountId);
     if (account->accountName().isEmpty()) {
         qCDebug(GDRIVE) << "Unknown account" << accountId << "for" << url;
-        error(KIO::ERR_SLAVE_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
+        error(KIO::ERR_WORKER_DEFINED, i18n("%1 isn't a known GDrive account", accountId));
         return;
     }
 
@@ -1260,7 +1260,7 @@ void KIOGDrive::del(const QUrl &url, bool isfile)
     // Trying to delete the Team Drive root is pointless
     if (gdriveUrl.isSharedDrivesRoot()) {
         qCDebug(GDRIVE) << "Tried deleting Shared Drives root.";
-        error(KIO::ERR_SLAVE_DEFINED, i18n("Can't delete Shared Drives root."));
+        error(KIO::ERR_WORKER_DEFINED, i18n("Can't delete Shared Drives root."));
         return;
     }
 
