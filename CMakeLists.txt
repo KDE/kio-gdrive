@@ -47,7 +47,7 @@ set_package_properties(KAccounts PROPERTIES
     PURPOSE "Enables integration with system-wide accounts.")
 
 if (NOT KAccounts_FOUND)
-    find_package(Qt5Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
+    find_package(Qt${QT_MAJOR_VERSION}Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
     set_package_properties(Qt5Keychain PROPERTIES
         URL "https://github.com/frankosterfeld/qtkeychain"
         PURPOSE "Required for secure storage of accounts secrets.")
