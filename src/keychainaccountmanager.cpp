@@ -45,7 +45,7 @@ KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
 
     const auto entry = readMap(accountName);
 
-    const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), QString::SkipEmptyParts);
+    const QStringList scopes = entry.value(QStringLiteral("scopes")).split(QLatin1Char(','), Qt::SkipEmptyParts);
     QList<QUrl> scopeUrls;
     for (const QString &scope : scopes) {
         scopeUrls << QUrl::fromUserInput(scope);
