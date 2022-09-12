@@ -8,6 +8,7 @@
   <extends>org.kde.krusader.desktop</extends>
   <extends>org.kde.gwenview.desktop</extends>
   <name>KIO GDrive</name>
+  <name xml:lang="ar">وحدة الدخل/الخرج لغوغل درايف</name>
   <name xml:lang="ast">KIO GDrive</name>
   <name xml:lang="az">KIO GDrive</name>
   <name xml:lang="ca">KIO GDrive</name>
@@ -46,6 +47,7 @@
   <name xml:lang="zh-CN">KIO GDrive</name>
   <name xml:lang="zh-TW">KIO GDrive</name>
   <summary>Google Drive integration with KDE Plasma and KDE applications</summary>
+  <summary xml:lang="ar">تكامل غوغل درايف مع تطبيقات بلازما و كدي</summary>
   <summary xml:lang="ast">Integración de Google Drive con Plasma y les aplicaciones de KDE</summary>
   <summary xml:lang="az">Google Diskin KDE Plasma və KDE tətbiqləri ilə inteqrasiyası</summary>
   <summary xml:lang="ca">Integració del Drive de Google amb el Plasma del KDE i les aplicacions KDE</summary>
@@ -85,6 +87,7 @@
   <summary xml:lang="zh-TW">適用於 KDE Plasma 和 KDE 應用程式的 Google Drive 整合</summary>
   <description>
     <p>KIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.</p>
+    <p xml:lang="ar">تمكّن وحدة غوغل درايف التطبيقات المدركة لـ KIO (مثل دولفين أو كيت أو حونفيو) للوصول إلى ملفات غوغل درايف على سحابة غوغل.</p>
     <p xml:lang="ast">KIO GDrive ye un esclavu pa KIO que permite a les aplicaciones qu'usen KIO (como Dolphin, Kate o Gwenview) acceder y editar ficheros de Google Drive na ñube.</p>
     <p xml:lang="az">KIO GDrive sizə KIO iləuyğun proqramları işə salmağa imkan verən KIO xidməti cihazıdır.</p>
     <p xml:lang="ca">El KIO GDrive és un esclau del KIO que permet a les aplicacions preparades per al KIO (com el Dolphin, el Kate o el Gwenview) que accedeixin i editin els fitxers del Drive de Google en el núvol.</p>
@@ -128,6 +131,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>Dolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.</caption>
+      <caption xml:lang="ar">دولفين يعرض غوغل درايف في اليمين السفلي، و فالكون يستعرض غوغل درايف في اليسار العلوي</caption>
       <caption xml:lang="ast">Dolphin amuesa KIO GDrive na parte baxera derecha y el restolador Falkon na parte cimera esquierda.</caption>
       <caption xml:lang="az">KIO GDrive Dolphində sağda aşağıda göstərilir, Falkon-da isə Google Diskə yuxarı solda baxılır.</caption>
       <caption xml:lang="ca">El Dolphin mostra el KIO GDrive a la part inferior dreta, i el Falkon mostra el Google Drive a la part superior esquerra.</caption>
