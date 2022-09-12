@@ -3,6 +3,7 @@
         "Authors": [
             {
                 "Name": "Nicolas Fella",
+                "Name[ar]": "نيكولاس فلا",
                 "Name[az]": "Nicolas Fella",
                 "Name[ca@valencia]": "Nicolas Fella",
                 "Name[ca]": "Nicolas Fella",
@@ -40,6 +41,7 @@
         ],
         "Category": "Utilities",
         "Description": "Upload files to Google Drive",
+        "Description[ar]": "ارفع ملفات إلى غوغل درايف",
         "Description[az]": "Faylları Google Diskə yükləyin",
         "Description[ca@valencia]": "Puja els fitxers a Google Drive",
         "Description[ca]": "Puja els fitxers al Google Drive",
@@ -76,6 +78,7 @@
         "Icon": "folder-gdrive",
         "License": "GPL",
         "Name": "Google Drive",
+        "Name[ar]": "جوجل درايف",
         "Name[az]": "Google Disk",
         "Name[ca@valencia]": "Google Drive",
         "Name[ca]": "Google Drive",

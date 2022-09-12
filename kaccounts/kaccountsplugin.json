@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Integrate KIO gdrive",
+        "Description[ar]": "تكامل وحدة الدخل/الخرج لغوغل درايف",
         "Description[az]": "KIO gdrive ilə inteqrasiya",
         "Description[ca@valencia]": "Integra KIO del GDrive",
         "Description[ca]": "Integra el KIO del GDrive",
@@ -42,6 +43,7 @@
         "Id": "kaccounts_kio_gdrive",
         "License": "GPL",
         "Name": "KIO gdrive",
+        "Name[ar]": "وحدة الدخل/الخرج لغوغل درايف",
         "Name[az]": "KIO gdrive",
         "Name[ca@valencia]": "KIO GDrive",
         "Name[ca]": "KIO GDrive",

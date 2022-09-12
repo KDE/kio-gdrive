@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Properties page showing additional information regarding a Google Drive item",
+        "Description[ar]": "صفحة الخصائص التي تعرض معلومات إضافية بخصوص عنصر غوغل درايف",
         "Description[az]": "Xüsusiyyətlər səhifəsi Google Disk elemntləri ilə bağlı əlavə məlumatları göstərir",
         "Description[ca@valencia]": "Pàgina de propietats que mostra informació addicional relativa a un element de Google Drive",
         "Description[ca]": "Pàgina de propietats que mostra informació addicional relativa a un element del Google Drive",
@@ -41,6 +42,7 @@
             "application/octet-stream"
         ],
         "Name": "Google Drive Properties Page",
+        "Name[ar]": "صفحة خصائص غوغل درايف",
         "Name[az]": "Googıe Disk xüsusiyyətləri səhifəsi",
         "Name[ca@valencia]": "Pàgina de propietats de Google Drive",
         "Name[ca]": "Pàgina de propietats del Google Drive",
