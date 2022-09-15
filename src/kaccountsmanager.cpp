@@ -153,6 +153,9 @@ AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const
 {
     auto job = new GetCredentialsJob(id, nullptr);
     job->exec();
+    if (job->error()) {
+        qCWarning(GDRIVE) << "GetCredentialsJob failed:" << job->errorString();
+    }
 
     auto gapiAccount = AccountPtr(new Account(displayName,
                                               job->credentialsData().value(QStringLiteral("AccessToken")).toString(),

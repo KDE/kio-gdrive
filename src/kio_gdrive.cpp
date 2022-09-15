@@ -1016,6 +1016,13 @@ bool KIOGDrive::readPutData(QTemporaryFile &tempFile, FilePtr &fileMetaData)
 
 bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &accountId)
 {
+    auto account = getAccount(accountId);
+    if (account->accessToken().isEmpty()) {
+        qCWarning(GDRIVE) << "Expired or missing access/refresh token for account" << accountId;
+        error(KIO::ERR_WORKER_DEFINED, i18n("Expired or missing access tokens for account %1", accountId));
+        return false;
+    }
+
     KIOGDrive::Action action = KIOGDrive::Fail;
     Q_FOREVER {
         qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << GDriveHelper::elideToken(job.account()->accessToken());
@@ -1029,7 +1036,7 @@ bool KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QString &account
         } else if (action == KIOGDrive::Fail) {
             return false;
         }
-        job.setAccount(getAccount(accountId));
+        job.setAccount(account);
         job.restart();
     };
 

@@ -135,5 +135,8 @@ KIO::UDSEntry GDriveHelper::trash()
 
 QString GDriveHelper::elideToken(const QString &token)
 {
+    if (token.isEmpty()) {
+        return {};
+    }
     return token.mid(0, 30).append(QStringLiteral("..."));
 }
