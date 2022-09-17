@@ -446,7 +446,7 @@ KIO::UDSEntry KIOGDrive::fetchSharedDrivesRootEntry(const QString &accountId, Fe
             canCreateDrives = about->canCreateDrives();
         }
     }
-    qCDebug(GDRIVE) << "Account" << accountId << (canCreateDrives ? "can" : "can't") << "create Drives";
+    qCDebug(GDRIVE) << "Account" << accountId << (canCreateDrives ? "can" : "can't") << "create Shared Drives";
 
     KIO::UDSEntry entry;
 
