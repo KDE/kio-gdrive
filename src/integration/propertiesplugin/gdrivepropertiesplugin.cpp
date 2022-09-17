@@ -58,6 +58,15 @@ void GDrivePropertiesPlugin::showEntryDetails(const KIO::UDSEntry &entry)
     const QString lastViewedByMe = m_item.timeString(KFileItem::AccessTime);
     m_ui.lastViewedByMeValue->setText(lastViewedByMe);
 
+    if (entry.contains(GDriveUDSEntryExtras::SharedWithMeDate)) {
+        m_ui.sharedWithMeValue->setText(entry.stringValue(GDriveUDSEntryExtras::SharedWithMeDate));
+        m_ui.sharedWithMeLabel->show();
+        m_ui.sharedWithMeValue->show();
+    } else {
+        m_ui.sharedWithMeLabel->hide();
+        m_ui.sharedWithMeValue->hide();
+    }
+
     const QString version = entry.stringValue(GDriveUDSEntryExtras::Version);
     m_ui.versionValue->setText(version);
 

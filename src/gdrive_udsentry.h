@@ -17,7 +17,8 @@ enum GDriveUDSEntryExtras {
     Owners,
     Version,
     LastModifyingUser,
-    Description
+    Description,
+    SharedWithMeDate
 };
 
 #endif // GDRIVEUDSENTRY_H

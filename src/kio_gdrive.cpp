@@ -229,6 +229,9 @@ KIO::UDSEntry KIOGDrive::fileToUDSEntry(const FilePtr &origFile, const QString &
     entry.fastInsert(GDriveUDSEntryExtras::Md5, file->md5Checksum());
     entry.fastInsert(GDriveUDSEntryExtras::LastModifyingUser, file->lastModifyingUserName());
     entry.fastInsert(GDriveUDSEntryExtras::Owners, file->ownerNames().join(QStringLiteral(", ")));
+    if (file->sharedWithMeDate().isValid()) {
+        entry.fastInsert(GDriveUDSEntryExtras::SharedWithMeDate, QLocale::system().toString(file->sharedWithMeDate(), QLocale::LongFormat));
+    }
 
     return entry;
 }
