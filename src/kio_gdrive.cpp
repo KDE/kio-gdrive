@@ -264,6 +264,19 @@ KIO::UDSEntry KIOGDrive::newAccountUDSEntry()
     return entry;
 }
 
+KIO::UDSEntry KIOGDrive::sharedWithMeUDSEntry()
+{
+    KIO::UDSEntry entry;
+
+    entry.fastInsert(KIO::UDSEntry::UDS_NAME, GDriveUrl::SharedWithMeDir);
+    entry.fastInsert(KIO::UDSEntry::UDS_DISPLAY_NAME, i18nc("folder containing gdrive files shared with me", "Shared With Me"));
+    entry.fastInsert(KIO::UDSEntry::UDS_FILE_TYPE, S_IFDIR);
+    entry.fastInsert(KIO::UDSEntry::UDS_ICON_NAME, QStringLiteral("folder-publicshare"));
+    entry.fastInsert(KIO::UDSEntry::UDS_ACCESS, S_IRUSR);
+
+    return entry;
+}
+
 KIO::UDSEntry KIOGDrive::accountToUDSEntry(const QString &accountNAme)
 {
     KIO::UDSEntry entry;
@@ -517,7 +530,7 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
     const auto gdriveUrl = GDriveUrl(url);
     Q_ASSERT(!gdriveUrl.isRoot());
 
-    if (gdriveUrl.isAccountRoot() || gdriveUrl.isTrashDir()) {
+    if (gdriveUrl.isAccountRoot() || gdriveUrl.isTrashDir() || gdriveUrl.isSharedWithMeRoot()) {
         qCDebug(GDRIVE) << "Resolved" << path << "to account root";
         return rootFolderId(gdriveUrl.account());
     }
@@ -535,15 +548,18 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
         return QString();
     }
 
-    // Try to recursively resolve ID of parent path - either from cache, or by
-    // querying Google
-    const QString parentId = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
-    if (parentId.isEmpty()) {
-        // We failed to resolve parent -> error
-        return QString();
+    QString parentId;
+    if (!gdriveUrl.isSharedWithMeTopLevel()) {
+        // Try to recursively resolve ID of parent path - either from cache, or by querying Google
+        parentId = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        if (parentId.isEmpty()) {
+            // We failed to resolve parent -> error
+            return QString();
+        }
+        qCDebug(GDRIVE) << "Getting ID for" << gdriveUrl.filename() << "in parent with ID" << parentId;
+    } else {
+        qCDebug(GDRIVE) << "Getting ID for" << gdriveUrl.filename() << "(top-level shared-with-me file without a parentId)";
     }
-
-    qCDebug(GDRIVE) << "Getting ID for" << gdriveUrl.filename() << "in parent with ID" << parentId;
 
     FileSearchQuery query;
     if (flags != KIOGDrive::None) {
@@ -552,7 +568,9 @@ QString KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
                        GDriveHelper::folderMimeType());
     }
     query.addQuery(FileSearchQuery::Title, FileSearchQuery::Equals, gdriveUrl.filename());
-    query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
+    if (!parentId.isEmpty()) {
+        query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, parentId);
+    }
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, gdriveUrl.isTrashed());
 
     const QString accountId = gdriveUrl.account();
@@ -709,6 +727,9 @@ void KIOGDrive::listDir(const QUrl &url)
         auto entry = fetchSharedDrivesRootEntry(accountId);
         listEntry(entry);
         folderId = rootFolderId(accountId);
+
+        auto sharedWithMeEntry = sharedWithMeUDSEntry();
+        listEntry(sharedWithMeEntry);
     } else if (gdriveUrl.isSharedDrivesRoot()) {
         listSharedDrivesRoot(url);
         return;
@@ -726,7 +747,12 @@ void KIOGDrive::listDir(const QUrl &url)
 
     FileSearchQuery query;
     query.addQuery(FileSearchQuery::Trashed, FileSearchQuery::Equals, false);
-    query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
+    // Top-level Shared-with-me files don't have a parent.
+    if (gdriveUrl.isSharedWithMeRoot()) {
+        query.addQuery(FileSearchQuery::SharedWithMe, FileSearchQuery::Equals, true);
+    } else {
+        query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
+    }
     FileFetchJob fileFetchJob(query, getAccount(accountId));
     const auto extraFields =
         QStringList({ KGAPI2::Drive::File::Fields::Labels,
@@ -828,6 +854,14 @@ void KIOGDrive::stat(const QUrl &url)
     if (gdriveUrl.isNewAccountPath()) {
         qCDebug(GDRIVE) << "stat()ing new-account path";
         const KIO::UDSEntry entry = newAccountUDSEntry();
+        statEntry(entry);
+        finished();
+        return;
+    }
+
+    if (gdriveUrl.isSharedWithMeRoot()) {
+        qCDebug(GDRIVE) << "stat()ing Shared With Me path";
+        const KIO::UDSEntry entry = sharedWithMeUDSEntry();
         statEntry(entry);
         finished();
         return;
