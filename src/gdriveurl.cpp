@@ -10,6 +10,7 @@
 #include "gdriveurl.h"
 
 const QString GDriveUrl::Scheme = QLatin1String("gdrive");
+const QString GDriveUrl::SharedWithMeDir = QLatin1String("Shared With Me");
 const QString GDriveUrl::SharedDrivesDir = QLatin1String("Shared Drives");
 const QString GDriveUrl::TrashDir = QLatin1String("trash");
 const QString GDriveUrl::NewAccountPath = QLatin1String("new-account");
@@ -61,6 +62,21 @@ bool GDriveUrl::isNewAccountPath() const
 bool GDriveUrl::isTopLevel() const
 {
     return m_components.length() == 2;
+}
+
+bool GDriveUrl::isSharedWithMeRoot() const
+{
+    return m_components.length() == 2 && m_components.at(1) == SharedWithMeDir;
+}
+
+bool GDriveUrl::isSharedWithMeTopLevel() const
+{
+    return m_components.length() == 3 && m_components.at(1) == SharedWithMeDir;
+}
+
+bool GDriveUrl::isSharedWithMe() const
+{
+    return m_components.length() > 2 && m_components.at(1) == SharedWithMeDir;
 }
 
 bool GDriveUrl::isSharedDrivesRoot() const

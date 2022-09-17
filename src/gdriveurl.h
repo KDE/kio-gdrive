@@ -23,6 +23,9 @@ public:
     bool isAccountRoot() const;
     bool isNewAccountPath() const;
     bool isTopLevel() const;
+    bool isSharedWithMeRoot() const;
+    bool isSharedWithMeTopLevel() const;
+    bool isSharedWithMe() const;
     bool isSharedDrivesRoot() const;
     bool isSharedDrive() const;
     bool isTrashDir() const;
@@ -34,6 +37,7 @@ public:
     static QString buildSharedDrivePath(const QString &accountId, const QString &drive);
 
     static const QString Scheme;
+    static const QString SharedWithMeDir;
     static const QString SharedDrivesDir;
     static const QString TrashDir;
     static const QString NewAccountPath;

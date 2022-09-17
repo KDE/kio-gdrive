@@ -38,6 +38,9 @@ void UrlTest::testGDriveUrl_data()
     QTest::addColumn<bool>("expectedIsTopLevel");
     QTest::addColumn<bool>("expectedIsRoot");
     QTest::addColumn<bool>("expectedIsAccountRoot");
+    QTest::addColumn<bool>("expectedIsSharedWithMeRoot");
+    QTest::addColumn<bool>("expectedIsSharedWithMeTopLevel");
+    QTest::addColumn<bool>("expectedIsSharedWithMe");
     QTest::addColumn<bool>("expectedIsSharedDrivesRoot");
     QTest::addColumn<bool>("expectedIsSharedDrive");
     QTest::addColumn<bool>("expectedIsNewAccountPath");
@@ -54,6 +57,9 @@ void UrlTest::testGDriveUrl_data()
             << false // expectedIsTopLevel
             << true  // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -70,6 +76,9 @@ void UrlTest::testGDriveUrl_data()
             << false // expectedIsTopLevel
             << false // expectedIsRoot
             << true  // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -86,6 +95,9 @@ void UrlTest::testGDriveUrl_data()
             << true  // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -102,6 +114,9 @@ void UrlTest::testGDriveUrl_data()
             << false // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -118,6 +133,9 @@ void UrlTest::testGDriveUrl_data()
             << true  // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << true  // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -134,6 +152,9 @@ void UrlTest::testGDriveUrl_data()
             << true  // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -150,6 +171,9 @@ void UrlTest::testGDriveUrl_data()
             << true  // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -166,6 +190,9 @@ void UrlTest::testGDriveUrl_data()
             << true  // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
@@ -179,15 +206,113 @@ void UrlTest::testGDriveUrl_data()
             << QStringLiteral("foo@gmail.com")
             << QStringLiteral("/foo@gmail.com/bar")
             << false // expectedIsTrashed
-            << false  // expectedIsTopLevel
+            << false // expectedIsTopLevel
             << false // expectedIsRoot
             << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
             << false // expectedIsSharedDrivesRoot
             << false // expectedIsSharedDrive
             << false // expectedIsNewAccountPath
             << false // expectedIsTrashDir
             << QStringList {QStringLiteral("foo@gmail.com"), QStringLiteral("bar"), QStringLiteral("baz.txt")}
             << QStringLiteral("baz.txt");
+
+    QTest::newRow("account shared with me root")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedWithMeDir)
+            << QStringLiteral("gdrive:/foo@gmail.com/") + GDriveUrl::SharedWithMeDir
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com")
+            << false // expectedIsTrashed
+            << true  // expectedIsTopLevel
+            << false // expectedIsRoot
+            << false // expectedIsAccountRoot
+            << true  // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << false // expectedIsSharedWithMe
+            << false // expectedIsSharedDrivesRoot
+            << false // expectedIsSharedDrive
+            << false // expectedIsNewAccountPath
+            << false // expectedIsTrashDir
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir}
+            << GDriveUrl::SharedWithMeDir;
+
+    QTest::newRow("shared with me top-level file")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/%1/baz.txt").arg(GDriveUrl::SharedWithMeDir))
+            << QStringLiteral("gdrive:/foo@gmail.com/%1/baz.txt").arg(GDriveUrl::SharedWithMeDir)
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedWithMeDir
+            << false // expectedIsTrashed
+            << false // expectedIsTopLevel
+            << false // expectedIsRoot
+            << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << true  // expectedIsSharedWithMeTopLevel
+            << true  // expectedIsSharedWithMe
+            << false // expectedIsSharedDrivesRoot
+            << false // expectedIsSharedDrive
+            << false // expectedIsNewAccountPath
+            << false // expectedIsTrashDir
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir, QStringLiteral("baz.txt")}
+            << QStringLiteral("baz.txt");
+
+    QTest::newRow("shared with me top-level folder")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/%1/bar/").arg(GDriveUrl::SharedWithMeDir))
+            << QStringLiteral("gdrive:/foo@gmail.com/%1/bar/").arg(GDriveUrl::SharedWithMeDir)
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedWithMeDir
+            << false // expectedIsTrashed
+            << false // expectedIsTopLevel
+            << false // expectedIsRoot
+            << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << true  // expectedIsSharedWithMeTopLevel
+            << true  // expectedIsSharedWithMe
+            << false // expectedIsSharedDrivesRoot
+            << false // expectedIsSharedDrive
+            << false // expectedIsNewAccountPath
+            << false // expectedIsTrashDir
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir, QStringLiteral("bar")}
+            << QStringLiteral("bar");
+
+    QTest::newRow("shared with me inner file")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/%1/bar/baz.txt").arg(GDriveUrl::SharedWithMeDir))
+            << QStringLiteral("gdrive:/foo@gmail.com/%1/bar/baz.txt").arg(GDriveUrl::SharedWithMeDir)
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedWithMeDir + QStringLiteral("/bar")
+            << false // expectedIsTrashed
+            << false // expectedIsTopLevel
+            << false // expectedIsRoot
+            << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << true  // expectedIsSharedWithMe
+            << false // expectedIsSharedDrivesRoot
+            << false // expectedIsSharedDrive
+            << false // expectedIsNewAccountPath
+            << false // expectedIsTrashDir
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir, QStringLiteral("bar"), QStringLiteral("baz.txt")}
+            << QStringLiteral("baz.txt");
+
+    QTest::newRow("shared with me inner folder")
+            << gdriveUrl(QStringLiteral("/foo@gmail.com/%1/bar/baz/").arg(GDriveUrl::SharedWithMeDir))
+            << QStringLiteral("gdrive:/foo@gmail.com/%1/bar/baz/").arg(GDriveUrl::SharedWithMeDir)
+            << QStringLiteral("foo@gmail.com")
+            << QStringLiteral("/foo@gmail.com/") + GDriveUrl::SharedWithMeDir + QStringLiteral("/bar")
+            << false // expectedIsTrashed
+            << false // expectedIsTopLevel
+            << false // expectedIsRoot
+            << false // expectedIsAccountRoot
+            << false // expectedIsSharedWithMeRoot
+            << false // expectedIsSharedWithMeTopLevel
+            << true  // expectedIsSharedWithMe
+            << false // expectedIsSharedDrivesRoot
+            << false // expectedIsSharedDrive
+            << false // expectedIsNewAccountPath
+            << false // expectedIsTrashDir
+            << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir, QStringLiteral("bar"), QStringLiteral("baz")}
+            << QStringLiteral("baz");
 }
 
 void UrlTest::testGDriveUrl()
@@ -204,6 +329,9 @@ void UrlTest::testGDriveUrl()
     QFETCH(bool, expectedIsTopLevel);
     QFETCH(bool, expectedIsRoot);
     QFETCH(bool, expectedIsAccountRoot);
+    QFETCH(bool, expectedIsSharedWithMeRoot);
+    QFETCH(bool, expectedIsSharedWithMeTopLevel);
+    QFETCH(bool, expectedIsSharedWithMe);
     QFETCH(bool, expectedIsSharedDrivesRoot);
     QFETCH(bool, expectedIsSharedDrive);
     QFETCH(bool, expectedIsNewAccountPath);
@@ -218,6 +346,9 @@ void UrlTest::testGDriveUrl()
     QCOMPARE(gdriveUrl.isTopLevel(), expectedIsTopLevel);
     QCOMPARE(gdriveUrl.isRoot(), expectedIsRoot);
     QCOMPARE(gdriveUrl.isAccountRoot(), expectedIsAccountRoot);
+    QCOMPARE(gdriveUrl.isSharedWithMeRoot(), expectedIsSharedWithMeRoot);
+    QCOMPARE(gdriveUrl.isSharedWithMeTopLevel(), expectedIsSharedWithMeTopLevel);
+    QCOMPARE(gdriveUrl.isSharedWithMe(), expectedIsSharedWithMe);
     QCOMPARE(gdriveUrl.isSharedDrivesRoot(), expectedIsSharedDrivesRoot);
     QCOMPARE(gdriveUrl.isSharedDrive(), expectedIsSharedDrive);
     QCOMPARE(gdriveUrl.isNewAccountPath(), expectedIsNewAccountPath);
