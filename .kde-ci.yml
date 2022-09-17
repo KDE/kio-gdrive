@@ -11,3 +11,6 @@ Dependencies:
     'frameworks/purpose': '@stable'
     'network/kaccounts-integration': '@same'
     'pim/libkgapi': '@same'
+
+Options:
+  require-passing-tests-on: [ 'Linux', 'FreeBSD' ]
