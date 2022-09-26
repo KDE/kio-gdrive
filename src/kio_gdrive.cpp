@@ -988,12 +988,17 @@ void KIOGDrive::get(const QUrl &url)
     mimeType(file->mimeType());
 
     FileFetchContentJob contentJob(downloadUrl, getAccount(accountId));
+    QObject::connect(&contentJob, &KGAPI2::Job::progress, [this](KGAPI2::Job *, int processed, int total) {
+        processedSize(processed);
+        totalSize(total);
+    });
     if (!runJob(contentJob, url, accountId)) {
         return;
     }
 
     QByteArray contentData = contentJob.data();
 
+    processedSize(contentData.size());
     totalSize(contentData.size());
 
     // data() has a maximum transfer size of 14 MiB so we need to send it in chunks.
