@@ -982,7 +982,7 @@ void KIOGDrive::get(const QUrl &url)
     if (GDriveHelper::isGDocsDocument(file)) {
         downloadUrl = GDriveHelper::convertFromGDocs(file);
     } else {
-        downloadUrl = file->downloadUrl();
+        downloadUrl = GDriveHelper::downloadUrl(file);
     }
 
     mimeType(file->mimeType());

@@ -120,6 +120,15 @@ QUrl GDriveHelper::convertFromGDocs(KGAPI2::Drive::FilePtr &file)
     return file->downloadUrl();
 }
 
+QUrl GDriveHelper::downloadUrl(const KGAPI2::Drive::FilePtr &file)
+{
+    if (file->downloadUrl().isValid()) {
+        return file->downloadUrl();
+    }
+
+    return file->exportLinks().value(file->mimeType());
+}
+
 // Currently unused, see https://phabricator.kde.org/T3443
 /*
 KIO::UDSEntry GDriveHelper::trash()
