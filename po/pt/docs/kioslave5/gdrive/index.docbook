@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2016-10-03</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>O KIO do GDrive permite-lhe aceder e editar os ficheiros da sua área do Google Drive, usando as aplicações do KDE que suportam o KIO.</para>
+
+<para
+>Poderá usar o 'kioslave' do 'gdrive' da seguinte forma:</para>
+<para
+><userinput
+>gdrive://</userinput
+> ou <userinput
+>gdrive://<replaceable
+>xpto@exemplo.com</replaceable
+></userinput
+>.</para>
+
+<para
+>O primeiro URL mostra-lhe uma janela de autenticação de OAuth do Google, caso nenhuma conta do Drive tenha ainda sido autenticada, ou então a lista com as suas contas autenticadas em alternativa.</para>
+
+<para
+>O URL <userinput
+>gdrive://</userinput
+> também pode ser usado em qualquer altura para adicionar uma nova conta.</para>
+
+<para
+>O URL <userinput
+>gdrive://<replaceable
+>xpto@exemplo.com</replaceable
+></userinput
+> apresenta todos os ficheiros e pastas do nível de topo da conta <userinput
+>xpto@exemplo.com</userinput
+> do Drive.</para>
+
+</article>

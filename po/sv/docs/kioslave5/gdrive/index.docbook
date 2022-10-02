@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2016-10-03</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>I/O-slaven GDrive låter dig komma åt och redigera dina filer på Google Drive med användning av KDE-program som stöder I/O-slavar.</para>
+
+<para
+>Du kan använda I/O-slaven gdrive som följer:</para>
+<para
+><userinput
+>gdrive://</userinput
+> eller <userinput
+>gdrive://<replaceable
+>plats@exempel.com</replaceable
+></userinput
+>.</para>
+
+<para
+>Den första webbadressen visar en OAuth inloggningsdialogruta från Google, om inget Drive-konto redan har behörighet, eller annars listan över konton med behörighet.</para>
+
+<para
+>Webbadressen <userinput
+>gdrive://</userinput
+> kan också användas när som helst för att lägga till ett ytterligare konto.</para>
+
+<para
+>Webbadressen <userinput
+>gdrive://<replaceable
+>plats@exempel.com</replaceable
+></userinput
+> listar alla filer och kataloger från toppnivån av Drive-kontot <userinput
+>plats@exempel.com</userinput
+>.</para>
+
+</article>

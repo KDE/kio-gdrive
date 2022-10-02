@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2016-10-03</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>KIO GDrive stelt u in staat toegang te hebben tot en uw Google Drive bestanden te bewerken met KDE toepassingen die KIO ondersteunen.</para>
+
+<para
+>U kunt de gdrive kioslave gebruiken als volgt:</para>
+<para
+><userinput
+>gdrive://</userinput
+> of <userinput
+>gdrive://<replaceable
+>foo@bijvoorbeeld.nl</replaceable
+></userinput
+>.</para>
+
+<para
+>De eerste URL toont een OAuth aanmelddialoog van Google, als er nog geen Drive account is geauthenticeerd of in plaats daarvan de lijst van uw geauthenticeerde accounts bestaat niet.</para>
+
+<para
+>De URL <userinput
+>gdrive://</userinput
+> kan ook op elk moment gebruikt worden om een extra account toe te voegen.</para>
+
+<para
+>De URL <userinput
+>gdrive://<replaceable
+>foo@voorbeeld.nl</replaceable
+></userinput
+> toont alle bestanden en mappen aan de top van het Drive account <userinput
+>foo@voorbeeld.nl</userinput
+>.</para>
+
+</article>

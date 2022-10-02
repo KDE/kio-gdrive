@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>GDrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>3 d'octubre de 2016</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>El KIO GDrive permet accedir i editar els vostres fitxers al Google Drive utilitzant les aplicacions &kde; que implementen el KIO.</para>
+
+<para
+>Podeu utilitzar el kioslave <quote
+>gdrive</quote
+> de la següent manera:</para>
+<para
+><userinput
+>gdrive://</userinput
+> o <userinput
+>gdrive://<replaceable
+>foo@exemple.cat</replaceable
+></userinput
+>.</para>
+
+<para
+>El primer &URL; mostra un diàleg d'inici de sessió OAuth de Google, si encara no disposeu d'un compte del Drive autenticat, o la llista dels vostres comptes autenticats alternatius.</para>
+
+<para
+>L'&URL; <userinput
+>gdrive://</userinput
+> també es pot utilitzar en qualsevol moment per afegir un compte addicional.</para>
+
+<para
+>L'&URL; <userinput
+>gdrive://<replaceable
+>foo@exemple.cat</replaceable
+></userinput
+> llistarà tots els fitxers i carpetes des del nivell superior del compte <userinput
+>foo@exemple.cat</userinput
+> del Drive.</para>
+
+</article>

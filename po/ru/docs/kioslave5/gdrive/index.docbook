@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Александр</firstname
+><surname
+>Поташев</surname
+><affiliation
+><address
+><email
+>aspotashev@gmail.com</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>3 октября 2016 г.</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>KIO GDrive позволяет просматривать и редактировать файлы, хранящиеся на Google Диске, в приложениях KDE с поддержкой KIO.</para>
+
+<para
+>Протокол gdrive можно использовать, например, следующим образом:</para>
+<para
+><userinput
+>gdrive://</userinput
+> или <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+>.</para>
+
+<para
+>Первый адрес откроет диалог входа в учётную запись по OAuth, если ещё не был выполнен вход ни в одну учётную запись Google Диска, либо список доступных учётных записей — в противном случае.</para>
+
+<para
+>Адрес <userinput
+>gdrive://</userinput
+> также можно использовать для добавления ещё одной учётной записи.</para>
+
+<para
+>По адресу <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+> будут показаны файлы и каталоги верхнего уровня, хранящиеся на Google Диске для учётной записи <userinput
+>foo@example.com</userinput
+>.</para>
+
+</article>

@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Serbian "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>Г‑драјв</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Елвис</firstname
+> <surname
+>Ангелачо</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Часлав</firstname
+><surname
+>Илић</surname
+><affiliation
+><address
+><email
+>caslav.ilic@gmx.net</email
+></address
+></affiliation
+><contrib
+>превод</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>3. 10. 2016.</date>
+<releaseinfo
+>г‑драјв 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>К‑У/И г‑драјв вам омогућава да приступате фајловима на Гугл‑драјву и уређујете их кроз КДЕ програме који подржавају К‑У/И.</para>
+
+<para
+>У/И захват г‑драјв можете користити овако:</para>
+<para
+><userinput
+>gdrive://</userinput
+> или <userinput
+>gdrive://<replaceable
+>blabla@primer.com</replaceable
+></userinput
+>.</para>
+
+<para
+>Први УРЛ приказује О‑аут пријавни дијалог на Гуглу у случају да још нисте аутентификовали налог, иначе списак свих ваших аутентификованих налога.</para>
+
+<para
+>УРЛ <userinput
+>gdrive://</userinput
+> може такође у сваком тренутку да се употреби за додавање нових налога.</para>
+
+<para
+>УРЛ <userinput
+>gdrive://<replaceable
+>blabla@primer.com</replaceable
+></userinput
+> набраја све фајлове и фасцикле горњег нивоа под налогом <userinput
+>blabla@primer.com</userinput
+> на Гугл‑драјву.</para>
+
+</article>

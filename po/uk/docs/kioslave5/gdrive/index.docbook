@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>3 жовтня 2016 року</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>За допомогою допоміжного засобу введення-виведення (KIO) GDrive ви зможете отримати доступ до перегляду і редагування ваших файлів на Диску Google за допомогою програм KDE, у яких передбачено підтримку KIO.</para>
+
+<para
+>Скористатися допоміжним засобом gdrive можна так:</para>
+<para
+><userinput
+>gdrive://</userinput
+> or <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+>.</para>
+
+<para
+>За допомогою першої адреси можна відкрити діалогове вікно входу до облікового запису Google за допомогою OAuth, якщо ще не було виконано розпізнавання облікового запису у системі Диска, або відкрити список облікових записів, розпізнавання для яких уже виконувалося.</para>
+
+<para
+>Адресою із префіксом <userinput
+>gdrive://</userinput
+> також будь-коли можна скористатися для додавання нового облікового запису.</para>
+
+<para
+>Використання у адресі частини <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+> дає змогу переглянути список усіх файлів і тек на верхньому рівні облікового запису Диска <userinput
+>foo@example.com</userinput
+>.</para>
+
+</article>
