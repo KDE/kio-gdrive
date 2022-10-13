@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-09-20 00:23+0200\n"
+"PO-Revision-Date: 2022-10-12 09:45+0200\n"
 "Last-Translator: Luigi Toscano <luigi.toscano@tiscali.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -84,11 +84,10 @@ msgid "New account"
 msgstr "Nuovo account"
 
 #: src/kio_gdrive.cpp:275
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Drive condivisi"
+msgstr "Condiviso con me"
 
 #: src/kio_gdrive.cpp:329
 #, kde-format
