@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-24 00:45+0000\n"
+"POT-Creation-Date: 2022-10-02 00:46+0000\n"
 "PO-Revision-Date: 2022-09-27 21:03+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -106,12 +106,12 @@ msgstr "Delte diskar"
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 er ikkje ein kjend GDrive-konto"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr ""
 
-#: src/kio_gdrive.cpp:1307
+#: src/kio_gdrive.cpp:1312
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Kan ikkje sletta rot til delte diskar."
