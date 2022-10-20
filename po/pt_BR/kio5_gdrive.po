@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-06-22 16:13-0300\n"
+"PO-Revision-Date: 2022-10-19 15:44-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -84,11 +84,10 @@ msgid "New account"
 msgstr "Nova conta"
 
 #: src/kio_gdrive.cpp:275
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Drives compartilhados"
+msgstr "Compartilhados comigo"
 
 #: src/kio_gdrive.cpp:329
 #, kde-format
@@ -108,7 +107,7 @@ msgstr "%1 não é uma conta do Google Drive conhecida"
 #: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "Expirado ou faltando token de acesso para a conta %1"
 
 #: src/kio_gdrive.cpp:1312
 #, kde-format
