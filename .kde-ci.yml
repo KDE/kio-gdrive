@@ -9,8 +9,11 @@ Dependencies:
     'frameworks/kdoctools': '@stable'
     'frameworks/kio': '@stable'
     'frameworks/purpose': '@stable'
-    'network/kaccounts-integration': '@same'
     'pim/libkgapi': '@same'
+
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
+  'require':
+    'network/kaccounts-integration': '@same'
 
 Options:
   require-passing-tests-on: [ 'Linux', 'FreeBSD' ]
