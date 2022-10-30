@@ -21,8 +21,8 @@
 #include <KIO/Job> //for stat.h
 #include <KGAPI/AuthJob>
 
-QString KeychainAccountManager::s_apiKey = QStringLiteral("554041944266.apps.googleusercontent.com");
-QString KeychainAccountManager::s_apiSecret = QStringLiteral("mdT1DjzohxN3npUUzkENT0gO");
+QString KeychainAccountManager::s_apiKey = QStringLiteral("836279663462-qq9rt1k4smgqhvt461r6l54vo9qm09bg.apps.googleusercontent.com");
+QString KeychainAccountManager::s_apiSecret = QStringLiteral("5-k19mrwsAud5a1r-qijtTJQ");
 
 
 QSet<QString> KeychainAccountManager::accounts()
