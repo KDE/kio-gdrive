@@ -11,18 +11,18 @@ You will not see the slave's output in the terminal where you started e.g. Dolph
 On systemd distros the output will go in the journalctl (assuming Qt built with the -journald option).
 A quick way to locate the relevant logs is the following command:
 
-    journalctl -b | grep kf5.kio.gdrive
+    journalctl -b | grep kf.kio.workers.gdrive
 
 This will only show the logs since the last boot. To retrieve also older logs, you can filter the messages by the process who emitted them (kdeinit5):
 
-    journalctl $(which kdeinit5) | grep kf5.kio.gdrive
+    journalctl $(which kdeinit5) | grep kf.kio.workers.gdrive
 
 Enable Debug Output
 ===================
 
 Th gdrive slave uses categorized debug output. Normally you would enable its output with a simple:
 
-    export QT_LOGGING_RULES="kf5.kio.gdrive.debug=true"
+    export QT_LOGGING_RULES="kf.kio.workers.gdrive=true"
 
 However, you need to make sure this variable is present in the environment of kdeinit5,
 which is the process that starts the ioslave.
@@ -30,4 +30,4 @@ which is the process that starts the ioslave.
 A simpler alternative is to create (or edit) ~/.config/QtProject/qtlogging.ini with the following content:
 
 [Rules]
-kf5.kio.gdrive.debug=true
+kf.kio.workers.gdrive=true

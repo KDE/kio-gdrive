@@ -28,7 +28,7 @@ configure_file(gdrivebackend.h.in ${CMAKE_CURRENT_BINARY_DIR}/gdrivebackend.h)
 ecm_qt_declare_logging_category(kio_gdrive_SRCS
     HEADER gdrivedebug.h
     IDENTIFIER GDRIVE
-    CATEGORY_NAME kf5.kio.gdrive)
+    CATEGORY_NAME kf.kio.workers.gdrive)
 
 kcoreaddons_add_plugin(kio_gdrive
     SOURCES ${kio_gdrive_SRCS}
