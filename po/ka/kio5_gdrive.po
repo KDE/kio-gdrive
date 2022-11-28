@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-09-25 06:43+0200\n"
+"PO-Revision-Date: 2022-11-27 11:16+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -30,6 +30,8 @@ msgid ""
 "You can now manage the Google Drive files of your <emphasis strong='true'>"
 "%1</emphasis> account."
 msgstr ""
+"ახლა <emphasis strong='true'>%1</emphasis>-ის Google Drive-ზე ფაილების "
+"მართვაც შეგიძლიათ."
 
 #: kaccounts/kaccountsplugin.cpp:38
 #, kde-format
@@ -91,7 +93,7 @@ msgstr "ჩემთვის გაზიარებული"
 #: src/kio_gdrive.cpp:329
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
-msgstr ""
+msgstr "Google Drive-ის ჩართული ანგარიშები არ არსებობს. დაამატეთ ერთი მაინც."
 
 #: src/kio_gdrive.cpp:473
 #, kde-format
@@ -106,7 +108,7 @@ msgstr "%1 GDrive-ის უცნობი ანგარიშია"
 #: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "ვადაგასული ან ნაკლული წვდომის კოდები ანგარიშისთვის %1"
 
 #: src/kio_gdrive.cpp:1312
 #, kde-format
