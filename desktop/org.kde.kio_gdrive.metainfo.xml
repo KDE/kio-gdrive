@@ -107,6 +107,7 @@
     <p xml:lang="ia">Kio Gdrive es un sclavo (slave) de KIO que habilita applicationes  conscie de KIO (tal como Dolphin,Kate o Gwenview) a acceder e modificar files de Google Drive in le nube (cloud).</p>
     <p xml:lang="id">KIO GDrive adalah sebuah KIO slave yang memungkinkan aplikasi KIO-aware (sepertihalnya Dolphin, Kate or Gwenview) untuk mengakses dan mengedit file-file Google Drive di cloud.</p>
     <p xml:lang="it">KIO GDrive è un KIO slave che consente alle applicazioni che gestiscono KIO (come Dolphin, Kate o Gwenview) di accedere e modificare i file di Google Drive sul cloud.</p>
+    <p xml:lang="ka">KIO GDrive-ი KIO-ის დაქვემდებარებულ პროგრამას წარმოადგენს, რომელიც პროგრამებს, რომლებიც KIO-ს იყენებენ (როგორიცაა Dolphin, Kate ან Gvenview), რომ Google Drive-ზე მყოფ ფაილებთან წვდომა მიიღონ.</p>
     <p xml:lang="ko">KIO GDrive는 KIO를 사용할 수 있는 프로그램(Dolphin, Kate, Gwenview 등)에서 Google 드라이브에 저장된 파일을 보고 편집할 수 있는 KIO 슬레이브입니다.</p>
     <p xml:lang="lt">KIO GDrive yra KIO pavaldusis, kuris įgalina KIO sąmoningas programas (tokias kaip Dolphin, Kate ar Gwenview) gauti prieigą prie Google disko ir taisyti failus debesijoje.</p>
     <p xml:lang="nl">KIO GDrive is een KIO-slave die met KIO bekende toepassingen (zoals Dolphin, Kate of Gwenview) toegang geeft tot bestanden en deze bewerkt op Google Drive in de cloud.</p>
@@ -151,6 +152,7 @@
       <caption xml:lang="id">Dolphin menampilkan KIO GDrive di sebelah kanan bawah, dan Falkon menelusuri Google Drive di sebelah kiri atas</caption>
       <caption xml:lang="ie">Dolphin monstra GDrive a bass dextri e Falcon naviga un Google Drive a alt levul.</caption>
       <caption xml:lang="it">Dolphin che mostra KIO GDrive nella parte inferiore destra, e Falkon che sfoglia Google Drive nella parte superiore sinistra.</caption>
+      <caption xml:lang="ka">Dolphin-ი KIO GDrive-ს ქვედა მარჯვენა კუთხეში აჩვენებს და Falkon-ი, რომელიც Google Drive-ზეა, ზედა მარცხენაში.</caption>
       <caption xml:lang="ko">오른쪽 아래: Dolphin으로 연 KIO GDrive, 왼쪽 위: Falkon으로 연 Google 드라이브.</caption>
       <caption xml:lang="lt">Apatinėje dešinėje Dolphin, rodanti KIO GDrive, o viršutinėje kairėje Falkon, naršanti Google diske.</caption>
       <caption xml:lang="nl">Dolphin die KIO-GDrive rechtsonder toont en Falkon browsing Google Drive linksboven.</caption>
