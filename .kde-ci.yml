@@ -10,6 +10,7 @@ Dependencies:
     'frameworks/kio': '@stable'
     'frameworks/purpose': '@stable'
     'pim/libkgapi': '@same'
+    'third-party/qtkeychain': '@latest'
 
 - 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
   'require':
