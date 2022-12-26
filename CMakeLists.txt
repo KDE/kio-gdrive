@@ -22,6 +22,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 include(ECMSetupVersion)
+include(ECMDeprecationSettings)
 
 find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Gui
@@ -70,6 +71,10 @@ ecm_setup_version(${RELEASE_SERVICE_VERSION}
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 add_definitions(-DQT_STRICT_ITERATORS)
 add_definitions(-DTRANSLATION_DOMAIN=\"kio5_gdrive\")
+
+ecm_set_disabled_deprecation_versions(QT 5.15.2
+     KF 5.83.0
+    )
 
 if(BUILD_TESTING)
     add_subdirectory(autotests)
