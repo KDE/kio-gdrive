@@ -18,8 +18,7 @@ msgstr ""
 "X-Generator: Lokalize 19.11.70\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
-#, fuzzy, kde-format
-#| msgid "New Online Account"
+#, kde-format
 msgid "New Online Account"
 msgstr "Nova conta por Internet"
 
@@ -83,9 +82,7 @@ msgid "G&oogle Drive"
 msgstr ""
 
 #: src/kio_gdrive.cpp:262
-#, fuzzy, kde-format
-#| msgctxt "login in a new google account"
-#| msgid "New account"
+#, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Nova conta"
