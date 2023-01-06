@@ -1,81 +1,41 @@
 <?xml version="1.0" ?>
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % German "INCLUDE">
+<!ENTITY % English "INCLUDE" >
 ]>
 
 <article lang="&language;" id="gdrive">
-<title
->gdrive</title>
+<title>gdrive</title>
 
 <articleinfo>
 
 <authorgroup>
-  <author
-><firstname
->Elvis</firstname
-><surname
->Angelaccio</surname
-> <affiliation
-> <address
-> <email
->elvis.angelaccio@kde.org</email>
+  <author><firstname>Elvis</firstname><surname>Angelaccio</surname>
+    <affiliation>
+      <address>
+        <email>elvis.angelaccio@kde.org</email>
       </address>
     </affiliation>
   </author>
-<othercredit role="translator"
-><firstname
->Burkhard</firstname
-><surname
->Lück</surname
-><affiliation
-><address
-><email
->lueck@hube-lueck.de</email
-></address
-></affiliation
-><contrib
->Übersetzung</contrib
-></othercredit
-> 
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date
->2016-10-03</date>
-<releaseinfo
->kio-gdrive 1.0.1</releaseinfo>
+<date>2016-10-03</date>
+<releaseinfo>kio-gdrive 1.0.1</releaseinfo>
 
 </articleinfo>
 
-<para
->Mit KIO GDrive haben Sie mit allen KDE-Anwendungen, die Ein-Ausgabemodule verwenden, Zugriff auf Ihre Dateien auf Google Drive und können Sie bearbeiten.</para>
+<para>KIO GDrive allows you to access and edit your Google Drive files using KDE applications that support KIO.</para>
 
-<para
->Nutzen Sie das Ein-/Ausgabemodul „gdrive“ folgendermaßen:</para>
-<para
-><userinput
->gdrive://</userinput
-> oder <userinput
->gdrive://<replaceable
->foo@example.com</replaceable
-></userinput
->.</para>
+<para>You can use the gdrive kioslave like this:</para>
+<para><userinput>gdrive://</userinput> or <userinput>gdrive://<replaceable>foo@example.com</replaceable></userinput>.</para>
 
-<para
->Mit der ersten URL wird ein OAuth-Anmeldungsdialog von Google angezeigt, wenn noch kein Zugang zu Google Drive eingerichtet wurde, ansonsten werden statt dessen alle vorhandenen Zugänge angezeigt.</para>
+<para>The first URL shows an OAuth login dialog from Google, if no Drive account has been authenticated yet,
+or the list of your authenticated accounts instead.</para>
 
-<para
->Die URL <userinput
->gdrive://</userinput
-> kann außerdem benutzt werden, um jederzeit einen zusätzlichen Zugang hinzuzufügen.</para>
+<para>The <userinput>gdrive://</userinput> URL can also be used at any time to add an additional account.</para>
 
-<para
->Mit der URL <userinput
->gdrive://<replaceable
->foo@example.com</replaceable
-></userinput
-> werden alle Dateien und Ordner auf der obersten Ebene des Drive-Zugangs <userinput
->foo@example.com</userinput
->.</para>
+<para>The URL <userinput>gdrive://<replaceable>foo@example.com</replaceable></userinput> lists all the files and folders
+from the top level of the <userinput>foo@example.com</userinput> Drive account.</para>
 
 </article>
