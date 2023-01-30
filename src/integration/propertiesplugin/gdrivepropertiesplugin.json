@@ -38,7 +38,7 @@
         "Description[uk]": "На сторінці властивостей показано додаткові відомості щодо запису Диска Google",
         "Description[x-test]": "xxProperties page showing additional information regarding a Google Drive itemxx",
         "Description[zh_CN]": "显示 Google Drive 项目额外信息的属性页面",
-        "Description[zh_TW]": "正在顯示一個 Google 雲端硬碟項目額外資訊的屬性頁面",
+        "Description[zh_TW]": "顯示 Google 雲端硬碟項目額外資訊的屬性頁面",
         "Icon": "folder-gdrive",
         "MimeTypes": [
             "inode/directory",
