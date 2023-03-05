@@ -62,7 +62,7 @@ msgstr "ارفع على المجلد:"
 #: src/integration/contextmenuaction/contextmenuaction.cpp:52
 #, kde-format
 msgid "Google Drive"
-msgstr "غوغل درايڤ"
+msgstr "غوغل درايف"
 
 #: src/integration/contextmenuaction/contextmenuaction.cpp:61
 #, kde-format
@@ -77,7 +77,7 @@ msgstr "افتح في المتصفّح"
 #: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
 #, kde-format
 msgid "G&oogle Drive"
-msgstr "&غوغل درايڤ"
+msgstr "&غوغل درايف"
 
 #: src/kio_gdrive.cpp:262
 #, kde-format
