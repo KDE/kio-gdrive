@@ -124,6 +124,7 @@
     <p xml:lang="uk">KIO GDrive — допоміжний засіб введення-виведення даних, який уможливлює для програм із підтримкою KIO (зокрема Dolphin, Kate та Gwenview) доступ та редагування даних файлів на Диску Google у обчислювальній «хмарі».</p>
     <p xml:lang="x-test">xxKIO GDrive is a KIO slave that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.xx</p>
     <p xml:lang="zh-CN">KIO GDrive 是 Google Drive 的 KIO 从属程序，它能够让支持 KIO 的程序 (例如 Dolphin、Kate 或者 Gwenview) 访问和编辑 Google Drive 上的文件。</p>
+    <p xml:lang="zh-TW">KIO Admin 是讓支援 KIO 的應用程式（例如 Dolphin、Kate 或 Gwenview）存取與編輯 Google 雲端硬碟檔案的 KIO slave。</p>
   </description>
   <url type="homepage">https://community.kde.org/KIO_GDrive</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kio-gdrive</url>
@@ -169,6 +170,7 @@
       <caption xml:lang="uk">Dolphin із відкритим KIO GDrive внизу праворуч і Falkon з відкритою сторінкою Google Диск вгорі ліворуч.</caption>
       <caption xml:lang="x-test">xxDolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.xx</caption>
       <caption xml:lang="zh-CN">位于右下方的 Dolphin 正在显示 KIO GDrive，位于左上方的 Falkon 正在浏览 Google Drive 网页版。</caption>
+      <caption xml:lang="zh-TW">Dolphin 在右下方顯示 KIO GDrive，以及 Falkon 在左上方正在瀏覽 Google 雲端硬碟。</caption>
       <image type="source" width="1664" height="936">https://cdn.kde.org/screenshots/kio-gdrive/kio-gdrive.png</image>
     </screenshot>
   </screenshots>
