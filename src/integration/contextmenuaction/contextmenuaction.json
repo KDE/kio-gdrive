@@ -44,6 +44,7 @@
         "Name[uk]": "Меню дій «Диска Google»",
         "Name[x-test]": "xx'Google Drive' actions menuxx",
         "Name[zh_CN]": "“Google Drive”操作菜单",
+        "Name[zh_TW]": "「Google 雲端硬碟」動作選單",
         "ServiceTypes": [
             "KFileItemAction/Plugin"
         ]
