@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-07-11 18:11+0300\n"
+"PO-Revision-Date: 2022-10-30 16:10+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -84,11 +84,10 @@ msgid "New account"
 msgstr "Uusi tili"
 
 #: src/kio_gdrive.cpp:275
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Jaetut asemat"
+msgstr "Jaettu kanssani"
 
 #: src/kio_gdrive.cpp:329
 #, kde-format
@@ -108,7 +107,7 @@ msgstr "%1 ei ole tunnettu GDrive-tili"
 #: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "Vanhentuneita tai puuttuvia saantimerkkejä tilille %1"
 
 #: src/kio_gdrive.cpp:1312
 #, kde-format
