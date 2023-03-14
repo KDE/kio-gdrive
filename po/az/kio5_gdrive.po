@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kio-gdrive package.
 #
-# Kheyyam <xxmn77@gmail.com>, 2022.
+# Kheyyam <xxmn77@gmail.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-07-06 18:09+0400\n"
+"PO-Revision-Date: 2023-03-12 18:33+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
 "Language: az\n"
@@ -15,12 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
 msgid "New Online Account"
-msgstr "İnternetdə yeni hesab"
+msgstr "Yeni istifadəçi hesabı"
 
 #: kaccounts/kaccountsplugin.cpp:37
 #, kde-kuit-format
@@ -84,11 +84,10 @@ msgid "New account"
 msgstr "Yeni hesab"
 
 #: src/kio_gdrive.cpp:275
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Paylaşılan disklər"
+msgstr "Mənimlə paylaşılan"
 
 #: src/kio_gdrive.cpp:329
 #, kde-format
@@ -109,7 +108,7 @@ msgstr "%1 məlum GDrive hesabı deyil"
 #: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "%1 hesabı üçün giriş tokenlərinin vaxtı bitib və ya onlar mövcud deyil"
 
 #: src/kio_gdrive.cpp:1312
 #, kde-format
