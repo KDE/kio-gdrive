@@ -18,6 +18,7 @@
   <name xml:lang="de">KIO GDrive</name>
   <name xml:lang="el">KIO GDrive</name>
   <name xml:lang="en-GB">KIO GDrive</name>
+  <name xml:lang="eo">KIO-GDrive</name>
   <name xml:lang="es">KIO GDrive</name>
   <name xml:lang="et">KIO GDrive</name>
   <name xml:lang="eu">KIO GDrive</name>
@@ -59,6 +60,7 @@
   <summary xml:lang="de">Integration von Google Drive mit Plasma und den KDE-Anwendungen</summary>
   <summary xml:lang="el">Ενσωμάτωση του Google Drive με το KDE Plasma και τις εφαρμογές του KDE</summary>
   <summary xml:lang="en-GB">Google Drive integration with KDE Plasma and KDE applications</summary>
+  <summary xml:lang="eo">Google Drive-integriĝo kun KDE PlasmaKDE Plasma kaj KDE-aplikoj</summary>
   <summary xml:lang="es">Integración de Google Drive con Plasma de KDE y aplicaciones de KDE</summary>
   <summary xml:lang="et">Google Drive'i lõimimine KDE Plasma ja KDE rakendustega</summary>
   <summary xml:lang="eu">Google Drive, KDE Plasma eta KDE aplikazioekin bateratzea</summary>
@@ -145,6 +147,7 @@
       <caption xml:lang="de">Ansicht von Dolphin mit KIO GDrive unten rechts und Falkon auf Google Drive oben links.</caption>
       <caption xml:lang="el">Το Dolphin εμφανίζει το KIO GDrive κάτω δεξιά, και το Falkon πάνω αριστερά.</caption>
       <caption xml:lang="en-GB">Dolphin showing KIO GDrive in lower right, and Falkon browsing Google Drive in upper left.</caption>
+      <caption xml:lang="eo">Dolfin montrante KIO-GDrive malsupre maldekstre, kaj Falkon foliumante Google Drive supre dekstre.</caption>
       <caption xml:lang="es">Dolphin mostrando KIO GDrive abajo a la derecha y Falkon navegando por Google Drive arriba a la izquierda.</caption>
       <caption xml:lang="et">Dolphin  KIO Drive'iga all paremal ja Falkon Google Drive'iga üleval vasakul.</caption>
       <caption xml:lang="eu">Dolphin behean eskuinean KIO GDrive erakusten, eta Falkon goian ezkerrean Google Drive arakatzen.</caption>
