@@ -2,8 +2,7 @@
     "KDE-KIO-Protocols": {
         "gdrive": {
             "Class": ":internet",
-            "ExtraNames": [
-            ],
+            "ExtraNames": [],
             "Icon": "folder-gdrive",
             "X-DocPath": "kioslave5/gdrive/index.html",
             "deleteRecursive": true,
