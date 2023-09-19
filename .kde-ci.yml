@@ -9,7 +9,7 @@ Dependencies:
     'frameworks/kdoctools': '@stable'
     'frameworks/kio': '@stable'
     'frameworks/purpose': '@stable'
-    'pim/libkgapi': '@same'
+    'pim/libkgapi': '@stable'
     'third-party/qtkeychain': '@latest'
 
 - 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
