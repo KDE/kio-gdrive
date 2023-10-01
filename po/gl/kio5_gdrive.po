@@ -113,4 +113,4 @@ msgstr "Caducaron ou faltan as fichas de acceso da conta %1"
 #: src/kio_gdrive.cpp:1312
 #, kde-format
 msgid "Can't delete Shared Drives root."
-msgstr "Non se pode eliminar a raíz das unidades compartidas"
+msgstr "Non é posíbel eliminar a raíz das unidades compartidas"
