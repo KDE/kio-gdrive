@@ -69,7 +69,7 @@ msgstr "Google Drive"
 #: src/integration/contextmenuaction/contextmenuaction.cpp:61
 #, kde-format
 msgid "Copy URL to clipboard"
-msgstr "Copia l'URL al porta-retalls"
+msgstr "Copia l'URL a dins del porta-retalls"
 
 #: src/integration/contextmenuaction/contextmenuaction.cpp:74
 #, kde-format
