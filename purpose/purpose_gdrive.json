@@ -40,6 +40,7 @@
                 "Name[ta]": "நிக்கோலஸ் ஃபெல்லா",
                 "Name[tr]": "Nicolas Fella",
                 "Name[uk]": "Nicolas Fella",
+                "Name[x-test]": "xxNicolas Fellaxx",
                 "Name[zh_CN]": "Nicolas Fella",
                 "Name[zh_TW]": "Nicolas Fella"
             }
@@ -83,6 +84,7 @@
         "Description[ta]": "கூகுள் டிரைவுக்கு கோப்புகளை ஏற்று",
         "Description[tr]": "Google Drive'a dosyalar yükle",
         "Description[uk]": "Вивантаження файлів на Google Диск",
+        "Description[x-test]": "xxUpload files to Google Drivexx",
         "Description[zh_CN]": "将文件上传到 Google Drive",
         "Description[zh_TW]": "上傳檔案到 Google 雲端硬碟",
         "Icon": "folder-gdrive",
@@ -125,6 +127,7 @@
         "Name[ta]": "கூகுள் டிரைவ்",
         "Name[tr]": "Google Drive",
         "Name[uk]": "Google Диск",
+        "Name[x-test]": "xxGoogle Drivexx",
         "Name[zh_CN]": "Google Drive",
         "Name[zh_TW]": "Google 雲端硬碟",
         "X-Purpose-ActionDisplay": "Google Drive..."
