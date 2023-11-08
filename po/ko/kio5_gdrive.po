@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:32+0000\n"
+"POT-Creation-Date: 2023-11-08 00:42+0000\n"
 "PO-Revision-Date: 2022-10-03 15:50+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-i18n-doc@kde.org>\n"
@@ -77,39 +77,44 @@ msgstr "브라우저로 열기"
 msgid "G&oogle Drive"
 msgstr "Google 드라이브(&O)"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:123
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:245
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "새 계정"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:258
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "나와 공유됨"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:311
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Google 드라이브 계정이 추가되지 않았습니다. 계정을 등록하십시오."
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:457
 #, kde-format
 msgid "Shared Drives"
 msgstr "공유 드라이브"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1은(는) 알려진 GDrive 계정이 아님"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1059
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "%1 계정의 접근 토큰이 만료되었거나 없음"
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1318
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "공유 드라이브 루트를 삭제할 수 없습니다."

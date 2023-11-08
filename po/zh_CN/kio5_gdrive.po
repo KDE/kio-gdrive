@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:32+0000\n"
+"POT-Creation-Date: 2023-11-08 00:42+0000\n"
 "PO-Revision-Date: 2023-10-21 13:54\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -77,39 +77,44 @@ msgstr "在浏览器中打开"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:123
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:245
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "新建账户"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:258
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "分享给我的"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:311
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "没有启用的 Google 云端硬盘账户。请至少添加一个。"
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:457
 #, kde-format
 msgid "Shared Drives"
 msgstr "共享驱动器"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 不是已知的 GDrive 账户"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1059
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "账户 %1 过期或缺少访问令牌"
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1318
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "无法删除共享驱动器根目录。"

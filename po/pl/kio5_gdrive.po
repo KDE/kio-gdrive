@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:32+0000\n"
+"POT-Creation-Date: 2023-11-08 00:42+0000\n"
 "PO-Revision-Date: 2022-10-18 18:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -78,39 +78,44 @@ msgstr "Otwórz w przeglądarce"
 msgid "G&oogle Drive"
 msgstr "Dysk G&oogle"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:123
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:245
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Nowe konto"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:258
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Udostępnione mi"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:311
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Nie włączono żadnego konta Dysku Google. Dodaj co najmniej jedno."
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:457
 #, kde-format
 msgid "Shared Drives"
 msgstr "Współdzielone urządzenia"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 nie jest znanym kontem GDrive"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1059
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Tokeny dostępu wygasły lub ich nie było dla konta %1"
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1318
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Nie można usunąć katalogu głównego współdzielonych urządzeń."

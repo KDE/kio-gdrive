@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:32+0000\n"
+"POT-Creation-Date: 2023-11-08 00:42+0000\n"
 "PO-Revision-Date: 2022-09-24 09:47+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -78,39 +78,44 @@ msgstr "Tarayıcıda aç"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:123
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:245
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Yeni hesap"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:258
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Benimle Paylaşılanlar"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:311
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Etkin Google Drive hesabı yok. Lütfen en azından bir tane ekleyin."
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:457
 #, kde-format
 msgid "Shared Drives"
 msgstr "Paylaşılan Sürücüler"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1, bilinen bir GDrive hesabı değil"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1059
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "%1 hesabı için süresi dolmuş veya eksik erişim jetonları"
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1318
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Paylaşılan Sürücüler kök dizini silinemiyor."

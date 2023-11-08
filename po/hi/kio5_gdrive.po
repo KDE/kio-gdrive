@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:32+0000\n"
+"POT-Creation-Date: 2023-11-08 00:42+0000\n"
 "PO-Revision-Date: 2021-07-07 13:23+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -78,40 +78,45 @@ msgstr "ब्राउज़र में खोलें"
 msgid "G&oogle Drive"
 msgstr "गूगल ड्राइव"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:123
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:245
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "नया ख़ाता"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:258
 #, fuzzy, kde-format
 #| msgid "Shared Drives"
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "साझा ड्राइव"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:311
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "कोई गूगल ड्राइव खाते सक्षम नहीं है। कृपया कम से कम एक जोड़ें।"
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:457
 #, kde-format
 msgid "Shared Drives"
 msgstr "साझा ड्राइव"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 ज्ञात जी-ड्राइव खाता नहीं है"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1059
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr ""
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1318
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "शेयर की गई डिस्क का रूट मिटाया नहीं जा सकता।"
