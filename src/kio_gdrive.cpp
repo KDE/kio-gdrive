@@ -42,7 +42,6 @@
 #include <KGAPI/Drive/FileTrashJob>
 #include <KGAPI/Drive/ParentReference>
 #include <KGAPI/Drive/Permission>
-#include <KIO/AccessManager>
 #include <KIO/Job>
 #include <KLocalizedString>
 

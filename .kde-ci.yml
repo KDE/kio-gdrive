@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['@all']
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
   'require':
     'frameworks/extra-cmake-modules': '@stable'
     'frameworks/ki18n': '@stable'
@@ -10,11 +10,18 @@ Dependencies:
     'frameworks/kio': '@stable'
     'frameworks/purpose': '@stable'
     'pim/libkgapi': '@stable'
+    'network/kaccounts-integration': '@same'
     'third-party/qtkeychain': '@latest'
 
-- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
+- 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
-    'network/kaccounts-integration': '@same'
+    'frameworks/extra-cmake-modules': '@latest-kf6'
+    'frameworks/ki18n': '@latest-kf6'
+    'frameworks/kdoctools': '@latest-kf6'
+    'frameworks/kio': '@latest-kf6'
+    'frameworks/purpose': '@latest-kf6'
+    'pim/libkgapi': '@latest-kf6'
+    'third-party/qtkeychain': '@latest'
 
 Options:
   require-passing-tests-on: [ 'Linux', 'FreeBSD' ]

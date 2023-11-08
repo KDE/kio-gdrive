@@ -8,12 +8,12 @@ set (RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE
 project(kio-gdrive VERSION ${RELEASE_SERVICE_VERSION})
 
 set(QT_MIN_VERSION 5.15.2)
-set(KF5_MIN_VERSION 5.96.0)
+set(KF_MIN_VERSION 5.96.0)
 set(KGAPI_MIN_VERSION 5.11.41)
 set(KACCOUNTS_MIN_VERSION 20.03.80)
 set(QTKEYCHAIN_MIN_VERSION 0.6.0)
 
-find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
+find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${ECM_MODULE_PATH})
 
 include(FeatureSummary)
@@ -30,16 +30,20 @@ find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Widgets)
 
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+find_package(KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION} REQUIRED COMPONENTS
     I18n
     DocTools
     KIO)
 
-find_package(KPimGAPI ${KGAPI_MIN_VERSION} REQUIRED)
+if(QT_MAJOR_VERSION STREQUAL "5")
+    find_package(KPimGAPI ${KGAPI_MIN_VERSION} REQUIRED)
+else()
+    find_package(KPim6GAPI ${KGAPI_MIN_VERSION} REQUIRED)
+endif()
 
-find_package(KF5Purpose ${KF5_MIN_VERSION}) # Optional since it depends on KAccounts
+find_package(KF${QT_MAJOR_VERSION}Purpose ${KF_MIN_VERSION}) # Optional since it depends on KAccounts
 
-set_package_properties(KF5Purpose PROPERTIES TYPE RECOMMENDED PURPOSE "Enables the Share menu plugin.")
+set_package_properties(KF${QT_MAJOR_VERSION}Purpose PROPERTIES TYPE RECOMMENDED PURPOSE "Enables the Share menu plugin.")
 
 find_package(KAccounts ${KACCOUNTS_MIN_VERSION})
 set_package_properties(KAccounts PROPERTIES
@@ -49,18 +53,18 @@ set_package_properties(KAccounts PROPERTIES
 
 if (NOT KAccounts_FOUND)
     find_package(Qt${QT_MAJOR_VERSION}Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
-    set_package_properties(Qt5Keychain PROPERTIES
+    set_package_properties(Qt${QT_MAJOR_VERSION}Keychain PROPERTIES
         URL "https://github.com/frankosterfeld/qtkeychain"
         PURPOSE "Required for secure storage of accounts secrets.")
     message(STATUS "Building the QtKeychain backend.")
 endif()
 
-find_package(Qt5Test QUIET)
-set_package_properties(Qt5Test PROPERTIES
+find_package(Qt${QT_MAJOR_VERSION}Test QUIET)
+set_package_properties(Qt${QT_MAJOR_VERSION}Test PROPERTIES
     TYPE OPTIONAL
     PURPOSE "Required for building tests.")
 
-if(NOT Qt5Test_FOUND)
+if(NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
    set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
 
@@ -83,7 +87,7 @@ add_subdirectory(desktop)
 add_subdirectory(doc)
 add_subdirectory(src)
 
-if (KF5Purpose_FOUND)
+if (KF${QT_MAJOR_VERSION}Purpose_FOUND)
     add_subdirectory(purpose)
 endif()
 

@@ -37,11 +37,15 @@ kcoreaddons_add_plugin(kio_gdrive
 target_link_libraries(kio_gdrive
     Qt::Core
     Qt::Network
-    KPim::GAPICore
-    KPim::GAPIDrive
-    KF5::KIOCore
-    KF5::KIOWidgets
-    KF5::I18n
+    KF${QT_MAJOR_VERSION}::KIOCore
+    KF${QT_MAJOR_VERSION}::KIOWidgets
+    KF${QT_MAJOR_VERSION}::I18n
     ${BACKEND_LIBS})
+
+if(QT_MAJOR_VERSION STREQUAL "5")
+    target_link_libraries(kio_gdrive KPim::GAPICore KPim::GAPIDrive)
+else()
+    target_link_libraries(kio_gdrive KPim6::GAPICore KPim6::GAPIDrive)
+endif()
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")

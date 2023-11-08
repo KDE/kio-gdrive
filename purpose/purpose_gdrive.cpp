@@ -28,6 +28,4 @@ public:
 
 K_PLUGIN_CLASS_WITH_JSON(GDrivePlugin, "purpose_gdrive.json")
 
-EXPORT_SHARE_VERSION
-
 #include "purpose_gdrive.moc"
