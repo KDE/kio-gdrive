@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:42+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2022-10-02 14:50+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Теперь вы можете работать с файлами на Google Диске учётной записи <emphasis "
 "strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "Открыть"
@@ -79,45 +79,45 @@ msgstr "Открыть в браузере"
 msgid "G&oogle Drive"
 msgstr "Диск G&oogle"
 
-#: src/kio_gdrive.cpp:123
+#: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
 msgstr ""
 
-#: src/kio_gdrive.cpp:245
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Добавить учётную запись"
 
-#: src/kio_gdrive.cpp:258
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Предоставленные мне"
 
-#: src/kio_gdrive.cpp:311
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr ""
 "Не настроено ни одной учётной записи Google Диска. Добавьте хотя бы одну."
 
-#: src/kio_gdrive.cpp:457
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "Общие диски"
 
-#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "«%1» — неизвестная учётная запись GDrive"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Истёк или отсутствует токен для доступа к учётной записи %1"
 
-#: src/kio_gdrive.cpp:1318
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Невозможно удалить корневой каталог общего диска."

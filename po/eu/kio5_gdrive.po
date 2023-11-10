@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:42+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2023-11-08 22:40+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Orain zure <emphasis strong='true'>%1</emphasis> kontuko Google Driveko "
 "fitxategiak kudeatzu ditzakezu."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "Ireki"
@@ -80,45 +80,45 @@ msgstr "Ireki arakatzailean"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:123
+#: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
 msgstr "Errore ezezaguna"
 
-#: src/kio_gdrive.cpp:245
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Kontu berria"
 
-#: src/kio_gdrive.cpp:258
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Nirekin partekatua"
 
-#: src/kio_gdrive.cpp:311
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr ""
 "Ez dago gaitutako Google Drive konturik. Gutxienez bat gehitu behar da."
 
-#: src/kio_gdrive.cpp:457
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "Partekatutako Drive-ak"
 
-#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 ez da GDrive-ko kontu ezagun bat"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "%1 kontuan sartzeko tokenak iraungita edo falta dira"
 
-#: src/kio_gdrive.cpp:1318
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Ezin da ezabatu Partekatutako Drive-aren erroa."

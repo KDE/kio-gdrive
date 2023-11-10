@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:42+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2023-11-08 15:41-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Você pode agora gerenciar os arquivos do Google Drive de sua conta <emphasis "
 "strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "Abrir"
@@ -77,44 +77,44 @@ msgstr "Abrir no navegador"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:123
+#: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
 msgstr "Erro desconhecido"
 
-#: src/kio_gdrive.cpp:245
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Nova conta"
 
-#: src/kio_gdrive.cpp:258
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Compartilhados comigo"
 
-#: src/kio_gdrive.cpp:311
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Não há contas do Google Drive habilitadas. Adicione pelo menos uma."
 
-#: src/kio_gdrive.cpp:457
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "Drives compartilhados"
 
-#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 não é uma conta do Google Drive conhecida"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Expirado ou faltando token de acesso para a conta %1"
 
-#: src/kio_gdrive.cpp:1318
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Não é possível excluir a raiz dos Drives compartilhados."

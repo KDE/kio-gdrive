@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:42+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2023-11-08 10:05+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Ara podeu gestionar els fitxers del Google Drive del vostre compte <emphasis "
 "strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "Obre"
@@ -81,46 +81,46 @@ msgstr "Obre en el navegador"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:123
+#: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
 msgstr "Error desconegut"
 
-#: src/kio_gdrive.cpp:245
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Compte nou"
 
-#: src/kio_gdrive.cpp:258
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Compartits amb mi"
 
-#: src/kio_gdrive.cpp:311
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr ""
 "No hi ha cap compte actiu de Google Drive. Si us plau, afegiu-ne un com a "
 "mínim."
 
-#: src/kio_gdrive.cpp:457
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "Drives compartits"
 
-#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 no és cap compte conegut del GDrive"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Els testimonis d'accés del compte %1 han vençut o manquen"
 
-#: src/kio_gdrive.cpp:1318
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "No es pot suprimir l'arrel dels Drives compartits."

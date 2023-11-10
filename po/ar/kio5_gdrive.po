@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:42+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2022-09-24 17:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -34,7 +34,7 @@ msgstr ""
 "يمكنك الآن إدارة ملفات غوغل درايف لحسابك <emphasis strong='true'>%1</"
 "emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "افتح"
@@ -79,44 +79,44 @@ msgstr "افتح في المتصفّح"
 msgid "G&oogle Drive"
 msgstr "&غوغل درايف"
 
-#: src/kio_gdrive.cpp:123
+#: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
 msgstr ""
 
-#: src/kio_gdrive.cpp:245
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "حساب جديد"
 
-#: src/kio_gdrive.cpp:258
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "المشاركات معي"
 
-#: src/kio_gdrive.cpp:311
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "لا توجد حسابات غوغل درايف ممكنة. الرجاء إضافة واحدة على الأقل."
 
-#: src/kio_gdrive.cpp:457
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "الأقراص المشتركة"
 
-#: src/kio_gdrive.cpp:712 src/kio_gdrive.cpp:874
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 ليس حساب غ.درايف معروف"
 
-#: src/kio_gdrive.cpp:1059
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "رمز النفاذ منتهي أو مفقود لحساب %1"
 
-#: src/kio_gdrive.cpp:1318
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "لا يمكن حذف جذر الأقراص المشتركة."
