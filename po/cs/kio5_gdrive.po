@@ -81,7 +81,7 @@ msgstr "G&oogle Drive"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Neznámá chyba"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-10 00:42+0000\n"
-"PO-Revision-Date: 2022-11-27 11:16+0100\n"
+"PO-Revision-Date: 2023-11-10 04:57+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -81,7 +81,7 @@ msgstr "&Google Drive"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "უცნობი შეცდომა"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format
