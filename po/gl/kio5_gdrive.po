@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2023.
+# SPDX-FileCopyrightText: 2023 Adrián Chaves (Gallaecio)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-10 00:42+0000\n"
-"PO-Revision-Date: 2023-05-01 08:50+0200\n"
+"PO-Revision-Date: 2023-11-11 14:08+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 23.08.2\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -80,7 +80,7 @@ msgstr "G&oogle Drive"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Erro descoñecido"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format

@@ -5,13 +5,13 @@
 # Automatically generated, 2016.
 # Eloy Cuadra <ecuadra@eloihr.net>, 2016, 2019, 2022.
 # Javier Vinal <fjvinal@gmail.com>, 2017.
-# Víctor Rodrigo Córdoba <vrcordoba@gmail.com>, 2019, 2020, 2021, 2022, %Y.
+# Víctor Rodrigo Córdoba <vrcordoba@gmail.com>, 2019, 2020, 2021, 2022, 2023, %Y.
 msgid ""
 msgstr ""
 "Project-Id-Version: kio5_gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-10 00:42+0000\n"
-"PO-Revision-Date: 2022-09-24 17:05+0200\n"
+"PO-Revision-Date: 2023-11-10 16:50+0100\n"
 "Last-Translator: Víctor Rodrigo Córdoba <vrcordoba@gmail.com>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -84,7 +84,7 @@ msgstr "G&oogle Drive"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Error desconocido"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format
