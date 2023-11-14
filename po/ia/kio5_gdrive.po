@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022.
+# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-10 00:42+0000\n"
-"PO-Revision-Date: 2022-11-28 16:07+0100\n"
+"PO-Revision-Date: 2023-11-13 15:03+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -80,7 +80,7 @@ msgstr "G&oogle Drive"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Error Incognite"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format
