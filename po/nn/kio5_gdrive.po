@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-02 00:46+0000\n"
+"POT-Creation-Date: 2023-11-10 00:42+0000\n"
 "PO-Revision-Date: 2023-01-06 19:18+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Du kan no handsama filene dine på Google Drive-kontoen din <emphasis "
 "strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:38
+#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
 #, kde-format
 msgid "Open"
 msgstr "Opna"
@@ -79,39 +79,44 @@ msgstr "Opna i nettlesar"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:262
+#: src/kio_gdrive.cpp:122
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:244
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Ny konto"
 
-#: src/kio_gdrive.cpp:275
+#: src/kio_gdrive.cpp:257
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Delt med meg"
 
-#: src/kio_gdrive.cpp:329
+#: src/kio_gdrive.cpp:310
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Ingen Google Drive-kontoar er sette opp. Du må leggja til minst éin."
 
-#: src/kio_gdrive.cpp:473
+#: src/kio_gdrive.cpp:456
 #, kde-format
 msgid "Shared Drives"
 msgstr "Delte diskar"
 
-#: src/kio_gdrive.cpp:724 src/kio_gdrive.cpp:880
+#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 er ikkje ein kjend GDrive-konto"
 
-#: src/kio_gdrive.cpp:1064
+#: src/kio_gdrive.cpp:1058
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Utgått eller manglande tilgangs­pollett for kontoen %1"
 
-#: src/kio_gdrive.cpp:1312
+#: src/kio_gdrive.cpp:1317
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Kan ikkje sletta rot til delte diskar."
