@@ -12,8 +12,8 @@
 #include <KPropertiesDialog>
 #else
 #include <KPropertiesDialogPlugin>
-#endif
 #include <KPropertiesDialog>
+#endif
 
 #include "ui_gdrivepropertiesplugin.h"
 
