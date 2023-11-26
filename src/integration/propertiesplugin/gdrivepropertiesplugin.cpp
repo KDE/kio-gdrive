@@ -10,6 +10,7 @@
 
 #include <KPluginFactory>
 #include <QClipboard>
+#include <QtGlobal>
 #include <QDesktopServices>
 #include <KIO/StatJob>
 #include <KLocalizedString>

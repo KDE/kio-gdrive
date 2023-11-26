@@ -7,13 +7,8 @@
 #ifndef GDRIVEPROPERTIESPLUGIN_H
 #define GDRIVEPROPERTIESPLUGIN_H
 
-#include <QtGlobal>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <KPropertiesDialog>
-#else
 #include <KPropertiesDialogPlugin>
 #include <KPropertiesDialog>
-#endif
 
 #include "ui_gdrivepropertiesplugin.h"
 
