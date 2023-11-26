@@ -13,6 +13,7 @@
 #include <QDesktopServices>
 #include <KIO/StatJob>
 #include <KLocalizedString>
+#include <KPropertiesDialog>
 
 K_PLUGIN_CLASS_WITH_JSON(GDrivePropertiesPlugin, "gdrivepropertiesplugin.json")
 
