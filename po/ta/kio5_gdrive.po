@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-10 00:42+0000\n"
+"POT-Creation-Date: 2023-11-27 00:42+0000\n"
 "PO-Revision-Date: 2022-09-27 19:35+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -72,7 +72,7 @@ msgstr "முகவரியை பிடிப்புப்பலகைய�
 msgid "Open in browser"
 msgstr "உலாவியில் திற"
 
-#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
+#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:111
 #, kde-format
 msgid "G&oogle Drive"
 msgstr "&கூகுள் டிரைவ்"

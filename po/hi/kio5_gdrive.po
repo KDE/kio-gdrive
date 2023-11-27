@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-10 00:42+0000\n"
+"POT-Creation-Date: 2023-11-27 00:42+0000\n"
 "PO-Revision-Date: 2021-07-07 13:23+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -72,7 +72,7 @@ msgstr "यूआरएल की नकल क्लिपबोर्ड प�
 msgid "Open in browser"
 msgstr "ब्राउज़र में खोलें"
 
-#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
+#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:111
 #, fuzzy, kde-format
 #| msgid "Google Drive"
 msgid "G&oogle Drive"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-10 00:42+0000\n"
+"POT-Creation-Date: 2023-11-27 00:42+0000\n"
 "PO-Revision-Date: 2023-11-25 02:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -72,7 +72,7 @@ msgstr "复制 URL 到剪贴板"
 msgid "Open in browser"
 msgstr "在浏览器中打开"
 
-#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
+#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:111
 #, kde-format
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"

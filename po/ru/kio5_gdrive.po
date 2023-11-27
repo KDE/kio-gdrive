@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-10 00:42+0000\n"
+"POT-Creation-Date: 2023-11-27 00:42+0000\n"
 "PO-Revision-Date: 2022-10-02 14:50+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -74,7 +74,7 @@ msgstr "Копировать URL в буфер обмена"
 msgid "Open in browser"
 msgstr "Открыть в браузере"
 
-#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
+#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:111
 #, kde-format
 msgid "G&oogle Drive"
 msgstr "Диск G&oogle"
