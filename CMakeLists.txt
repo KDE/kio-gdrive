@@ -45,13 +45,19 @@ find_package(KF${QT_MAJOR_VERSION}Purpose ${KF_MIN_VERSION}) # Optional since it
 
 set_package_properties(KF${QT_MAJOR_VERSION}Purpose PROPERTIES TYPE RECOMMENDED PURPOSE "Enables the Share menu plugin.")
 
-find_package(KAccounts ${KACCOUNTS_MIN_VERSION})
-set_package_properties(KAccounts PROPERTIES
+if(QT_MAJOR_VERSION STREQUAL "5")
+  set(KACCOUNTS_SUFFIX "")
+else()
+  set(KACCOUNTS_SUFFIX "6")
+endif()
+
+find_package(KAccounts${KACCOUNTS_SUFFIX} ${KACCOUNTS_MIN_VERSION})
+set_package_properties(KAccounts${KACCOUNTS_SUFFIX} PROPERTIES
     TYPE RECOMMENDED
     URL "https://commits.kde.org/kaccounts-integration"
     PURPOSE "Enables integration with system-wide accounts.")
 
-if (NOT KAccounts_FOUND)
+if (NOT KAccounts${KACCOUNTS_SUFFIX}_FOUND)
     find_package(Qt${QT_MAJOR_VERSION}Keychain ${QTKEYCHAIN_MIN_VERSION} REQUIRED)
     set_package_properties(Qt${QT_MAJOR_VERSION}Keychain PROPERTIES
         URL "https://github.com/frankosterfeld/qtkeychain"
@@ -91,7 +97,7 @@ if (KF${QT_MAJOR_VERSION}Purpose_FOUND)
     add_subdirectory(purpose)
 endif()
 
-if (KAccounts_FOUND)
+if (KAccounts${KACCOUNTS_SUFFIX}_FOUND)
     message(STATUS "Building the KAccounts backend.")
     add_subdirectory(kaccounts)
 endif()

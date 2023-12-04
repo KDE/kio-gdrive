@@ -9,7 +9,7 @@ kcoreaddons_add_plugin(kaccounts_gdrive
 
 set_target_properties(kaccounts_gdrive PROPERTIES OUTPUT_NAME "gdrive")
 target_link_libraries(kaccounts_gdrive
-    KAccounts
+    KAccounts${KACCOUNTS_SUFFIX}
     KF${QT_MAJOR_VERSION}::KIOWidgets
     KF${QT_MAJOR_VERSION}::I18n
     KF${QT_MAJOR_VERSION}::Notifications)

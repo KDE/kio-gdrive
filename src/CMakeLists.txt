@@ -10,11 +10,11 @@ set(kio_gdrive_SRCS
     gdrivehelper.cpp
     gdriveurl.cpp)
 
-if (KAccounts_FOUND)
+if (KAccounts${KACCOUNTS_SUFFIX}_FOUND)
     set(BACKEND_SRC kaccountsmanager.cpp)
     set(BACKEND_HEADER kaccountsmanager.h)
     set(BACKEND_CLASSNAME KAccountsManager)
-    set(BACKEND_LIBS KAccounts)
+    set(BACKEND_LIBS KAccounts${KACCOUNTS_SUFFIX})
 else()
     set(BACKEND_SRC keychainaccountmanager.cpp)
     set(BACKEND_HEADER keychainaccountmanager.h)
