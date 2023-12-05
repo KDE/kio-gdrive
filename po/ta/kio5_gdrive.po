@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kio-gdrive package.
 #
-# Kishore G <kishore96@gmail.com>, 2021, 2022.
+# SPDX-FileCopyrightText: 2021, 2022, 2023 Kishore G <kishore96@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-27 00:42+0000\n"
-"PO-Revision-Date: 2022-09-27 19:35+0530\n"
+"PO-Revision-Date: 2023-12-04 20:48+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -80,7 +80,7 @@ msgstr "&கூகுள் டிரைவ்"
 #: src/kio_gdrive.cpp:122
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "தெரியாத சிக்கல்"
 
 #: src/kio_gdrive.cpp:244
 #, kde-format
