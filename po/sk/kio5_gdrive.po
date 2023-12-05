@@ -1,5 +1,5 @@
 # translation of kio5_gdrive.po to Slovak
-# Roman Paholik <wizzardsk@gmail.com>, 2016.
+# SPDX-FileCopyrightText: 2016, 2023 Roman Paholik <wizzardsk@gmail.com>
 # Mthw <jari_45@hotmail.com>, 2019.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2020, 2022.
 # Dusan Kazik <prescott66@gmail.com>, 2020.
@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: kio5_gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-02 00:46+0000\n"
-"PO-Revision-Date: 2022-01-25 14:45+0100\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
-"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-12-04 17:30+0100\n"
+"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
@@ -74,10 +74,9 @@ msgid "Open in browser"
 msgstr "Otvoriť v prehliadači"
 
 #: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Drive"
+#, kde-format
 msgid "G&oogle Drive"
-msgstr "Google Drive"
+msgstr "G&oogle Drive"
 
 #: src/kio_gdrive.cpp:262
 #, kde-format
@@ -86,11 +85,10 @@ msgid "New account"
 msgstr "Nový účet"
 
 #: src/kio_gdrive.cpp:275
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Zdieľané jednotky"
+msgstr "Zdieľané so mnou"
 
 #: src/kio_gdrive.cpp:329
 #, kde-format
@@ -111,7 +109,7 @@ msgstr "%1 nie je známe a konto GDrive"
 #: src/kio_gdrive.cpp:1064
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "Expirovaný alebo chýbajúci prístupový token pre účet %1"
 
 #: src/kio_gdrive.cpp:1312
 #, kde-format
