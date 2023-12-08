@@ -42,14 +42,14 @@ AccountPtr KAccountsManager::account(const QString &accountName)
 
 AccountPtr KAccountsManager::createAccount()
 {
-    if (QStandardPaths::findExecutable(QStringLiteral("kcmshell5")).isEmpty()) {
+    if (QStandardPaths::findExecutable(QStringLiteral("kcmshell6")).isEmpty()) {
         return AccountPtr(new Account());
     }
 
     const auto oldAccounts = accounts();
 
     QProcess process;
-    process.start(QStringLiteral("kcmshell5"), {QStringLiteral("kcm_kaccounts")});
+    process.start(QStringLiteral("kcmshell6"), {QStringLiteral("kcm_kaccounts")});
     qCDebug(GDRIVE) << "Waiting for kcmshell process...";
     if (process.waitForFinished(-1)) {
         loadAccounts();
