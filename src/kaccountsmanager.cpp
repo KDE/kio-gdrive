@@ -151,7 +151,7 @@ void KAccountsManager::loadAccounts()
 
 AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const QString& displayName)
 {
-    auto job = new GetCredentialsJob(id, nullptr);
+    auto job = new KAccounts::GetCredentialsJob(id, nullptr);
     job->exec();
     if (job->error()) {
         qCWarning(GDRIVE) << "GetCredentialsJob failed:" << job->errorString();

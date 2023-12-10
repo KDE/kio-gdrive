@@ -9,7 +9,7 @@
 
 #include <KAccounts/KAccountsDPlugin>
 
-class GoogleDrivePlugin : public KAccountsDPlugin
+class GoogleDrivePlugin : public KAccounts::KAccountsDPlugin
 {
     Q_OBJECT
 public:

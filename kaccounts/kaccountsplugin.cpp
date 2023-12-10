@@ -18,7 +18,7 @@
 K_PLUGIN_CLASS_WITH_JSON(GoogleDrivePlugin, "kaccountsplugin.json")
 
 GoogleDrivePlugin::GoogleDrivePlugin(QObject *parent, const QVariantList &args)
-    : KAccountsDPlugin(parent, args)
+    : KAccounts::KAccountsDPlugin(parent, args)
 {
 }
 
