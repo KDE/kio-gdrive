@@ -9,7 +9,7 @@ import QtQuick.Controls 2.10
 import QtQuick.Layouts 1.1
 import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kquickcontrolsaddons 2.0 as KQCA
-import Ubuntu.OnlineAccounts 0.1 as OA
+import SSO.OnlineAccounts 0.1 as OA
 
 ColumnLayout
 {
