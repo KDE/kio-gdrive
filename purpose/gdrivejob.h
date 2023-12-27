@@ -7,17 +7,18 @@
 #ifndef GDRIVEJOB_H
 #define GDRIVEJOB_H
 
-#include <purpose/pluginbase.h>
 #include <QString>
 #include <QUrl>
+#include <purpose/pluginbase.h>
 
 class GDriveJob : public Purpose::Job
 {
     Q_OBJECT
-    public:
-        GDriveJob(QObject* parent)
-            : Purpose::Job(parent)
-        {}
-        void start() override;
+public:
+    GDriveJob(QObject *parent)
+        : Purpose::Job(parent)
+    {
+    }
+    void start() override;
 };
 #endif /* GDRIVEJOB_H */

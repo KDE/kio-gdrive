@@ -63,7 +63,6 @@ void PathCache::removePath(const QString &path)
     m_pathIdMap.remove(path);
 }
 
-
 void PathCache::dump()
 {
     qCDebug(GDRIVE) << "==== DUMP ====";
@@ -72,4 +71,3 @@ void PathCache::dump()
     }
     qCDebug(GDRIVE) << "==== DUMP ====";
 }
-

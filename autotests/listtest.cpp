@@ -13,7 +13,7 @@ class ListTest : public QObject
 {
     Q_OBJECT
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void testListJob();
 
 private:
@@ -31,7 +31,7 @@ void ListTest::testListJob()
     listJob->setUiDelegate(nullptr);
     QVERIFY(listJob);
 
-    connect(listJob, &KIO::ListJob::entries, this, [=](KIO::Job*, const KIO::UDSEntryList& list) {
+    connect(listJob, &KIO::ListJob::entries, this, [=](KIO::Job *, const KIO::UDSEntryList &list) {
         m_entries = list.count();
         for (const auto &entry : list) {
             // Check properties of new-account entry.

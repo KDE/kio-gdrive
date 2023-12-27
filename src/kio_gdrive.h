@@ -31,12 +31,10 @@ public:
     enum Action {
         Success,
         Fail,
-        Restart
+        Restart,
     };
 
-    explicit KIOGDrive(const QByteArray &protocol,
-                       const QByteArray &pool_socket,
-                       const QByteArray &app_socket);
+    explicit KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket, const QByteArray &app_socket);
     ~KIOGDrive() override;
 
     virtual KIO::WorkerResult openConnection() Q_DECL_OVERRIDE;
@@ -60,12 +58,12 @@ private:
     enum PathFlags {
         None = 0,
         PathIsFolder = 1,
-        PathIsFile = 2
+        PathIsFile = 2,
     };
 
     enum class FetchEntryFlags {
         None = 0,
-        CurrentDir = 1
+        CurrentDir = 1,
     };
 
     static KIO::UDSEntry newAccountUDSEntry();
@@ -130,7 +128,6 @@ private:
     PathCache m_cache;
 
     QMap<QString /* account */, QString /* rootId */> m_rootIds;
-
 };
 
 #endif // KIO_GDRIVE_H

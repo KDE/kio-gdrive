@@ -43,4 +43,3 @@ public:
      */
     virtual QSet<QString> accounts() = 0;
 };
-

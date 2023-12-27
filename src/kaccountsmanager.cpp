@@ -26,7 +26,8 @@ KAccountsManager::KAccountsManager()
 }
 
 KAccountsManager::~KAccountsManager()
-{}
+{
+}
 
 AccountPtr KAccountsManager::account(const QString &accountName)
 {
@@ -149,7 +150,7 @@ void KAccountsManager::loadAccounts()
     }
 }
 
-AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const QString& displayName)
+AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const QString &displayName)
 {
     auto job = new KAccounts::GetCredentialsJob(id, nullptr);
     job->exec();
@@ -166,7 +167,8 @@ AccountPtr KAccountsManager::getAccountCredentials(Accounts::AccountId id, const
         gapiAccount->addScope(QUrl::fromUserInput(scope));
     }
 
-    qCDebug(GDRIVE) << "Got account credentials for:" << gapiAccount->accountName() << ", accessToken:" << GDriveHelper::elideToken(gapiAccount->accessToken()) << ", refreshToken:" << GDriveHelper::elideToken(gapiAccount->refreshToken());
+    qCDebug(GDRIVE) << "Got account credentials for:" << gapiAccount->accountName() << ", accessToken:" << GDriveHelper::elideToken(gapiAccount->accessToken())
+                    << ", refreshToken:" << GDriveHelper::elideToken(gapiAccount->refreshToken());
 
     return gapiAccount;
 }

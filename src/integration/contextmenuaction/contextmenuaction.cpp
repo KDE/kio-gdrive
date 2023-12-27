@@ -8,10 +8,10 @@
 #include "contextmenuaction.h"
 #include "../../gdrive_udsentry.h"
 
-#include <QGuiApplication>
-#include <QDesktopServices>
-#include <QClipboard>
 #include <QAction>
+#include <QClipboard>
+#include <QDesktopServices>
+#include <QGuiApplication>
 #include <QMenu>
 
 #include <KFileItemListProperties>
@@ -21,10 +21,11 @@
 K_PLUGIN_CLASS_WITH_JSON(ContextMenuAction, "contextmenuaction.json")
 
 ContextMenuAction::ContextMenuAction(QObject *parent, const QVariantList &)
-: KAbstractFileItemActionPlugin(parent)
-{}
+    : KAbstractFileItemActionPlugin(parent)
+{
+}
 
-QList<QAction*> ContextMenuAction::actions(const KFileItemListProperties &fileItemInfos, QWidget *parentWidget)
+QList<QAction *> ContextMenuAction::actions(const KFileItemListProperties &fileItemInfos, QWidget *parentWidget)
 {
     // Ignore if more than one file is selected
     if (fileItemInfos.items().size() != 1) {
@@ -53,7 +54,7 @@ QList<QAction*> ContextMenuAction::actions(const KFileItemListProperties &fileIt
     gdriveMenuAction->setMenu(gdriveMenu);
     gdriveMenuAction->setIcon(QIcon::fromTheme(QStringLiteral("folder-gdrive")));
 
-    return { gdriveMenuAction };
+    return {gdriveMenuAction};
 }
 
 QAction *ContextMenuAction::createCopyUrlAction(QWidget *parent, const QString &gdriveLink)

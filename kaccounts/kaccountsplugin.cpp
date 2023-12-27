@@ -9,9 +9,9 @@
 
 #include <KAccounts/Core>
 
+#include <KIO/OpenUrlJob>
 #include <KLocalizedString>
 #include <KNotification>
-#include <KIO/OpenUrlJob>
 
 #include <KPluginFactory>
 
@@ -34,7 +34,8 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
     auto notification = new KNotification(QStringLiteral("new-account-added"));
     notification->setComponentName(QStringLiteral("gdrive"));
     notification->setTitle(i18n("New Online Account"));
-    notification->setText(xi18nc("@info", "You can now manage the Google Drive files of your <emphasis strong='true'>%1</emphasis> account.", account->displayName()));
+    notification->setText(
+        xi18nc("@info", "You can now manage the Google Drive files of your <emphasis strong='true'>%1</emphasis> account.", account->displayName()));
 
     QUrl url;
     url.setScheme(QStringLiteral("gdrive"));

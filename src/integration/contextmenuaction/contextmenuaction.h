@@ -8,18 +8,16 @@
 #ifndef CONTEXTMENUACTION_H
 #define CONTEXTMENUACTION_H
 
-#include <KFileItem>
 #include <KAbstractFileItemActionPlugin>
-
+#include <KFileItem>
 
 class ContextMenuAction : public KAbstractFileItemActionPlugin
 {
-
     Q_OBJECT
 
 public:
     ContextMenuAction(QObject *parent, const QVariantList &args);
-    QList<QAction*> actions(const KFileItemListProperties &fileItemInfos, QWidget *parentWidget) override;
+    QList<QAction *> actions(const KFileItemListProperties &fileItemInfos, QWidget *parentWidget) override;
 
 private:
     QAction *createCopyUrlAction(QWidget *parent, const QString &gdriveLink);

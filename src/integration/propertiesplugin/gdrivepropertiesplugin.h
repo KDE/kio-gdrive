@@ -7,8 +7,8 @@
 #ifndef GDRIVEPROPERTIESPLUGIN_H
 #define GDRIVEPROPERTIESPLUGIN_H
 
-#include <KPropertiesDialogPlugin>
 #include <KPropertiesDialog>
+#include <KPropertiesDialogPlugin>
 
 #include "ui_gdrivepropertiesplugin.h"
 

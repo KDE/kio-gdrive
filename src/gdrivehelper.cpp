@@ -7,21 +7,21 @@
 
 #include "gdrivehelper.h"
 
-#include <KIO/Job>
 #include <KGAPI/Drive/File>
+#include <KIO/Job>
 #include <KLocalizedString>
 
 using namespace KGAPI2::Drive;
 
-#define VND_GOOGLE_APPS_DOCUMENT        QStringLiteral("application/vnd.google-apps.document")
-#define VND_GOOGLE_APPS_DRAWING         QStringLiteral("application/vnd.google-apps.drawing")
-#define VND_GOOGLE_APPS_FILE            QStringLiteral("application/vnd.google-apps.file")
-#define VND_GOOGLE_APPS_FORM            QStringLiteral("application/vnd.google-apps.form")
-#define VND_GOOGLE_APPS_PRESENTATION    QStringLiteral("application/vnd.google-apps.presentation")
-#define VND_GOOGLE_APPS_SPREADSHEET     QStringLiteral("application/vnd.google-apps.spreadsheet")
-#define VND_GOOGLE_APPS_FOLDER          QStringLiteral("application/vnd.google-apps.folder")
+#define VND_GOOGLE_APPS_DOCUMENT QStringLiteral("application/vnd.google-apps.document")
+#define VND_GOOGLE_APPS_DRAWING QStringLiteral("application/vnd.google-apps.drawing")
+#define VND_GOOGLE_APPS_FILE QStringLiteral("application/vnd.google-apps.file")
+#define VND_GOOGLE_APPS_FORM QStringLiteral("application/vnd.google-apps.form")
+#define VND_GOOGLE_APPS_PRESENTATION QStringLiteral("application/vnd.google-apps.presentation")
+#define VND_GOOGLE_APPS_SPREADSHEET QStringLiteral("application/vnd.google-apps.spreadsheet")
+#define VND_GOOGLE_APPS_FOLDER QStringLiteral("application/vnd.google-apps.folder")
 
-#define VND_OASIS_OPENDOCUMENT_TEXT     QStringLiteral("application/vnd.oasis.opendocument.text")
+#define VND_OASIS_OPENDOCUMENT_TEXT QStringLiteral("application/vnd.oasis.opendocument.text")
 #define VND_OASIS_OPENDOCUMENT_PRESENTATION QStringLiteral("application/vnd.oasis.opendocument.presentation")
 // Google's Drive API v2 mistakenly documents an x-vnd style MIME type
 // for .ods files, so we #define both the correct but undocumented,
@@ -29,54 +29,34 @@ using namespace KGAPI2::Drive;
 #define VND_OASIS_OPENDOCUMENT_SPREADSHEET QStringLiteral("application/vnd.oasis.opendocument.spreadsheet")
 #define X_VND_OASIS_OPENDOCUMENT_SPREADSHEET QStringLiteral("application/x-vnd.oasis.opendocument.spreadsheet")
 
+#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT QStringLiteral("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION                                                                                          \
+    QStringLiteral("application/vnd.openxmlformats-officedocument.presentationml.presentation")
+#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET QStringLiteral("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT \
-            QStringLiteral("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION \
-            QStringLiteral("application/vnd.openxmlformats-officedocument.presentationml.presentation")
-#define VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET \
-            QStringLiteral("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+#define IMAGE_PNG QStringLiteral("image/png")
+#define IMAGE_JPEG QStringLiteral("image/jpeg")
+#define APPLICATION_PDF QStringLiteral("application/pdf")
 
-#define IMAGE_PNG                       QStringLiteral("image/png")
-#define IMAGE_JPEG                      QStringLiteral("image/jpeg")
-#define APPLICATION_PDF                 QStringLiteral("application/pdf")
-
-namespace GDriveHelper {
+namespace GDriveHelper
+{
 
 static const QMap<QString /* mimetype */, QString /* .ext */> ExtensionsMap{
-    { VND_OASIS_OPENDOCUMENT_TEXT, QStringLiteral(".odt") },
-    { VND_OASIS_OPENDOCUMENT_SPREADSHEET, QStringLiteral(".ods") },
-    { VND_OASIS_OPENDOCUMENT_PRESENTATION, QStringLiteral(".odp") },
-    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, QStringLiteral(".docx") },
-    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, QStringLiteral(".xlsx") },
-    { VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION, QStringLiteral(".pptx") },
-    { IMAGE_PNG, QStringLiteral(".png") },
-    { IMAGE_JPEG, QStringLiteral(".jpg") },
-    { APPLICATION_PDF, QStringLiteral(".pdf") }
-};
+    {VND_OASIS_OPENDOCUMENT_TEXT, QStringLiteral(".odt")},
+    {VND_OASIS_OPENDOCUMENT_SPREADSHEET, QStringLiteral(".ods")},
+    {VND_OASIS_OPENDOCUMENT_PRESENTATION, QStringLiteral(".odp")},
+    {VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, QStringLiteral(".docx")},
+    {VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, QStringLiteral(".xlsx")},
+    {VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION, QStringLiteral(".pptx")},
+    {IMAGE_PNG, QStringLiteral(".png")},
+    {IMAGE_JPEG, QStringLiteral(".jpg")},
+    {APPLICATION_PDF, QStringLiteral(".pdf")}};
 
-static const QMap<QString /* mimetype */, QStringList /* target mimetypes */ > ConversionMap{
-    { VND_GOOGLE_APPS_DOCUMENT, {
-            VND_OASIS_OPENDOCUMENT_TEXT,
-            VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT,
-            APPLICATION_PDF }
-    },
-    { VND_GOOGLE_APPS_DRAWING, {
-            IMAGE_PNG,
-            IMAGE_JPEG,
-            APPLICATION_PDF }
-    },
-    { VND_GOOGLE_APPS_PRESENTATION, {
-            VND_OASIS_OPENDOCUMENT_PRESENTATION,
-            VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION,
-            APPLICATION_PDF }
-    },
-    { VND_GOOGLE_APPS_SPREADSHEET, {
-            VND_OASIS_OPENDOCUMENT_SPREADSHEET,
-            VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET,
-            APPLICATION_PDF }
-    }
-};
+static const QMap<QString /* mimetype */, QStringList /* target mimetypes */> ConversionMap{
+    {VND_GOOGLE_APPS_DOCUMENT, {VND_OASIS_OPENDOCUMENT_TEXT, VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT, APPLICATION_PDF}},
+    {VND_GOOGLE_APPS_DRAWING, {IMAGE_PNG, IMAGE_JPEG, APPLICATION_PDF}},
+    {VND_GOOGLE_APPS_PRESENTATION, {VND_OASIS_OPENDOCUMENT_PRESENTATION, VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION, APPLICATION_PDF}},
+    {VND_GOOGLE_APPS_SPREADSHEET, {VND_OASIS_OPENDOCUMENT_SPREADSHEET, VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET, APPLICATION_PDF}}};
 
 }
 

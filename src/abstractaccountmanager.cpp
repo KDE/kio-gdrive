@@ -7,5 +7,6 @@
 
 #include "abstractaccountmanager.h"
 
-AbstractAccountManager::~AbstractAccountManager() {}
-
+AbstractAccountManager::~AbstractAccountManager()
+{
+}

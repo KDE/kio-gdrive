@@ -10,8 +10,8 @@
 #include "gdrivedebug.h"
 
 #include <QDataStream>
-#include <QIODevice>
 #include <QEventLoop>
+#include <QIODevice>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <qt5keychain/keychain.h>
@@ -19,12 +19,11 @@
 #include <qt6keychain/keychain.h>
 #endif
 
-#include <KIO/Job> //for stat.h
 #include <KGAPI/AuthJob>
+#include <KIO/Job> //for stat.h
 
 QString KeychainAccountManager::s_apiKey = QStringLiteral("836279663462-qq9rt1k4smgqhvt461r6l54vo9qm09bg.apps.googleusercontent.com");
 QString KeychainAccountManager::s_apiSecret = QStringLiteral("5-k19mrwsAud5a1r-qijtTJQ");
-
 
 QSet<QString> KeychainAccountManager::accounts()
 {
@@ -56,10 +55,8 @@ KGAPI2::AccountPtr KeychainAccountManager::account(const QString &accountName)
         scopeUrls << QUrl::fromUserInput(scope);
     }
 
-    return KGAPI2::AccountPtr(new KGAPI2::Account(accountName,
-                                                     entry.value(QStringLiteral("accessToken")),
-                                                     entry.value(QStringLiteral("refreshToken")),
-                                                     scopeUrls));
+    return KGAPI2::AccountPtr(
+        new KGAPI2::Account(accountName, entry.value(QStringLiteral("accessToken")), entry.value(QStringLiteral("refreshToken")), scopeUrls));
 }
 
 KGAPI2::AccountPtr KeychainAccountManager::createAccount()
@@ -73,8 +70,7 @@ KGAPI2::AccountPtr KeychainAccountManager::createAccount()
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
 
     QEventLoop eventLoop;
-    QObject::connect(authJob, &KGAPI2::Job::finished,
-                     &eventLoop, &QEventLoop::quit);
+    QObject::connect(authJob, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
 
     account = authJob->account();
@@ -92,14 +88,14 @@ void KeychainAccountManager::storeAccount(const KGAPI2::AccountPtr &account)
     qCDebug(GDRIVE) << "Storing account" << account->accessToken();
 
     QMap<QString, QString> entry;
-    entry[ QStringLiteral("accessToken") ] = account->accessToken();
-    entry[ QStringLiteral("refreshToken") ] = account->refreshToken();
+    entry[QStringLiteral("accessToken")] = account->accessToken();
+    entry[QStringLiteral("refreshToken")] = account->refreshToken();
     QStringList scopes;
     const auto accountScopes = account->scopes();
     for (const QUrl &scope : accountScopes) {
         scopes << scope.toString();
     }
-    entry[ QStringLiteral("scopes") ] = scopes.join(QLatin1Char(','));
+    entry[QStringLiteral("scopes")] = scopes.join(QLatin1Char(','));
 
     writeMap(account->accountName(), entry);
     storeAccountName(account->accountName());
@@ -109,8 +105,7 @@ KGAPI2::AccountPtr KeychainAccountManager::refreshAccount(const KGAPI2::AccountP
 {
     KGAPI2::AuthJob *authJob = new KGAPI2::AuthJob(account, s_apiKey, s_apiSecret);
     QEventLoop eventLoop;
-    QObject::connect(authJob, &KGAPI2::Job::finished,
-                     &eventLoop, &QEventLoop::quit);
+    QObject::connect(authJob, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
     if (authJob->error() != KGAPI2::OK && authJob->error() != KGAPI2::NoError) {
         return KGAPI2::AccountPtr();
@@ -211,7 +206,7 @@ void KeychainAccountManager::removeAccount(const QString &accountName)
     removeAccountName(accountName);
 }
 
-template <typename T>
+template<typename T>
 QByteArray KeychainAccountManager::serialize(const T &object)
 {
     QByteArray data;
@@ -222,7 +217,7 @@ QByteArray KeychainAccountManager::serialize(const T &object)
     return data;
 }
 
-template <typename T>
+template<typename T>
 T KeychainAccountManager::deserialize(QByteArray *data)
 {
     if (!data) {

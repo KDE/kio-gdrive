@@ -12,13 +12,15 @@
 
 namespace QKeychain
 {
-    class Job;
+class Job;
 }
 
 class KeychainAccountManager : public AbstractAccountManager
 {
 public:
-    virtual ~KeychainAccountManager() {}
+    virtual ~KeychainAccountManager()
+    {
+    }
 
     KGAPI2::AccountPtr account(const QString &accountName) override;
     KGAPI2::AccountPtr createAccount() override;
@@ -28,7 +30,7 @@ public:
 
 private:
     template<typename T>
-    QByteArray serialize(const T& object);
+    QByteArray serialize(const T &object);
 
     template<typename T>
     T deserialize(QByteArray *data);
@@ -48,4 +50,3 @@ private:
     static QString s_apiKey;
     static QString s_apiSecret;
 };
-

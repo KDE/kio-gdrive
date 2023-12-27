@@ -5,23 +5,23 @@
  */
 
 #include "gdrivepropertiesplugin.h"
-#include "../../gdrivedebug.h"
 #include "../../gdrive_udsentry.h"
+#include "../../gdrivedebug.h"
 
-#include <KPluginFactory>
-#include <QClipboard>
-#include <QtGlobal>
-#include <QDesktopServices>
 #include <KIO/StatJob>
 #include <KLocalizedString>
+#include <KPluginFactory>
+#include <QClipboard>
+#include <QDesktopServices>
+#include <QtGlobal>
 
 K_PLUGIN_CLASS_WITH_JSON(GDrivePropertiesPlugin, "gdrivepropertiesplugin.json")
 
 GDrivePropertiesPlugin::GDrivePropertiesPlugin(QObject *parent, const QList<QVariant> &args)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-: KPropertiesDialogPlugin(qobject_cast<KPropertiesDialog *>(parent))
+    : KPropertiesDialogPlugin(qobject_cast<KPropertiesDialog *>(parent))
 #else
-: KPropertiesDialogPlugin(parent)
+    : KPropertiesDialogPlugin(parent)
 #endif
 
 {
@@ -46,7 +46,7 @@ GDrivePropertiesPlugin::GDrivePropertiesPlugin(QObject *parent, const QList<QVar
     m_ui.setupUi(&m_widget);
 
     // Re stat() the item because the entry is probably lacking required information.
-    const KIO::StatJob* job = KIO::stat(m_item.url(), KIO::HideProgressInfo);
+    const KIO::StatJob *job = KIO::stat(m_item.url(), KIO::HideProgressInfo);
     connect(job, &KJob::finished, this, &GDrivePropertiesPlugin::statJobFinished);
 }
 
@@ -100,7 +100,7 @@ void GDrivePropertiesPlugin::showEntryDetails(const KIO::UDSEntry &entry)
 
 void GDrivePropertiesPlugin::statJobFinished(KJob *job)
 {
-    KIO::StatJob *statJob = qobject_cast<KIO::StatJob*>(job);
+    KIO::StatJob *statJob = qobject_cast<KIO::StatJob *>(job);
     if (!statJob || statJob->error()) {
         qCDebug(GDRIVE) << "Failed stat()ing" << statJob->url() << statJob->errorString();
         qCDebug(GDRIVE) << "Not showing Google Drive properties tab";

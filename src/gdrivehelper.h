@@ -13,19 +13,17 @@
 
 namespace GDriveHelper
 {
-    QString folderMimeType();
+QString folderMimeType();
 
-    bool isGDocsDocument(const KGAPI2::Drive::FilePtr &file);
+bool isGDocsDocument(const KGAPI2::Drive::FilePtr &file);
 
-    QUrl convertFromGDocs(KGAPI2::Drive::FilePtr &file);
+QUrl convertFromGDocs(KGAPI2::Drive::FilePtr &file);
 
-    QUrl downloadUrl(const KGAPI2::Drive::FilePtr &file);
+QUrl downloadUrl(const KGAPI2::Drive::FilePtr &file);
 
-    KIO::UDSEntry trash();
+KIO::UDSEntry trash();
 
-    QString elideToken(const QString &token);
+QString elideToken(const QString &token);
 }
-
-
 
 #endif // GDRIVEHELPER_H

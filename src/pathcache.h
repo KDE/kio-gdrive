@@ -24,6 +24,7 @@ public:
     void removePath(const QString &path);
 
     void dump();
+
 private:
     QHash<QString /* path */, QString> m_pathIdMap;
 };

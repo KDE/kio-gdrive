@@ -6,12 +6,12 @@
  */
 
 #include "kio_gdrive.h"
+#include "gdrive_udsentry.h"
 #include "gdrivebackend.h"
 #include "gdrivedebug.h"
 #include "gdrivehelper.h"
 #include "gdriveurl.h"
 #include "gdriveversion.h"
-#include "gdrive_udsentry.h"
 
 #include <QApplication>
 #include <QMimeDatabase>
@@ -54,27 +54,25 @@ class KIOPluginForMetaData : public QObject
     Q_PLUGIN_METADATA(IID "org.kde.kio.slave.gdrive" FILE "gdrive.json")
 };
 
-extern "C"
+extern "C" {
+int Q_DECL_EXPORT kdemain(int argc, char **argv)
 {
-    int Q_DECL_EXPORT kdemain(int argc, char **argv)
-    {
-        QApplication app(argc, argv);
-        app.setApplicationName(QStringLiteral("kio_gdrive"));
+    QApplication app(argc, argv);
+    app.setApplicationName(QStringLiteral("kio_gdrive"));
 
-        if (argc != 4) {
-             fprintf(stderr, "Usage: kio_gdrive protocol domain-socket1 domain-socket2\n");
-             exit(-1);
-        }
-
-        KIOGDrive slave(argv[1], argv[2], argv[3]);
-        slave.dispatchLoop();
-        return 0;
+    if (argc != 4) {
+        fprintf(stderr, "Usage: kio_gdrive protocol domain-socket1 domain-socket2\n");
+        exit(-1);
     }
+
+    KIOGDrive slave(argv[1], argv[2], argv[3]);
+    slave.dispatchLoop();
+    return 0;
+}
 }
 
-KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket,
-                      const QByteArray &app_socket):
-    WorkerBase("gdrive", pool_socket, app_socket)
+KIOGDrive::KIOGDrive(const QByteArray &protocol, const QByteArray &pool_socket, const QByteArray &app_socket)
+    : WorkerBase("gdrive", pool_socket, app_socket)
 {
     Q_UNUSED(protocol);
 
@@ -93,30 +91,30 @@ KIOGDrive::Result KIOGDrive::handleError(const KGAPI2::Job &job, const QUrl &url
     qCDebug(GDRIVE) << "Completed job" << (&job) << "error code:" << job.error() << "- message:" << job.errorString();
 
     switch (job.error()) {
-        case KGAPI2::OK:
-        case KGAPI2::NoError:
-            return Result::success();
-        case KGAPI2::AuthCancelled:
-        case KGAPI2::AuthError:
+    case KGAPI2::OK:
+    case KGAPI2::NoError:
+        return Result::success();
+    case KGAPI2::AuthCancelled:
+    case KGAPI2::AuthError:
+        return Result::fail(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
+    case KGAPI2::Unauthorized: {
+        const AccountPtr oldAccount = job.account();
+        const AccountPtr account = m_accountManager->refreshAccount(oldAccount);
+        if (!account) {
             return Result::fail(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
-        case KGAPI2::Unauthorized: {
-            const AccountPtr oldAccount = job.account();
-            const AccountPtr account = m_accountManager->refreshAccount(oldAccount);
-            if (!account) {
-                return Result::fail(KIO::ERR_CANNOT_LOGIN, url.toDisplayString());
-            }
-            return Result::restart();
         }
-        case KGAPI2::Forbidden:
-            return Result::fail(KIO::ERR_ACCESS_DENIED, url.toDisplayString());
-        case KGAPI2::NotFound:
-            return Result::fail(KIO::ERR_DOES_NOT_EXIST, url.toDisplayString());
-        case KGAPI2::NoContent:
-            return Result::fail(KIO::ERR_NO_CONTENT, url.toDisplayString());
-        case KGAPI2::QuotaExceeded:
-            return Result::fail(KIO::ERR_DISK_FULL, url.toDisplayString());
-        default:
-            return Result::fail(KIO::ERR_WORKER_DEFINED, job.errorString());
+        return Result::restart();
+    }
+    case KGAPI2::Forbidden:
+        return Result::fail(KIO::ERR_ACCESS_DENIED, url.toDisplayString());
+    case KGAPI2::NotFound:
+        return Result::fail(KIO::ERR_DOES_NOT_EXIST, url.toDisplayString());
+    case KGAPI2::NoContent:
+        return Result::fail(KIO::ERR_NO_CONTENT, url.toDisplayString());
+    case KGAPI2::QuotaExceeded:
+        return Result::fail(KIO::ERR_DISK_FULL, url.toDisplayString());
+    default:
+        return Result::fail(KIO::ERR_WORKER_DEFINED, job.errorString());
     }
 
     return Result::fail(KIO::ERR_WORKER_DEFINED, i18n("Unknown error"));
@@ -140,7 +138,7 @@ KIO::WorkerResult KIOGDrive::fileSystemFreeSpace(const QUrl &url)
     aboutFetch.setFields({
         About::Fields::Kind,
         About::Fields::QuotaBytesTotal,
-        About::Fields::QuotaBytesUsedAggregate
+        About::Fields::QuotaBytesUsedAggregate,
     });
     if (auto result = runJob(aboutFetch, url, accountId); result.success()) {
         const AboutPtr about = aboutFetch.aboutData();
@@ -352,7 +350,7 @@ KIO::WorkerResult KIOGDrive::listSharedDrivesRoot(const QUrl &url)
         Drives::Fields::Name,
         Drives::Fields::Hidden,
         Drives::Fields::CreatedDate,
-        Drives::Fields::Capabilities
+        Drives::Fields::Capabilities,
     });
 
     if (auto result = runJob(sharedDrivesFetchJob, url, accountId); result.success()) {
@@ -412,7 +410,7 @@ KIO::WorkerResult KIOGDrive::statSharedDrive(const QUrl &url)
         Drives::Fields::Name,
         Drives::Fields::Hidden,
         Drives::Fields::CreatedDate,
-        Drives::Fields::Capabilities
+        Drives::Fields::Capabilities,
     });
     if (auto result = runJob(sharedDriveFetchJob, url, accountId); !result.success()) {
         return result;
@@ -433,11 +431,10 @@ KIO::UDSEntry KIOGDrive::fetchSharedDrivesRootEntry(const QString &accountId, Fe
     AboutFetchJob aboutFetch(getAccount(accountId));
     aboutFetch.setFields({
         About::Fields::Kind,
-        About::Fields::CanCreateDrives
+        About::Fields::CanCreateDrives,
     });
     QEventLoop eventLoop;
-    QObject::connect(&aboutFetch, &KGAPI2::Job::finished,
-                     &eventLoop, &QEventLoop::quit);
+    QObject::connect(&aboutFetch, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
     if (aboutFetch.error() == KGAPI2::OK || aboutFetch.error() == KGAPI2::NoError) {
         const AboutPtr about = aboutFetch.aboutData();
@@ -482,7 +479,7 @@ public:
     }
 
     RecursionDepthCounter(const RecursionDepthCounter &) = delete;
-    RecursionDepthCounter& operator=(const RecursionDepthCounter &) = delete;
+    RecursionDepthCounter &operator=(const RecursionDepthCounter &) = delete;
 
     int depth() const
     {
@@ -494,7 +491,6 @@ private:
 };
 
 int RecursionDepthCounter::sDepth = 0;
-
 
 std::pair<KIO::WorkerResult, QString> KIOGDrive::resolveFileIdFromPath(const QString &path, PathFlags flags)
 {
@@ -602,11 +598,10 @@ QString KIOGDrive::resolveSharedDriveId(const QString &idOrName, const QString &
     searchByIdJob.setFields({
         Drives::Fields::Kind,
         Drives::Fields::Id,
-        Drives::Fields::Name
+        Drives::Fields::Name,
     });
     QEventLoop eventLoop;
-    QObject::connect(&searchByIdJob, &KGAPI2::Job::finished,
-                     &eventLoop, &QEventLoop::quit);
+    QObject::connect(&searchByIdJob, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
     if (searchByIdJob.error() == KGAPI2::OK || searchByIdJob.error() == KGAPI2::NoError) {
         // A Shared Drive with that id exists so we return it
@@ -632,10 +627,9 @@ QString KIOGDrive::resolveSharedDriveId(const QString &idOrName, const QString &
     sharedDrivesFetchJob.setFields({
         Drives::Fields::Kind,
         Drives::Fields::Id,
-        Drives::Fields::Name
+        Drives::Fields::Name,
     });
-    QObject::connect(&sharedDrivesFetchJob, &KGAPI2::Job::finished,
-                     &eventLoop, &QEventLoop::quit);
+    QObject::connect(&sharedDrivesFetchJob, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
     eventLoop.exec();
     if (sharedDrivesFetchJob.error() == KGAPI2::OK || sharedDrivesFetchJob.error() == KGAPI2::NoError) {
         const auto objects = sharedDrivesFetchJob.items();
@@ -694,7 +688,7 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
 
     const auto gdriveUrl = GDriveUrl(url);
 
-    if (gdriveUrl.isRoot())  {
+    if (gdriveUrl.isRoot()) {
         return listAccounts();
     }
     if (gdriveUrl.isNewAccountPath()) {
@@ -715,7 +709,7 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
     if (gdriveUrl.isAccountRoot()) {
         auto entry = fetchSharedDrivesRootEntry(accountId);
         listEntry(entry);
-        auto[result, id] = rootFolderId(accountId);
+        auto [result, id] = rootFolderId(accountId);
 
         if (!result.success()) {
             return result;
@@ -729,14 +723,12 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
     } else {
         folderId = m_cache.idForPath(url.path());
         if (folderId.isEmpty()) {
-            auto[result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
-                                             KIOGDrive::PathIsFolder);
+            auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFolder);
 
             if (!result.success()) {
                 return result;
             }
             folderId = id;
-
         }
         if (folderId.isEmpty()) {
             return KIO::WorkerResult::fail(KIO::ERR_DOES_NOT_EXIST, url.path());
@@ -752,12 +744,12 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
         query.addQuery(FileSearchQuery::Parents, FileSearchQuery::In, folderId);
     }
     FileFetchJob fileFetchJob(query, getAccount(accountId));
-    const auto extraFields =
-        QStringList({ KGAPI2::Drive::File::Fields::Labels,
-                      KGAPI2::Drive::File::Fields::ExportLinks,
-                      KGAPI2::Drive::File::Fields::LastViewedByMeDate,
-                      KGAPI2::Drive::File::Fields::AlternateLink,
-        });
+    const auto extraFields = QStringList({
+        KGAPI2::Drive::File::Fields::Labels,
+        KGAPI2::Drive::File::Fields::ExportLinks,
+        KGAPI2::Drive::File::Fields::LastViewedByMeDate,
+        KGAPI2::Drive::File::Fields::AlternateLink,
+    });
     fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
     if (auto result = runJob(fileFetchJob, url, accountId); !result.success()) {
         return result;
@@ -896,8 +888,7 @@ KIO::WorkerResult KIOGDrive::stat(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
-                                    KIOGDrive::None);
+        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::None);
 
         if (!result.success()) {
             return result;
@@ -952,7 +943,7 @@ KIO::WorkerResult KIOGDrive::get(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
+        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
 
         if (!result.success()) {
             return result;
@@ -1061,8 +1052,7 @@ KIO::WorkerResult KIOGDrive::runJob(KGAPI2::Job &job, const QUrl &url, const QSt
     Q_FOREVER {
         qCDebug(GDRIVE) << "Running job" << (&job) << "with accessToken" << GDriveHelper::elideToken(job.account()->accessToken());
         QEventLoop eventLoop;
-        QObject::connect(&job, &KGAPI2::Job::finished,
-                         &eventLoop, &QEventLoop::quit);
+        QObject::connect(&job, &KGAPI2::Job::finished, &eventLoop, &QEventLoop::quit);
         eventLoop.exec();
         Result result = handleError(job, url);
         if (result.action == KIOGDrive::Success) {
@@ -1125,7 +1115,7 @@ KIO::WorkerResult KIOGDrive::putCreate(const QUrl &url)
         // Not creating in root directory, fill parent references
         QString parentId;
 
-        auto[result, id] = resolveFileIdFromPath(gdriveUrl.parentPath());
+        auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath());
 
         if (!result.success()) {
             return result;
@@ -1133,7 +1123,7 @@ KIO::WorkerResult KIOGDrive::putCreate(const QUrl &url)
         parentId = id;
 
         if (parentId.isEmpty()) {
-            return KIO::WorkerResult::fail(KIO::ERR_DOES_NOT_EXIST, url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path());
+            return KIO::WorkerResult::fail(KIO::ERR_DOES_NOT_EXIST, url.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path());
         }
         parentReferences << ParentReferencePtr(new ParentReference(parentId));
     }
@@ -1162,7 +1152,6 @@ KIO::WorkerResult KIOGDrive::putCreate(const QUrl &url)
 
     return KIO::WorkerResult::pass();
 }
-
 
 KIO::WorkerResult KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags flags)
 {
@@ -1195,7 +1184,6 @@ KIO::WorkerResult KIOGDrive::put(const QUrl &url, int permissions, KIO::JobFlags
 
     return KIO::WorkerResult::pass();
 }
-
 
 KIO::WorkerResult KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permissions, KIO::JobFlags flags)
 {
@@ -1237,7 +1225,7 @@ KIO::WorkerResult KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permiss
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         sourceFileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
+        auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
 
         if (!result.success()) {
             return result;
@@ -1268,14 +1256,14 @@ KIO::WorkerResult KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permiss
 
     QString destDirId;
     if (destGDriveUrl.isTopLevel()) {
-        auto[result, id] = rootFolderId(destAccountId);
+        auto [result, id] = rootFolderId(destAccountId);
 
         if (!result.success()) {
             return result;
         }
         destDirId = id;
     } else {
-        auto[result, id] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        auto [result, id] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!result.success()) {
             return result;
@@ -1325,8 +1313,7 @@ KIO::WorkerResult KIOGDrive::del(const QUrl &url, bool isfile)
     if (isfile && urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(),
-                                    isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
+        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
         if (!result.success()) {
             return result;
         }
@@ -1403,8 +1390,7 @@ KIO::WorkerResult KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobF
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         sourceFileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(),
-                                    KIOGDrive::PathIsFile);
+        auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
         if (!result.success()) {
             return result;
         }
@@ -1451,14 +1437,14 @@ KIO::WorkerResult KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobF
     if (destGDriveUrl.isAccountRoot()) {
         // user is trying to move to root -> we are only renaming
     } else {
-         // skip filename and extract the second-to-last component
-        auto[destDirResult, destDirId] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        // skip filename and extract the second-to-last component
+        auto [destDirResult, destDirId] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!destDirResult.success()) {
             return destDirResult;
         }
 
-        auto[srcDirResult, srcDirId] = resolveFileIdFromPath(srcGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        auto [srcDirResult, srcDirId] = resolveFileIdFromPath(srcGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!srcDirResult.success()) {
             return srcDirResult;
@@ -1504,7 +1490,7 @@ KIO::WorkerResult KIOGDrive::mimetype(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto[result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
+        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
 
         if (!result.success()) {
             return result;

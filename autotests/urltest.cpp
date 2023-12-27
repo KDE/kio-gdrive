@@ -48,6 +48,7 @@ void UrlTest::testGDriveUrl_data()
     QTest::addColumn<QStringList>("expectedPathComponents");
     QTest::addColumn<QString>("expectedFilename");
 
+    // clang-format off
     QTest::newRow("root url")
             << gdriveUrl(QStringLiteral("/"))
             << QStringLiteral("gdrive:/")
@@ -313,6 +314,7 @@ void UrlTest::testGDriveUrl_data()
             << false // expectedIsTrashDir
             << QStringList {QStringLiteral("foo@gmail.com"), GDriveUrl::SharedWithMeDir, QStringLiteral("bar"), QStringLiteral("baz")}
             << QStringLiteral("baz");
+    // clang-format on
 }
 
 void UrlTest::testGDriveUrl()

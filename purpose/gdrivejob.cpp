@@ -8,10 +8,10 @@
 
 #include <KIO/CopyJob>
 
-QList<QUrl> arrayToList(const QJsonArray& array)
+QList<QUrl> arrayToList(const QJsonArray &array)
 {
     QList<QUrl> ret;
-    for (const QJsonValue& val : array) {
+    for (const QJsonValue &val : array) {
         ret += val.toVariant().toUrl();
     }
     return ret;
