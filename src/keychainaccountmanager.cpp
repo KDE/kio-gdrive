@@ -10,6 +10,7 @@
 #include "gdrivedebug.h"
 
 #include <QDataStream>
+#include <QIODevice>
 #include <QEventLoop>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
