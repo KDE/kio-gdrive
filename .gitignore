@@ -3,3 +3,4 @@
 build
 build-overlay
 build-root
+.clang-format
