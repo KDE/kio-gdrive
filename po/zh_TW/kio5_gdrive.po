@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio5_gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2023-12-02 20:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "新增線上帳號"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -34,7 +34,7 @@ msgstr ""
 "您現在可以管理 <emphasis strong='true'>%1</emphasis> 帳號的 Google 雲端硬碟檔"
 "案。"
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "開啟"
@@ -59,17 +59,17 @@ msgstr "設定帳號"
 msgid "Upload to folder:"
 msgstr "上傳到資料夾："
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "Google 雲端硬碟"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "複製連結到剪貼簿"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "在瀏覽器開啟"
@@ -79,44 +79,44 @@ msgstr "在瀏覽器開啟"
 msgid "G&oogle Drive"
 msgstr "Google 雲端硬碟(&O)"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr "未知的錯誤"
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "新增帳戶"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "與我分享"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "未啟用 Google 雲端硬碟的帳號。請至少新增一個。"
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "分享的磁碟"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 不是一個已知的 GDrive 帳號"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "帳號 %1 的存取 token 已過期或缺失"
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "無法刪除「分享的磁碟」根目錄。"

@@ -51,7 +51,7 @@
 >KIO GDrive, Google Drive dosyalarınızı KIO destekleyen KDE uygulamalarınız kullanarak düzenlemenizi sağlar.</para>
 
 <para
->Gdrive kioslave'i şöyle kullanabilirsiniz:</para>
+>Gdrive kioslave’i şöyle kullanabilirsiniz:</para>
 <para
 ><userinput
 >gdrive://</userinput
@@ -62,12 +62,12 @@
 >.</para>
 
 <para
->İlk URL henüz bir Drive hesabı ile kimlik doğrulaması yapılmamışsa Google'den bir OAuth giriş penceresi, yapılmışsa hesaplarınızın listesini gösterir.</para>
+>İlk URL henüz bir Drive hesabı ile kimlik doğrulaması yapılmamışsa Google’den bir OAuth giriş penceresi, yapılmışsa hesaplarınızın listesini gösterir.</para>
 
 <para
 ><userinput
 >gdrive://</userinput
-> URL'si ek bir hesap eklemek için her zaman kullanılabilir.</para>
+> URL’si ek bir hesap eklemek için her zaman kullanılabilir.</para>
 
 <para
 ><userinput

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2023-01-14 23:31\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "Новы сеціўны акаўнт"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -36,7 +36,7 @@ msgstr ""
 "Цяпер вы можаце кіраваць файламі вашага акаўнта Google Drive <emphasis "
 "strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "Адкрыць"
@@ -61,17 +61,17 @@ msgstr "Наладжванне акаўнтаў"
 msgid "Upload to folder:"
 msgstr "Запампаваць у каталог:"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "Google Drive"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "Скапіяваць URL у буфер абмену"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "Адкрыць у браўзеры"
@@ -81,45 +81,45 @@ msgstr "Адкрыць у браўзеры"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr ""
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Новы акаўнт"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Абагуленае са мной"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Няма ўключаных акаўнтаў Google Drive. Дадайце прынамсі адзін."
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "Абагуленыя дыскі"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 - невядомы акаўнт GDrive"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr ""
 "Няма токенаў доступу для акаўнта \"%1\" або іх тэрмін дзеяння скончыўся"
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Немагчыма выдаліць каранёвы каталог абагуленых дыскаў."

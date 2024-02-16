@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2023-11-09 12:48+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
-"Language-Team: fr\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "Nouveau compte en ligne"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -37,7 +37,7 @@ msgstr ""
 "Vous pouvez désormais gérer les fichiers Google Drive de votre compte "
 "<emphasis strong='true'>%1</emphasis>."
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "Ouvrir"
@@ -62,17 +62,17 @@ msgstr "Configurer les comptes"
 msgid "Upload to folder:"
 msgstr "Envoyer vers le dossier :"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "Google Drive"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "Copier l'URL dans le presse-papier"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "Ouvrir dans un navigateur"
@@ -82,44 +82,44 @@ msgstr "Ouvrir dans un navigateur"
 msgid "G&oogle Drive"
 msgstr "G&oogle Drive"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Nouveau compte"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Partagé avec moi"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "Aucun compte Google Drive activé. Veuillez en ajouter au moins un."
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "Disques partagés"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 n'est pas un compte « GDrive » connu"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "Jetons d'accès expirés ou manquants pour le compte %1"
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Impossible de supprimer la racine des Disques partagés."

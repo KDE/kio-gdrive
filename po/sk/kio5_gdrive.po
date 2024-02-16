@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio5_gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2022-01-25 14:45+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "Nový online účet"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -33,7 +33,7 @@ msgstr ""
 "Teraz môžete spravovať súbory disku Google vo vašom <emphasis strong='true'>"
 "%1</emphasis> účte."
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "Otvoriť"
@@ -58,17 +58,17 @@ msgstr "Nastaviť účty"
 msgid "Upload to folder:"
 msgstr "Nahrať do priečinku:"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "Google Drive"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "Skopírovať URL do schránky"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "Otvoriť v prehliadači"
@@ -79,46 +79,46 @@ msgstr "Otvoriť v prehliadači"
 msgid "G&oogle Drive"
 msgstr "Google Drive"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr ""
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "Nový účet"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, fuzzy, kde-format
 #| msgid "Shared Drives"
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "Zdieľané jednotky"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr ""
 "Nie sú povolené žiadne účty disku Google. Prosím, pridajte aspoň jeden."
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "Zdieľané jednotky"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 nie je známe a konto GDrive"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr ""
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "Nedá sa odstrániť koreňový priečinok zdieľaných jednotiek."
