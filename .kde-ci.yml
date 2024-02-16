@@ -10,6 +10,7 @@ Dependencies:
     'frameworks/kio': '@latest-kf6'
     'frameworks/purpose': '@latest-kf6'
     'pim/libkgapi': '@latest-kf6'
+    'network/kaccounts-integration': '@latest-kf6'
     'third-party/qtkeychain': '@latest'
 
 Options:
