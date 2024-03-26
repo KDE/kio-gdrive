@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Slovenian "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Matjaž</firstname
+><surname
+>Jeran</surname
+><affiliation
+><address
+><email
+>matjaz.jeran@amis.net</email
+></address
+></affiliation
+><contrib
+>Prevod</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>03.10.2016</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>KIO GDrive vam omogoča dostop in urejanje datotek Google Drive z uporabo aplikacij KDE, ki podpirajo KIO.</para>
+
+<para
+>Kioslave gdrive lahko uporabite takole:</para>
+<para
+><userinput
+>gdrive://</userinput
+> ali <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+>.</para>
+
+<para
+>Prvi URL prikazuje pogovorno okno za prijavo OAuth iz Googla, če še ni bil preverjen noben račun Drive, ali namesto tega seznam vaših preverjenih računov.</para>
+
+<para
+>URL <userinput
+>gdrive://</userinput
+> lahko kadar koli uporabite tudi za dodajanje dodatnega računa.</para>
+
+<para
+>URL <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+> navaja vse datoteke in mape z najvišje ravni pogona <userinput
+>foo@example.com</userinput
+> račun.</para>
+
+</article>
