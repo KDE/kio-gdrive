@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2021-07-07 13:23+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "नया ओनलाइन ख़ाता"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 "अब आप अपने <emphasis strong='true'>%1</emphasis> खाते की गूगल डिस्क फ़ाइलों को "
 "प्रबंधित कर सकते हैं।"
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "खोलें"
@@ -57,17 +57,17 @@ msgstr "ख़ातों को विन्यस्त करें"
 msgid "Upload to folder:"
 msgstr "फ़ोल्डर में अपलो़ड करें :"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "गूगल ड्राइव"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "यूआरएल की नकल क्लिपबोर्ड पर बनाएं"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "ब्राउज़र में खोलें"
@@ -78,45 +78,45 @@ msgstr "ब्राउज़र में खोलें"
 msgid "G&oogle Drive"
 msgstr "गूगल ड्राइव"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr ""
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "नया ख़ाता"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, fuzzy, kde-format
 #| msgid "Shared Drives"
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "साझा ड्राइव"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "कोई गूगल ड्राइव खाते सक्षम नहीं है। कृपया कम से कम एक जोड़ें।"
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "साझा ड्राइव"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 ज्ञात जी-ड्राइव खाता नहीं है"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr ""
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "शेयर की गई डिस्क का रूट मिटाया नहीं जा सकता।"

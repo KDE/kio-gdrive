@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-27 00:42+0000\n"
+"POT-Creation-Date: 2024-02-16 01:40+0000\n"
 "PO-Revision-Date: 2023-12-04 20:48+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "New Online Account"
 msgstr "புதிய இணைய கணக்கு"
 
-#: kaccounts/kaccountsplugin.cpp:37
+#: kaccounts/kaccountsplugin.cpp:38
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 "உங்கள் <emphasis strong='true'>%1</emphasis> கணக்கின் கூகுள் டிரைவ் கோப்புகளை நீங்கள் "
 "இப்போது நிர்வகிக்கலாம்."
 
-#: kaccounts/kaccountsplugin.cpp:44 kaccounts/kaccountsplugin.cpp:47
+#: kaccounts/kaccountsplugin.cpp:45 kaccounts/kaccountsplugin.cpp:48
 #, kde-format
 msgid "Open"
 msgstr "திற"
@@ -57,17 +57,17 @@ msgstr "கணக்குகளை அமை"
 msgid "Upload to folder:"
 msgstr "அடைவிற்கு பதிவேற்று:"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:52
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
 msgid "Google Drive"
 msgstr "கூகுள் டிரைவ்"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:61
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
 #, kde-format
 msgid "Copy URL to clipboard"
 msgstr "முகவரியை பிடிப்புப்பலகையில் நகலெடு"
 
-#: src/integration/contextmenuaction/contextmenuaction.cpp:74
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
 #, kde-format
 msgid "Open in browser"
 msgstr "உலாவியில் திற"
@@ -77,44 +77,44 @@ msgstr "உலாவியில் திற"
 msgid "G&oogle Drive"
 msgstr "&கூகுள் டிரைவ்"
 
-#: src/kio_gdrive.cpp:122
+#: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
 msgstr "தெரியாத சிக்கல்"
 
-#: src/kio_gdrive.cpp:244
+#: src/kio_gdrive.cpp:242
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
 msgstr "புதிய கணக்கு"
 
-#: src/kio_gdrive.cpp:257
+#: src/kio_gdrive.cpp:255
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
 msgstr "என்னுடன் பகிரப்பட்டவை"
 
-#: src/kio_gdrive.cpp:310
+#: src/kio_gdrive.cpp:308
 #, kde-format
 msgid "There are no Google Drive accounts enabled. Please add at least one."
 msgstr "எந்த கூகுள் டிரைவ் கணக்குகளும் இயக்கப்படவில்லை. ஒன்றையாவது சேருங்கள்."
 
-#: src/kio_gdrive.cpp:456
+#: src/kio_gdrive.cpp:453
 #, kde-format
 msgid "Shared Drives"
 msgstr "பகிரப்பட்ட சேமிப்பகங்கள்"
 
-#: src/kio_gdrive.cpp:711 src/kio_gdrive.cpp:873
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
 #, kde-format
 msgid "%1 isn't a known GDrive account"
 msgstr "%1 ஒரு GDrive கணக்கு இல்லை"
 
-#: src/kio_gdrive.cpp:1058
+#: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
 msgstr "%1 எனும் கணக்கிற்கான அணுகல் டோக்கன்கள் இல்லை, அல்லது காலாவதியாகிவிட்டன"
 
-#: src/kio_gdrive.cpp:1317
+#: src/kio_gdrive.cpp:1305
 #, kde-format
 msgid "Can't delete Shared Drives root."
 msgstr "பகிரப்பட்ட தாய் அடைவை நீக்க முடியாது."
