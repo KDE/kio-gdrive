@@ -1,15 +1,15 @@
 # translation of kio5_gdrive.pot to Esperanto
 # Copyright (C) 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the kio-gdrive package.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2024.
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-16 01:40+0000\n"
-"PO-Revision-Date: 2024-03-24 10:34+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"PO-Revision-Date: 2024-05-30 22:41+0200\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "Malfermi en retumilo"
 #: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:111
 #, kde-format
 msgid "G&oogle Drive"
-msgstr "Google Drive"
+msgstr "G&oogle Drive"
 
 #: src/kio_gdrive.cpp:120
 #, kde-format
