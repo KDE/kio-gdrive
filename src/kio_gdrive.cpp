@@ -533,7 +533,7 @@ std::pair<KIO::WorkerResult, QString> KIOGDrive::resolveFileIdFromPath(const QSt
     QString parentId;
     if (!gdriveUrl.isSharedWithMeTopLevel()) {
         // Try to recursively resolve ID of parent path - either from cache, or by querying Google
-        auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!result.success()) {
             return {result, QString()};
@@ -709,7 +709,7 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
     if (gdriveUrl.isAccountRoot()) {
         auto entry = fetchSharedDrivesRootEntry(accountId);
         listEntry(entry);
-        auto [result, id] = rootFolderId(accountId);
+        const auto [result, id] = rootFolderId(accountId);
 
         if (!result.success()) {
             return result;
@@ -723,7 +723,7 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
     } else {
         folderId = m_cache.idForPath(url.path());
         if (folderId.isEmpty()) {
-            auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFolder);
+            const auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFolder);
 
             if (!result.success()) {
                 return result;
@@ -800,14 +800,14 @@ KIO::WorkerResult KIOGDrive::mkdir(const QUrl &url, int permissions)
 
     QString parentId;
     if (gdriveUrl.isTopLevel()) {
-        auto [result, id] = rootFolderId(accountId);
+        const auto [result, id] = rootFolderId(accountId);
         if (!result.success()) {
             return result;
         }
         parentId = id;
 
     } else {
-        auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath(), KIOGDrive::PathIsFolder);
         if (!result.success()) {
             return result;
         }
@@ -888,7 +888,7 @@ KIO::WorkerResult KIOGDrive::stat(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::None);
+        const auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::None);
 
         if (!result.success()) {
             return result;
@@ -943,7 +943,7 @@ KIO::WorkerResult KIOGDrive::get(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
+        const auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
 
         if (!result.success()) {
             return result;
@@ -1115,7 +1115,7 @@ KIO::WorkerResult KIOGDrive::putCreate(const QUrl &url)
         // Not creating in root directory, fill parent references
         QString parentId;
 
-        auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath());
+        const auto [result, id] = resolveFileIdFromPath(gdriveUrl.parentPath());
 
         if (!result.success()) {
             return result;
@@ -1225,7 +1225,7 @@ KIO::WorkerResult KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permiss
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         sourceFileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
+        const auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path());
 
         if (!result.success()) {
             return result;
@@ -1256,14 +1256,14 @@ KIO::WorkerResult KIOGDrive::copy(const QUrl &src, const QUrl &dest, int permiss
 
     QString destDirId;
     if (destGDriveUrl.isTopLevel()) {
-        auto [result, id] = rootFolderId(destAccountId);
+        const auto [result, id] = rootFolderId(destAccountId);
 
         if (!result.success()) {
             return result;
         }
         destDirId = id;
     } else {
-        auto [result, id] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const auto [result, id] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!result.success()) {
             return result;
@@ -1313,7 +1313,8 @@ KIO::WorkerResult KIOGDrive::del(const QUrl &url, bool isfile)
     if (isfile && urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
+        const auto [result, id] =
+            resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path(), isfile ? KIOGDrive::PathIsFile : KIOGDrive::PathIsFolder);
         if (!result.success()) {
             return result;
         }
@@ -1390,7 +1391,7 @@ KIO::WorkerResult KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobF
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         sourceFileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
+        const auto [result, id] = resolveFileIdFromPath(src.adjusted(QUrl::StripTrailingSlash).path(), KIOGDrive::PathIsFile);
         if (!result.success()) {
             return result;
         }
@@ -1438,13 +1439,13 @@ KIO::WorkerResult KIOGDrive::rename(const QUrl &src, const QUrl &dest, KIO::JobF
         // user is trying to move to root -> we are only renaming
     } else {
         // skip filename and extract the second-to-last component
-        auto [destDirResult, destDirId] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const auto [destDirResult, destDirId] = resolveFileIdFromPath(destGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!destDirResult.success()) {
             return destDirResult;
         }
 
-        auto [srcDirResult, srcDirId] = resolveFileIdFromPath(srcGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
+        const auto [srcDirResult, srcDirId] = resolveFileIdFromPath(srcGDriveUrl.parentPath(), KIOGDrive::PathIsFolder);
 
         if (!srcDirResult.success()) {
             return srcDirResult;
@@ -1490,7 +1491,7 @@ KIO::WorkerResult KIOGDrive::mimetype(const QUrl &url)
     if (urlQuery.hasQueryItem(QStringLiteral("id"))) {
         fileId = urlQuery.queryItemValue(QStringLiteral("id"));
     } else {
-        auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
+        const auto [result, id] = resolveFileIdFromPath(url.adjusted(QUrl::StripTrailingSlash).path());
 
         if (!result.success()) {
             return result;
