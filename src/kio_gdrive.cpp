@@ -538,7 +538,7 @@ std::pair<KIO::WorkerResult, QString> KIOGDrive::resolveFileIdFromPath(const QSt
         if (!result.success()) {
             return {result, QString()};
         }
-        id = parentId;
+        parentId = id;
 
         if (parentId.isEmpty()) {
             // We failed to resolve parent -> error
