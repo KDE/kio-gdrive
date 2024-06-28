@@ -45,7 +45,7 @@
 >gdrive://</userinput
 > o <userinput
 >gdrive://<replaceable
->foo@exemple.cat</replaceable
+>foo@example.com</replaceable
 ></userinput
 >.</para>
 
@@ -60,10 +60,10 @@
 <para
 >L'&URL; <userinput
 >gdrive://<replaceable
->foo@exemple.cat</replaceable
+>foo@example.com</replaceable
 ></userinput
 > llistarà tots els fitxers i carpetes des del nivell superior del compte <userinput
->foo@exemple.cat</userinput
+>foo@example.com</userinput
 > del Drive.</para>
 
 </article>
