@@ -41,13 +41,9 @@ void GoogleDrivePlugin::onAccountCreated(const Accounts::AccountId accountId, co
     url.setScheme(QStringLiteral("gdrive"));
     url.setPath(QStringLiteral("/%1").arg(account->displayName()));
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    notification->setActions({i18n("Open")});
-    connect(notification, static_cast<void (KNotification::*)(unsigned int)>(&KNotification::activated), this, [=]() {
-#else
     auto action = notification->addAction(i18n("Open"));
     connect(action, &KNotificationAction::activated, this, [url] {
-#endif
+
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, QStringLiteral("inode/directory"));
         job->start();
     });

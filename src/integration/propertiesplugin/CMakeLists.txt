@@ -7,9 +7,9 @@ ki18n_wrap_ui(gdrivepropertiesplugin_SRCS gdrivepropertiesplugin.ui)
 
 kcoreaddons_add_plugin(gdrivepropertiesplugin
     SOURCES ${gdrivepropertiesplugin_SRCS}
-    INSTALL_NAMESPACE "kf${QT_MAJOR_VERSION}/propertiesdialog")
+    INSTALL_NAMESPACE "kf6/propertiesdialog")
 
 target_link_libraries(gdrivepropertiesplugin
-    KF${QT_MAJOR_VERSION}::I18n
-    KF${QT_MAJOR_VERSION}::KIOWidgets
+    KF6::I18n
+    KF6::KIOWidgets
 )

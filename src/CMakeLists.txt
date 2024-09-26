@@ -10,11 +10,11 @@ set(kio_gdrive_SRCS
     gdrivehelper.cpp
     gdriveurl.cpp)
 
-if (KAccounts${KACCOUNTS_SUFFIX}_FOUND)
+if (KAccounts6_FOUND)
     set(BACKEND_SRC kaccountsmanager.cpp)
     set(BACKEND_HEADER kaccountsmanager.h)
     set(BACKEND_CLASSNAME KAccountsManager)
-    set(BACKEND_LIBS KAccounts${KACCOUNTS_SUFFIX})
+    set(BACKEND_LIBS KAccounts6)
 else()
     set(BACKEND_SRC keychainaccountmanager.cpp)
     set(BACKEND_HEADER keychainaccountmanager.h)
@@ -32,20 +32,16 @@ ecm_qt_declare_logging_category(kio_gdrive_SRCS
 
 kcoreaddons_add_plugin(kio_gdrive
     SOURCES ${kio_gdrive_SRCS}
-    INSTALL_NAMESPACE kf${QT_MAJOR_VERSION}/kio)
+    INSTALL_NAMESPACE kf6/kio)
 
 target_link_libraries(kio_gdrive
-    Qt::Core
-    Qt::Network
-    KF${QT_MAJOR_VERSION}::KIOCore
-    KF${QT_MAJOR_VERSION}::KIOWidgets
-    KF${QT_MAJOR_VERSION}::I18n
+    Qt6::Core
+    Qt6::Network
+    KF6::KIOCore
+    KF6::KIOWidgets
+    KF6::I18n
     ${BACKEND_LIBS})
 
-if(QT_MAJOR_VERSION STREQUAL "5")
-    target_link_libraries(kio_gdrive KPim::GAPICore KPim::GAPIDrive)
-else()
-    target_link_libraries(kio_gdrive KPim6::GAPICore KPim6::GAPIDrive)
-endif()
+target_link_libraries(kio_gdrive KPim6::GAPICore KPim6::GAPIDrive)
 
 set_target_properties(kio_gdrive PROPERTIES OUTPUT_NAME "gdrive")

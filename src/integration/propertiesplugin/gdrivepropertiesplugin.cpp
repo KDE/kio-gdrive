@@ -18,12 +18,7 @@
 K_PLUGIN_CLASS_WITH_JSON(GDrivePropertiesPlugin, "gdrivepropertiesplugin.json")
 
 GDrivePropertiesPlugin::GDrivePropertiesPlugin(QObject *parent, const QList<QVariant> &args)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    : KPropertiesDialogPlugin(qobject_cast<KPropertiesDialog *>(parent))
-#else
     : KPropertiesDialogPlugin(parent)
-#endif
-
 {
     Q_UNUSED(args)
 
