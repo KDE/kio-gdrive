@@ -750,7 +750,7 @@ KIO::WorkerResult KIOGDrive::listDir(const QUrl &url)
         KGAPI2::Drive::File::Fields::LastViewedByMeDate,
         KGAPI2::Drive::File::Fields::AlternateLink,
     });
-    fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::BasicFields + extraFields);
+    fileFetchJob.setFields(KGAPI2::Drive::FileFetchJob::FieldShorthands::basicFields() + extraFields);
     if (auto result = runJob(fileFetchJob, url, accountId); !result.success()) {
         return result;
     }
