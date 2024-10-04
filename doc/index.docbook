@@ -27,7 +27,7 @@
 
 <para>KIO GDrive allows you to access and edit your Google Drive files using KDE applications that support KIO.</para>
 
-<para>You can use the gdrive kioslave like this:</para>
+<para>You can use the gdrive KIO Worker like this:</para>
 <para><userinput>gdrive://</userinput> or <userinput>gdrive://<replaceable>foo@example.com</replaceable></userinput>.</para>
 
 <para>The first URL shows an OAuth login dialog from Google, if no Drive account has been authenticated yet,

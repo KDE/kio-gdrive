@@ -7,7 +7,7 @@ as long as kdeinit5 has been installed in the same prefix.
 Locate Debug Output
 ===================
 
-You will not see the slave's output in the terminal where you started e.g. Dolphin.
+You will not see the worker's output in the terminal where you started e.g. Dolphin.
 On systemd distros the output will go in the journalctl (assuming Qt built with the -journald option).
 A quick way to locate the relevant logs is the following command:
 
@@ -20,12 +20,12 @@ This will only show the logs since the last boot. To retrieve also older logs, y
 Enable Debug Output
 ===================
 
-Th gdrive slave uses categorized debug output. Normally you would enable its output with a simple:
+Th gdrive worker uses categorized debug output. Normally you would enable its output with a simple:
 
     export QT_LOGGING_RULES="kf.kio.workers.gdrive=true"
 
 However, you need to make sure this variable is present in the environment of kdeinit5,
-which is the process that starts the ioslave.
+which is the process that starts the ioworker.
 
 A simpler alternative is to create (or edit) ~/.config/QtProject/qtlogging.ini with the following content:
 

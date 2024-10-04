@@ -13,7 +13,7 @@ INSTALLATION
     $ sudo make install
     $ kdeinit5 # or just re-login
 
-Now you are ready to use the slave. Either click the "Network" button in Dolphin or run:
+Now you are ready to use the worker. Either click the "Network" button in Dolphin or run:
 
     $ kioclient5 exec gdrive:/
 
