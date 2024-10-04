@@ -84,7 +84,7 @@ if (KF6Purpose_FOUND)
     add_subdirectory(purpose)
 endif()
 
-if (KAccounts${KACCOUNTS_SUFFIX}_FOUND)
+if (KAccounts6_FOUND)
     message(STATUS "Building the KAccounts backend.")
     add_subdirectory(kaccounts)
 endif()
