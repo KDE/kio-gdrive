@@ -1,0 +1,130 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Marek Laane <qiilaq69@gmail.com>, 2016, 2019.
+# Mihkel Tõnnov <mihhkel@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2024-10-06 00:39+0000\n"
+"PO-Revision-Date: 2020-10-07 19:57+0200\n"
+"Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
+"Language-Team: Estonian <>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 20.08.1\n"
+
+#: kaccounts/kaccountsplugin.cpp:36
+#, fuzzy, kde-format
+#| msgid "New Online Account"
+msgid "New Online Account"
+msgstr "Uus võrgukonto"
+
+#: kaccounts/kaccountsplugin.cpp:38
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"You can now manage the Google Drive files of your <emphasis strong='true'>"
+"%1</emphasis> account."
+msgstr ""
+"Nüüd on võimalik hallata Google Drive'i faile oma <emphasis strong='true'>"
+"%1</emphasis> kontos."
+
+#: kaccounts/kaccountsplugin.cpp:44
+#, kde-format
+msgid "Open"
+msgstr "Ava"
+
+#: purpose/purpose_gdrive_config.qml:24
+#, fuzzy, kde-format
+#| msgctxt "login in a new google account"
+#| msgid "New account"
+msgid "Select an account:"
+msgstr "Uus konto"
+
+#: purpose/purpose_gdrive_config.qml:63
+#, kde-format
+msgid "No account configured"
+msgstr ""
+
+#: purpose/purpose_gdrive_config.qml:71
+#, fuzzy, kde-format
+#| msgid "New Online Account"
+msgid "Configure Accounts"
+msgstr "Uus võrgukonto"
+
+#: purpose/purpose_gdrive_config.qml:78
+#, kde-format
+msgid "Upload to folder:"
+msgstr ""
+
+#: src/integration/contextmenuaction/contextmenuaction.cpp:53
+#, kde-format
+msgid "Google Drive"
+msgstr "Google Drive"
+
+#: src/integration/contextmenuaction/contextmenuaction.cpp:62
+#, kde-format
+msgid "Copy URL to clipboard"
+msgstr "Kopeeri URL lõikepuhvrisse"
+
+#: src/integration/contextmenuaction/contextmenuaction.cpp:75
+#, kde-format
+msgid "Open in browser"
+msgstr "Ava veebilehitsejas"
+
+#: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:106
+#, fuzzy, kde-format
+#| msgid "Google Drive"
+msgid "G&oogle Drive"
+msgstr "Google Drive"
+
+#: src/kio_gdrive.cpp:120
+#, kde-format
+msgid "Unknown error"
+msgstr ""
+
+#: src/kio_gdrive.cpp:242
+#, fuzzy, kde-format
+#| msgctxt "login in a new google account"
+#| msgid "New account"
+msgctxt "login in a new google account"
+msgid "New account"
+msgstr "Uus konto"
+
+#: src/kio_gdrive.cpp:255
+#, fuzzy, kde-format
+#| msgid "Shared Drives"
+msgctxt "folder containing gdrive files shared with me"
+msgid "Shared With Me"
+msgstr "Jagatud kettad"
+
+#: src/kio_gdrive.cpp:308
+#, kde-format
+msgid "There are no Google Drive accounts enabled. Please add at least one."
+msgstr ""
+"Ükski Google Drive'i konto pole lubatud. Palun lisa vähemalt üks konto."
+
+#: src/kio_gdrive.cpp:453
+#, kde-format
+msgid "Shared Drives"
+msgstr "Jagatud kettad"
+
+#: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
+#, kde-format
+msgid "%1 isn't a known GDrive account"
+msgstr "%1 ei ole tuntud GDrive'i konto"
+
+#: src/kio_gdrive.cpp:1049
+#, kde-format
+msgid "Expired or missing access tokens for account %1"
+msgstr ""
+
+#: src/kio_gdrive.cpp:1305
+#, kde-format
+msgid "Can't delete Shared Drives root."
+msgstr "Jagatud ketaste juurt ei saa kustutada."

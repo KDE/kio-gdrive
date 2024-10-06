@@ -51,7 +51,7 @@
 >KIO GDrive le permite acceder a sus archivos de Google Drive y editarlos usando aplicaciones de KDE que funcionan con KIO.</para>
 
 <para
->Puede usar el esclavo kio gdrive de este modo:</para>
+>Puede usar el cliente KIO gdrive de este modo:</para>
 <para
 ><userinput
 >gdrive://</userinput

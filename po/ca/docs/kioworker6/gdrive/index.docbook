@@ -37,9 +37,7 @@
 >El KIO GDrive permet accedir i editar els vostres fitxers al Google Drive utilitzant les aplicacions &kde; que implementen el KIO.</para>
 
 <para
->Podeu utilitzar el kioslave <quote
->gdrive</quote
-> de la següent manera:</para>
+>Podeu utilitzar el procés de treball KIO GDrive de la manera següent:</para>
 <para
 ><userinput
 >gdrive://</userinput
