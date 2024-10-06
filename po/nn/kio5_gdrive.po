@@ -1,4 +1,4 @@
-# Translation of kio5_gdrive to Norwegian Nynorsk
+# Translation of kio6_gdrive to Norwegian Nynorsk
 #
 msgid ""
 msgstr ""
