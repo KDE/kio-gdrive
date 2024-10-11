@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/kio-gdrive/kio5_gdrive.pot\n"
-"X-Crowdin-File-ID: 5960\n"
+"X-Crowdin-File: /kf6-trunk/messages/kio-gdrive/kio6_gdrive.pot\n"
+"X-Crowdin-File-ID: 56054\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
