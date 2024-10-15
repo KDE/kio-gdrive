@@ -73,10 +73,9 @@ msgid "Open in browser"
 msgstr "Άνοιγμα στον περιηγητή"
 
 #: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:106
-#, fuzzy, kde-format
-#| msgid "Google Drive"
+#, kde-format
 msgid "G&oogle Drive"
-msgstr "Google Drive"
+msgstr "Google Dr&ive"
 
 #: src/kio_gdrive.cpp:120
 #, kde-format
