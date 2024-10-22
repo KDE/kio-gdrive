@@ -20,7 +20,7 @@ Dependencies:
     'frameworks/kdoctools': '@latest-kf6'
     'frameworks/kio': '@latest-kf6'
     'frameworks/purpose': '@latest-kf6'
-    'pim/libkgapi': '@latest-kf6'
+    'pim/libkgapi': '@same'
     'third-party/qtkeychain': '@latest'
 
 Options:
