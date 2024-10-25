@@ -45,7 +45,6 @@
         "Description[zh_TW]": "整合 KIO gdrive",
         "EnabledByDefault": true,
         "Icon": "system-file-manager",
-        "Id": "kaccounts_kio_gdrive",
         "License": "GPL",
         "Name": "KIO gdrive",
         "Name[ar]": "وحدة الدخل/الخرج لغوغل درايف",
