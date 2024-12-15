@@ -28,6 +28,8 @@ msgid ""
 "You can now manage the Google Drive files of your <emphasis strong='true'>"
 "%1</emphasis> account."
 msgstr ""
+"इदानीं भवान् स्वस्य <emphasis strong='true'>%1</emphasis> खातेः Google Drive "
+"सञ्चिकाः प्रबन्धयितुं शक्नोति ।"
 
 #: kaccounts/kaccountsplugin.cpp:44
 #, kde-format
@@ -83,13 +85,13 @@ msgstr "अज्ञातदोषः"
 #, kde-format
 msgctxt "login in a new google account"
 msgid "New account"
-msgstr ""
+msgstr "नवीन खाता"
 
 #: src/kio_gdrive.cpp:255
 #, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr ""
+msgstr "मया सह साझां कृतम्"
 
 #: src/kio_gdrive.cpp:308
 #, kde-format
