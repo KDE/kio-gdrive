@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-06 00:39+0000\n"
-"PO-Revision-Date: 2024-05-30 22:41+0200\n"
+"PO-Revision-Date: 2024-12-28 17:41+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-doc@kde.org>\n"
 "Language: eo\n"
@@ -30,6 +30,8 @@ msgid ""
 "You can now manage the Google Drive files of your <emphasis strong='true'>"
 "%1</emphasis> account."
 msgstr ""
+"Vi nun povas mastrumi la Google-Drive dosierojn de via konto <emphasis "
+"strong='true'>%1</emphasis>."
 
 #: kaccounts/kaccountsplugin.cpp:44
 #, kde-format
