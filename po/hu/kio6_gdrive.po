@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2025 This file is copyright:
 # This file is distributed under the same license as the kio-gdrive package.
 #
-# Kristof Kiszel <ulysses@fsf.hu>, 2022.
+# SPDX-FileCopyrightText: 2022, 2025 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: kio-gdrive\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-06 00:39+0000\n"
-"PO-Revision-Date: 2022-02-10 14:47+0100\n"
+"PO-Revision-Date: 2025-01-27 21:10+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.07.70\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
 #, kde-format
@@ -73,15 +73,14 @@ msgid "Open in browser"
 msgstr "Megnyitás böngészőben"
 
 #: src/integration/propertiesplugin/gdrivepropertiesplugin.cpp:106
-#, fuzzy, kde-format
-#| msgid "Google Drive"
+#, kde-format
 msgid "G&oogle Drive"
-msgstr "Google Drive"
+msgstr "G&oogle Drive"
 
 #: src/kio_gdrive.cpp:120
 #, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Ismeretlen hiba"
 
 #: src/kio_gdrive.cpp:242
 #, kde-format
@@ -90,11 +89,10 @@ msgid "New account"
 msgstr "Új fiók"
 
 #: src/kio_gdrive.cpp:255
-#, fuzzy, kde-format
-#| msgid "Shared Drives"
+#, kde-format
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Megosztott meghajtók"
+msgstr "Velem megosztva"
 
 #: src/kio_gdrive.cpp:308
 #, kde-format
@@ -115,7 +113,7 @@ msgstr "%1 nem egy ismert GDrive fiók"
 #: src/kio_gdrive.cpp:1049
 #, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "Lejárt vagy hiányzó hozzáférési tokenek a(z) %1 fiókhoz"
 
 #: src/kio_gdrive.cpp:1305
 #, kde-format
