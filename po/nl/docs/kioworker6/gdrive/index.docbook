@@ -37,7 +37,7 @@
 >KIO GDrive stelt u in staat toegang te hebben tot en uw Google Drive bestanden te bewerken met KDE toepassingen die KIO ondersteunen.</para>
 
 <para
->U kunt de gdrive kioslave gebruiken als volgt:</para>
+>U kunt de gdrive kio-worker gebruiken als volgt:</para>
 <para
 ><userinput
 >gdrive://</userinput
