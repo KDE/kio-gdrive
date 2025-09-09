@@ -43,7 +43,6 @@
         "Description[ta]": "KIO gdrive-ஐ ஒருங்கிணை",
         "Description[tr]": "KIO GDrive ile Tümleştir",
         "Description[uk]": "Інтеграція із KIO gdrive",
-        "Description[x-test]": "xxIntegrate KIO gdrivexx",
         "Description[zh_CN]": "KIO GDrive 整合",
         "Description[zh_TW]": "整合 KIO gdrive",
         "EnabledByDefault": true,
@@ -92,7 +91,6 @@
         "Name[sv]": "KIO gdrive",
         "Name[tr]": "KIO gdrive",
         "Name[uk]": "KIO GDrive",
-        "Name[x-test]": "xxKIO gdrivexx",
         "Name[zh_CN]": "KIO GDrive",
         "Name[zh_TW]": "KIO gdrive",
         "Version": "0.1"
