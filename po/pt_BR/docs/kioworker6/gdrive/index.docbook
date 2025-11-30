@@ -51,7 +51,7 @@
 >O KIO GDrive permite a você acessar e editar seus arquivos do Google Drive usando os aplicativos do KDE que suportam KIO.</para>
 
 <para
->Você pode usar o kioslave gdrive desta forma:</para>
+>Você pode usar o kio wroker gdrive desta forma:</para>
 <para
 ><userinput
 >gdrive://</userinput
