@@ -41,41 +41,41 @@
 </authorgroup>
 
 <date
->2016-10-03</date>
+>2016‒10‒03</date>
 <releaseinfo
 >kio-gdrive 1.0.1</releaseinfo>
 
 </articleinfo>
 
 <para
->KIO GDrive, Google Drive dosyalarınızı KIO destekleyen KDE uygulamalarınız kullanarak düzenlemenizi sağlar.</para>
+>KIO GDrive, Google Drive dosyalarınızı KIO destekleyen KDE uygulamalarını kullanarak düzenlemenizi sağlar.</para>
 
 <para
->Gdrive kioslave’i şöyle kullanabilirsiniz:</para>
+>gdrive KIO işçisini şöyle kullanabilirsiniz:</para>
 <para
 ><userinput
 >gdrive://</userinput
 > veya <userinput
 >gdrive://<replaceable
->foo@örnek.com</replaceable
+>şey@örnek.com</replaceable
 ></userinput
 >.</para>
 
 <para
->İlk URL henüz bir Drive hesabı ile kimlik doğrulaması yapılmamışsa Google’den bir OAuth giriş penceresi, yapılmışsa hesaplarınızın listesini gösterir.</para>
+>İlk URL, henüz hiçbir Drive hesabının kimliği doğrulanmamışsa Google’dan bir OAuth oturum açma iletişim kutusunu veya bunun yerine kimliği doğrulanmış hesaplarınızın listesini gösterir.</para>
 
 <para
 ><userinput
 >gdrive://</userinput
-> URL’si ek bir hesap eklemek için her zaman kullanılabilir.</para>
+> URL’si, ek bir hesap eklemek için her zaman kullanılabilir.</para>
 
 <para
 ><userinput
 >gdrive://<replaceable
->foo@örnek.com</replaceable
+>şey@örnek.com</replaceable
 ></userinput
 > <userinput
->foo@example.com</userinput
-> Drive hesabının en üst düzeydeki dosyalarını ve klasörlerini listeler.</para>
+>şey@örnek.com</userinput
+>, Drive hesabının en üst düzeydeki dosyalarını ve klasörlerini listeler.</para>
 
 </article>
