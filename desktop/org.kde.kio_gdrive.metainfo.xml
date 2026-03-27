@@ -101,6 +101,7 @@
   <description>
     <p>KIO GDrive is a KIO worker that enables KIO-aware applications (such as Dolphin, Kate or Gwenview) to access and edit Google Drive files on the cloud.</p>
     <p xml:lang="ar">تمكّن وحدة غوغل درايف التطبيقات المدركة لـ KIO (مثل دولفين أو كيت أو حونفيو) للوصول إلى ملفات غوغل درايف على سحابة غوغل.</p>
+    <p xml:lang="az">KIO GDrive, KIO dəstəkli tətbiqlərin (Dolphin, Kate və ya Gwenview kimi) buludda olan Google Disk (Google Drive) fayllarına daxil olmasına və onlara düzəliş etməsinə imkan verən bir KIO moduludur.</p>
     <p xml:lang="be">KIO GDrive - гэта ўбудова KIO worker, якая дазваляе праграмам, якія працуюць з KIO (напрыклад, Dolphin, Kate або Gwenview), атрымліваць доступ і рэдагаваць файлы ў воблаку Google Drive.</p>
     <p xml:lang="bg">KIO GDrive e KIO worker програма, която позволява на приложения, поддържащи KIO (като Dolphin, Kate или Gwenview) да имат достъп и да редактират файлове в облачната услуга Google Диск.</p>
     <p xml:lang="ca">El KIO GDrive és un procés de treball del KIO que permet a les aplicacions preparades per al KIO (com el Dolphin, el Kate o el Gwenview) que accedeixin i editin els fitxers del Drive de Google en el núvol.</p>
