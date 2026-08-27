@@ -4,13 +4,13 @@
 Dependencies:
  - 'on': ['@all']
    'require':
-    'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/ki18n': '@latest-kf6'
-    'frameworks/kdoctools': '@latest-kf6'
-    'frameworks/kio': '@latest-kf6'
-    'frameworks/purpose': '@latest-kf6'
+    'frameworks/extra-cmake-modules': 'Frameworks/6.24'
+    'frameworks/ki18n': 'Frameworks/6.24'
+    'frameworks/kdoctools': 'Frameworks/6.24'
+    'frameworks/kio': 'Frameworks/6.24'
+    'frameworks/purpose': 'Frameworks/6.24'
     'pim/libkgapi': '@latest-kf6'
-    'network/kaccounts-integration': '@latest-kf6'
+    'network/kaccounts-integration': 'release/25.12'
     'third-party/qtkeychain': '@latest'
 
 Options:
