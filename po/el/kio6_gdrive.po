@@ -18,19 +18,19 @@ msgstr ""
 "X-Generator: Lokalize 20.04.2\n"
 
 #: kaccounts/kaccountsplugin.cpp:36
-#, kde-format
+#, fuzzy, kde-format
 msgid "New Online Account"
-msgstr "Νέος επιγραμμικός λογαριασμός"
+msgstr "Νέος διαδικτυακός λογαριασμός"
 
 #: kaccounts/kaccountsplugin.cpp:38
-#, kde-kuit-format
+#, fuzzy, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "You can now manage the Google Drive files of your <emphasis strong='true'>"
 "%1</emphasis> account."
 msgstr ""
 "Μπορείτε τώρα να διαχειριστείτε τα Google Drive αρχεία του <emphasis "
-"strong='true'>%1</emphasis> λογσριασμού σας."
+"strong='true'>%1</emphasis> λογαριασμού σας."
 
 #: kaccounts/kaccountsplugin.cpp:44
 #, kde-format
@@ -53,9 +53,9 @@ msgid "Configure Accounts"
 msgstr "Διαμόρφωση λογαριασμών"
 
 #: purpose/purpose_gdrive_config.qml:78
-#, kde-format
+#, fuzzy, kde-format
 msgid "Upload to folder:"
-msgstr "Αποστολή στο φάκελο:"
+msgstr "Μεταφόρτωση στο φάκελο:"
 
 #: src/integration/contextmenuaction/contextmenuaction.cpp:53
 #, kde-format
@@ -78,9 +78,9 @@ msgid "G&oogle Drive"
 msgstr "Google Dr&ive"
 
 #: src/kio_gdrive.cpp:120
-#, kde-format
+#, fuzzy, kde-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Άγνωστο σφάλμα"
 
 #: src/kio_gdrive.cpp:242
 #, kde-format
@@ -93,7 +93,7 @@ msgstr "Νέος λογαριασμός"
 #| msgid "Shared Drives"
 msgctxt "folder containing gdrive files shared with me"
 msgid "Shared With Me"
-msgstr "Κοινόχρηστα Drive"
+msgstr "Σε κοινή χρήση με μένα"
 
 #: src/kio_gdrive.cpp:308
 #, kde-format
@@ -107,16 +107,16 @@ msgid "Shared Drives"
 msgstr "Κοινόχρηστα Drive"
 
 #: src/kio_gdrive.cpp:705 src/kio_gdrive.cpp:865
-#, kde-format
+#, fuzzy, kde-format
 msgid "%1 isn't a known GDrive account"
-msgstr "To %1 δεν είναι ένας γνωστός GDrive λογαριασμός"
+msgstr "Το %1 δεν είναι ένας γνωστός GDrive λογαριασμός"
 
 #: src/kio_gdrive.cpp:1049
-#, kde-format
+#, fuzzy, kde-format
 msgid "Expired or missing access tokens for account %1"
-msgstr ""
+msgstr "Το διακριτικό πρόσβασης για λογαριασμό %1 έληξε ή δε βρέθηκε"
 
 #: src/kio_gdrive.cpp:1305
-#, kde-format
+#, fuzzy, kde-format
 msgid "Can't delete Shared Drives root."
-msgstr "Αδυναμία διαγραφής του διαχειριστή των κοινόχρηστων Drive"
+msgstr "Αδυναμία διαγραφής του βασικού φακέλου κοινόχρηστων Drive"
