@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<article lang="&language;" id="gdrive">
+<title
+>gdrive</title>
+
+<articleinfo>
+
+<authorgroup>
+  <author
+><firstname
+>Elvis</firstname
+><surname
+>Angelaccio</surname
+> <affiliation
+> <address
+> <email
+>elvis.angelaccio@kde.org</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2016-10-03</date>
+<releaseinfo
+>kio-gdrive 1.0.1</releaseinfo>
+
+</articleinfo>
+
+<para
+>يتيح لك KIO GDrive الوصول إلى ملفات غوغل درايف وتحريرها باستخدام تطبيقات كيدي التي تدعم KIO.</para>
+
+<para
+>يمكنك استخدام عامل  gdrive KIO كالتالي:</para>
+<para
+><userinput
+>gdrive://</userinput
+> or <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+>.</para>
+
+<para
+>يعرض الرابط الأول نافذة حوار تسجيل الدخول عبر OAuth من غوغل، إذا لم يتم مصادقة أي حساب درايف بعد، أو يعرض قائمة بحساباتك التي تمت مصادقتها بدلًا من ذلك.</para>
+
+<para
+>يمكن أيضًا استخدام عنوان URL <userinput
+>gdrive://</userinput
+> في أي وقت لإضافة حساب إضافي.</para>
+
+<para
+>يعرض الرابط <userinput
+>gdrive://<replaceable
+>foo@example.com</replaceable
+></userinput
+> جميع الملفات والمجلدات الموجودة في المستوى الأعلى لحساب درايف <userinput
+>foo@example.com</userinput
+>.</para>
+
+</article>
